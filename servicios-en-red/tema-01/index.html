@@ -66,6 +66,12 @@
                                 📝 Cuestionario 2
                     </a>
                 </li>
+
+                <li>
+                    <a href="#protocolo-tcp">
+                         3. El protocolo TCP
+                    </a>
+                </li>
                 <li>
                     <a href="#bibliografia">
                         Bibliografía
@@ -1413,6 +1419,635 @@ iface enp2s0 inet dhcp</code></pre>
             </li>
 
         </ol>
+
+</section>
+
+<!-- =========================
+     3. EL PROTOCOLO TCP
+     ========================= -->
+
+<section id="protocolo-tcp">
+
+    <h2>3. El protocolo TCP</h2>
+
+
+    <!-- =========================
+         INTERCONEXIÓN DE REDES
+         ========================= -->
+
+    <h3>3.1. Interconexión de redes</h3>
+
+    <p>
+        El protocolo <strong>TCP</strong> (<em>Transmission Control
+        Protocol</em> o protocolo de control de transmisión) fue
+        diseñado para funcionar en redes poco fiables.
+    </p>
+
+    <p>
+        Es un protocolo de la
+        <strong>capa de transporte (nivel 4)</strong>
+        y su objetivo principal es aportar
+        <strong>fiabilidad</strong> a las transmisiones basadas
+        en TCP/IP.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>🔐 ¿Qué aporta TCP?</h4>
+
+        <p>
+            TCP permite establecer una comunicación fiable entre
+            dos aplicaciones, controlando que los datos enviados
+            lleguen correctamente y en el orden adecuado.
+        </p>
+
+        <ul>
+
+            <li>
+                Control de errores.
+            </li>
+
+            <li>
+                Detección de pérdidas.
+            </li>
+
+            <li>
+                Retransmisión de datos.
+            </li>
+
+            <li>
+                Entrega ordenada de los datos.
+            </li>
+
+            <li>
+                Control de flujo.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <p>
+        La fiabilidad que proporciona TCP resulta especialmente
+        útil en comunicaciones en las que necesitamos asegurar
+        que los datos llegan correctamente, sin pérdidas ni
+        errores.
+    </p>
+
+    <p>
+        Como contrapartida, los mecanismos de control que utiliza
+        TCP generan una <strong>carga adicional de tráfico</strong>
+        y procesamiento respecto a protocolos como UDP.
+    </p>
+
+
+    <!-- =========================
+         TCP VS UDP
+         ========================= -->
+
+    <h3>3.2. TCP y UDP</h3>
+
+    <p>
+        TCP y UDP son protocolos de la capa de transporte, pero
+        proporcionan servicios diferentes.
+    </p>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Característica</th>
+                <th>TCP</th>
+                <th>UDP</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>Orientado a conexión</td>
+                <td>✔ Sí</td>
+                <td>✘ No</td>
+            </tr>
+
+            <tr>
+                <td>Fiabilidad</td>
+                <td>✔ Sí</td>
+                <td>✘ No</td>
+            </tr>
+
+            <tr>
+                <td>Entrega ordenada</td>
+                <td>✔ Sí</td>
+                <td>✘ No garantizada</td>
+            </tr>
+
+            <tr>
+                <td>Retransmisión</td>
+                <td>✔ Sí</td>
+                <td>✘ No</td>
+            </tr>
+
+            <tr>
+                <td>Control de flujo</td>
+                <td>✔ Sí</td>
+                <td>✘ No</td>
+            </tr>
+
+            <tr>
+                <td>Cabecera</td>
+                <td>Mayor</td>
+                <td>Menor</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="nota">
+
+        <h4>💡 Recuerda</h4>
+
+        <p>
+            TCP prioriza la <strong>fiabilidad</strong>, mientras
+            que UDP tiene una menor sobrecarga y no proporciona
+            las mismas garantías de entrega.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         PUERTOS
+         ========================= -->
+
+    <h3>3.3. Puertos TCP</h3>
+
+    <p>
+        El protocolo TCP proporciona un punto de acceso a las
+        aplicaciones mediante los
+        <strong>puertos</strong>.
+    </p>
+
+    <p>
+        Un puerto es un número entero que permite identificar
+        el servicio o aplicación que utiliza una comunicación
+        TCP dentro de un equipo.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>🔌 Ejemplo</h4>
+
+        <p>
+            Un servidor puede tener una dirección IP:
+        </p>
+
+        <p>
+            <code>192.168.1.10</code>
+        </p>
+
+        <p>
+            y ofrecer un servicio web mediante:
+        </p>
+
+        <p>
+            <strong>TCP puerto 80</strong>
+        </p>
+
+        <p>
+            De esta forma, la dirección IP identifica el equipo
+            y el puerto permite identificar el servicio dentro
+            de ese equipo.
+        </p>
+
+    </div>
+
+
+    <h4>Tipos de puertos</h4>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Tipo</th>
+                <th>Rango</th>
+                <th>Descripción</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    <strong>Bien conocidos</strong>
+                </td>
+
+                <td>
+                    0 – 1023
+                </td>
+
+                <td>
+                    Puertos asociados tradicionalmente a servicios
+                    y protocolos conocidos.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+                    <strong>Registrados</strong>
+                </td>
+
+                <td>
+                    1024 – 49151
+                </td>
+
+                <td>
+                    Pueden ser registrados para aplicaciones y
+                    servicios específicos.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td>
+                    <strong>Dinámicos o efímeros</strong>
+                </td>
+
+                <td>
+                    49152 – 65535
+                </td>
+
+                <td>
+                    Normalmente se asignan dinámicamente a las
+                    aplicaciones cliente.
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="nota">
+
+        <h4>🌐 Algunos puertos conocidos</h4>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Puerto</th>
+                    <th>Protocolo / servicio</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><code>20/21</code></td>
+                    <td>FTP</td>
+                </tr>
+
+                <tr>
+                    <td><code>22</code></td>
+                    <td>SSH</td>
+                </tr>
+
+                <tr>
+                    <td><code>23</code></td>
+                    <td>Telnet</td>
+                </tr>
+
+                <tr>
+                    <td><code>25</code></td>
+                    <td>SMTP</td>
+                </tr>
+
+                <tr>
+                    <td><code>53</code></td>
+                    <td>DNS</td>
+                </tr>
+
+                <tr>
+                    <td><code>80</code></td>
+                    <td>HTTP</td>
+                </tr>
+
+                <tr>
+                    <td><code>110</code></td>
+                    <td>POP3</td>
+                </tr>
+
+                <tr>
+                    <td><code>143</code></td>
+                    <td>IMAP</td>
+                </tr>
+
+                <tr>
+                    <td><code>443</code></td>
+                    <td>HTTPS</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =========================
+         SOCKET
+         ========================= -->
+
+    <h2>Para saber más</h2>
+
+    <h3>3.4. Socket de Internet</h3>
+
+    <p>
+        Un <strong>socket</strong> es un concepto abstracto que
+        permite que dos programas puedan intercambiar datos,
+        normalmente mediante un protocolo de transporte.
+    </p>
+
+    <p>
+        Una comunicación TCP puede identificarse mediante una
+        combinación de elementos que incluye las direcciones IP
+        y los puertos de origen y destino.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>🔌 Ejemplo de socket</h4>
+
+        <p>
+            Podemos representar un extremo de una comunicación
+            TCP mediante:
+        </p>
+
+        <p>
+            <strong>
+                84.88.125.15 : TCP : 2300
+            </strong>
+        </p>
+
+        <p>
+            Donde:
+        </p>
+
+        <ul>
+
+            <li>
+                <strong>84.88.125.15</strong> → dirección IP.
+            </li>
+
+            <li>
+                <strong>TCP</strong> → protocolo de transporte.
+            </li>
+
+            <li>
+                <strong>2300</strong> → número de puerto.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================
+         EJEMPLO DE CONEXIONES
+         ========================= -->
+
+    <h3>3.5. Ejemplo de conexiones TCP</h3>
+
+    <p>
+        Un servidor puede tener un puerto escuchando conexiones
+        y mantener simultáneamente varias conexiones TCP.
+    </p>
+
+    <p>
+        Esto es posible porque una conexión TCP se identifica
+        mediante los extremos de la comunicación.
+    </p>
+
+
+    <div class="conexion-tcp">
+
+        <div class="conexion-servidor">
+
+            <h4>🖥️ Servidor Telnet</h4>
+
+            <p>
+                IP:
+                <strong>10.0.1.25</strong>
+            </p>
+
+            <p>
+                Puerto:
+                <strong>23</strong>
+            </p>
+
+            <p>
+                Socket:
+                <code>10.0.1.25:23</code>
+            </p>
+
+        </div>
+
+
+        <div class="flecha-conexion">
+            ↕
+        </div>
+
+
+        <div class="conexion-clientes">
+
+            <h4>💻 Clientes</h4>
+
+            <div class="cliente-tcp">
+
+                <strong>Cliente 1</strong>
+
+                <p>
+                    IP:
+                    <code>10.0.1.50</code>
+                </p>
+
+                <p>
+                    Puerto:
+                    <code>1038</code>
+                </p>
+
+                <p>
+                    Socket:
+                    <code>10.0.1.50:1038</code>
+                </p>
+
+            </div>
+
+
+            <div class="cliente-tcp">
+
+                <strong>Cliente 2</strong>
+
+                <p>
+                    IP:
+                    <code>10.0.2.47</code>
+                </p>
+
+                <p>
+                    Puerto:
+                    <code>1038</code>
+                </p>
+
+                <p>
+                    Socket:
+                    <code>10.0.2.47:1038</code>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="nota">
+
+        <h4>🔎 ¿Por qué pueden utilizar el mismo puerto?</h4>
+
+        <p>
+            Dos clientes pueden utilizar el mismo puerto local,
+            por ejemplo el <strong>1038</strong>, porque sus
+            direcciones IP son diferentes.
+        </p>
+
+        <p>
+            Una conexión TCP se distingue por la combinación de
+            los extremos de la comunicación, no únicamente por
+            el número de puerto.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         RESUMEN
+         ========================= -->
+
+    <h3>3.6. Resumen</h3>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Concepto</th>
+                <th>Idea principal</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><strong>TCP</strong></td>
+                <td>
+                    Protocolo de transporte orientado a conexión
+                    y fiable.
+                </td>
+            </tr>
+
+            <tr>
+                <td><strong>Puerto</strong></td>
+                <td>
+                    Permite identificar una aplicación o servicio
+                    dentro de un equipo.
+                </td>
+            </tr>
+
+            <tr>
+                <td><strong>Socket</strong></td>
+                <td>
+                    Representa un extremo de una comunicación
+                    mediante IP, protocolo y puerto.
+                </td>
+            </tr>
+
+            <tr>
+                <td><strong>Conexión TCP</strong></td>
+                <td>
+                    Relaciona los extremos origen y destino de
+                    la comunicación.
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         CUESTIONARIO
+         ========================= -->
+
+    <h2>Cuestionario</h2>
+
+    <div class="concepto">
+
+        <ol>
+
+            <li>
+                ¿Cuál es la función principal del protocolo TCP?
+            </li>
+
+            <li>
+                ¿En qué se diferencia TCP de UDP?
+            </li>
+
+            <li>
+                ¿Qué mecanismos utiliza TCP para proporcionar
+                fiabilidad?
+            </li>
+
+            <li>
+                ¿Qué es un puerto y qué función desempeña?
+            </li>
+
+            <li>
+                ¿Qué diferencia existe entre los puertos
+                bien conocidos, registrados y dinámicos?
+            </li>
+
+            <li>
+                ¿Qué es un socket?
+            </li>
+
+            <li>
+                ¿Por qué dos equipos diferentes pueden utilizar
+                simultáneamente el mismo número de puerto?
+            </li>
+
+        </ol>
+
+    </div>
 
 </section>
 
