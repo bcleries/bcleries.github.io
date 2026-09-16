@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tema 1 - Servicios en red</title>
+    <title>Tema 1 - Arquitectura de red TCP/IP</title>
 
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -13,70 +14,658 @@
 <body>
 
     <header>
-        <h1>Tema 1: Introducción a los servicios en red</h1>
-        <p>Servicios en red</p>
+        <h1>Tema 1</h1>
+        <p>Arquitectura de red TCP/IP</p>
     </header>
+
 
     <main>
 
-        <section>
-            <h2>Introducción</h2>
-
-            <p>
-                En este tema estudiaremos los conceptos fundamentales
-                relacionados con los servicios en red.
-            </p>
-        </section>
-
+        <!-- ÍNDICE DEL TEMA -->
 
         <section>
-            <h2>Contenidos</h2>
-
-            <h3>1.1. Interconexión de redes</h3>
-            <p>
-                Internet es una red pública y global de ordenadores que están interconectados mediante el protocolo de Internet (Internet Protocol) y que se comunican mediante la conmutación de paquetes. Internet es la unión de millones de subredes domésticas, académicas, comerciales y gubernamentales; es por eso que a veces se la llama «la red de redes».
-             </p>
-             <p>  
-                A pesar de que hay una gran diversidad de arquitecturas de red, la familia de protocolos TCP/IP se utiliza en la mayoría de redes que conforman Internet, así como en las intranets de empresas, centros educativos, zonas WIFI, oficinas y hogares.
-             </p>
-             <p>     
-                La denominación TCP/IP hace referencia a sus dos protocolos más importantes: el Protocolo de Internet (IP) y el Protocolo de Transferencia de Datos (TCP).
-            </p>
-
-            <h3>1.2. Conceptos básicos</h3>
-            <p>
-                Contenido del apartado...
-            </p>
-
-            <h3>1.3. Servicios de red</h3>
-            <p>
-                Contenido del apartado...
-            </p>
-
-        </section>
-
-
-        <section>
-            <h2>Recursos</h2>
+            <h2>📚 Índice</h2>
 
             <ul>
-                <li>📄 Apuntes</li>
-                <li>💻 Ejercicios</li>
-                <li>🎥 Vídeos</li>
-                <li>🔗 Enlaces de interés</li>
+                <li>
+                    <a href="#interconexion">
+                        1. Interconexión de redes
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#capas">
+                        1.1. Modelo de capas
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#protocolo">
+                        ¿Qué es un protocolo?
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#servicio">
+                        ¿Qué es un servicio de capa?
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#encapsulamiento">
+                        Encapsulamiento
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#unidades">
+                        Unidades de información
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#estructura">
+                        1.1.3. Estructura de red
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#cliente-servidor">
+                        Modelo cliente/servidor
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#p2p">
+                        Redes de igual a igual (P2P)
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#cuestionario">
+                        📝 Cuestionario
+                    </a>
+                </li>
             </ul>
+
+        </section>
+
+
+        <!-- 1. INTERCONEXIÓN DE REDES -->
+
+        <section id="interconexion">
+
+            <h2>1. Interconexión de redes</h2>
+
+            <p>
+                Internet es una red pública y global de ordenadores
+                interconectados mediante el protocolo de Internet
+                (<strong>Internet Protocol, IP</strong>) y que se comunican
+                mediante la conmutación de paquetes.
+            </p>
+
+            <p>
+                Internet es la unión de millones de subredes domésticas,
+                académicas, comerciales y gubernamentales. Por este motivo
+                también se conoce como <strong>la red de redes</strong>.
+            </p>
+
+            <p>
+                A pesar de la diversidad de arquitecturas de red existentes,
+                la familia de protocolos <strong>TCP/IP</strong> se utiliza
+                en la mayoría de las redes que forman Internet.
+            </p>
+
+            <div class="nota">
+
+                <h3>💡 ¿Sabías que...?</h3>
+
+                <p>
+                    TCP/IP también se utiliza en intranets de empresas,
+                    centros educativos, redes Wi-Fi, oficinas y hogares.
+                </p>
+
+            </div>
+
+            <p>
+                La denominación <strong>TCP/IP</strong> hace referencia a
+                dos de sus protocolos más importantes:
+            </p>
+
+            <ul>
+                <li><strong>IP</strong> — Internet Protocol</li>
+                <li><strong>TCP</strong> — Transmission Control Protocol</li>
+            </ul>
+
+        </section>
+
+
+        <!-- 1.1 MODELO DE CAPAS -->
+
+        <section id="capas">
+
+            <h2>1.1. Modelo de capas</h2>
+
+            <p>
+                El modelo TCP/IP organiza las funciones de comunicación
+                de una red en diferentes capas.
+            </p>
+
+
+            <h3>🔵 Capa de aplicación</h3>
+
+            <p>
+                La capa de aplicación TCP/IP se corresponde con las capas
+                de aplicación, presentación y sesión del modelo OSI.
+            </p>
+
+            <p>
+                Es la capa que utilizan los programas para comunicarse
+                a través de la red con otros programas.
+            </p>
+
+            <h4>Ejemplos de protocolos</h4>
+
+            <ul>
+                <li><strong>HTTP</strong> — HyperText Transfer Protocol</li>
+                <li><strong>FTP</strong> — File Transfer Protocol</li>
+                <li><strong>SMTP</strong> — Simple Mail Transfer Protocol</li>
+                <li><strong>SSH</strong> — Secure Shell</li>
+            </ul>
+
+
+            <h3>🟢 Capa de transporte</h3>
+
+            <p>
+                La capa de transporte TCP/IP se corresponde con la capa
+                de transporte del modelo OSI.
+            </p>
+
+            <p>
+                Sus protocolos solucionan problemas relacionados con la
+                fiabilidad, el orden y el control de los datos que llegan
+                al destino.
+            </p>
+
+
+            <h4>TCP</h4>
+
+            <div class="concepto">
+
+                <h4>TCP — Transmission Control Protocol</h4>
+
+                <p>
+                    Es un protocolo fiable y orientado a conexión.
+                    Permite que los datos enviados por una aplicación
+                    lleguen correctamente y en orden al destino.
+                </p>
+
+                <p>
+                    TCP fragmenta el flujo de datos procedente de la
+                    aplicación en unidades más pequeñas y posteriormente
+                    las transmite hacia las capas inferiores.
+                </p>
+
+            </div>
+
+
+            <h4>UDP</h4>
+
+            <div class="concepto">
+
+                <h4>UDP — User Datagram Protocol</h4>
+
+                <p>
+                    Es un protocolo no orientado a conexión y no garantiza
+                    la entrega de los datos ni su orden.
+                </p>
+
+                <p>
+                    Su principal ventaja es la rapidez, por lo que se utiliza
+                    en situaciones donde la velocidad es más importante que
+                    la exactitud de todos los datos.
+                </p>
+
+                <p>
+                    Algunos ejemplos son las transmisiones de
+                    <strong>voz y vídeo</strong>.
+                </p>
+
+            </div>
+
+
+            <h3>🟠 Capa de red o interred</h3>
+
+            <p>
+                La capa de Internet del modelo TCP/IP es equivalente
+                a la capa de red del modelo OSI.
+            </p>
+
+            <p>
+                Su misión fundamental es conseguir que los paquetes
+                puedan viajar desde el origen hasta el destino atravesando
+                diferentes redes.
+            </p>
+
+            <p>
+                Los paquetes pueden incluso seguir caminos diferentes
+                y llegar al destino en un orden diferente al de salida.
+            </p>
+
+            <p>
+                Esta capa también proporciona mecanismos de
+                <strong>direccionamiento</strong>.
+            </p>
+
+
+            <h3>🟣 Capa de acceso a la red</h3>
+
+            <p>
+                La capa de acceso a la red del modelo TCP/IP engloba
+                las capas de enlace y física del modelo OSI.
+            </p>
+
+            <p>
+                Se encarga de utilizar los protocolos necesarios para
+                conectarse a la red física y permitir el envío de
+                paquetes IP.
+            </p>
+
+
+            <h4>Capa física</h4>
+
+            <p>
+                El objetivo de la capa física es transportar una corriente
+                de bits desde una máquina hasta otra.
+            </p>
+
+            <p>
+                En esta capa se definen las señales y los medios utilizados
+                para transmitirlas.
+            </p>
+
+            <p>
+                Los medios físicos pueden presentar diferentes características
+                en cuanto a ancho de banda, retardo, coste, instalación
+                y mantenimiento.
+            </p>
+
+        </section>
+
+
+        <!-- PROTOCOLO -->
+
+        <section id="protocolo">
+
+            <h2>¿Qué es un protocolo?</h2>
+
+            <div class="concepto">
+
+                <p>
+                    Un <strong>protocolo</strong> es un conjunto de normas
+                    organizadas y acordadas entre los participantes de una
+                    comunicación.
+                </p>
+
+                <p>
+                    Su misión es regular determinados aspectos de la
+                    comunicación.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SERVICIO DE CAPA -->
+
+        <section id="servicio">
+
+            <h2>¿Qué es un servicio de capa?</h2>
+
+            <p>
+                En el modelo TCP/IP, los protocolos de las capas inferiores
+                ofrecen un servicio a los protocolos de la capa inmediatamente
+                superior mediante una interfaz que comunica ambas capas.
+            </p>
+
+            <p>
+                De esta manera, cada capa proporciona determinadas
+                funcionalidades a las capas superiores y, finalmente,
+                facilita a las aplicaciones el uso de Internet y otras redes.
+            </p>
+
+        </section>
+
+
+        <!-- ENCAPSULAMIENTO -->
+
+        <section id="encapsulamiento">
+
+            <h2>Encapsulamiento</h2>
+
+            <p>
+                Para conseguir sus objetivos, cada protocolo añade
+                información de control a la unidad de datos que recibe
+                de la capa superior.
+            </p>
+
+            <div class="nota">
+
+                <h3>📦 Idea clave</h3>
+
+                <p>
+                    Cuando los datos bajan por las diferentes capas,
+                    cada capa añade su propia información de control.
+                    Este proceso recibe el nombre de
+                    <strong>encapsulamiento</strong>.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- UNIDADES DE INFORMACIÓN -->
+
+        <section id="unidades">
+
+            <h2>Unidades de información</h2>
+
+            <p>
+                La unidad de información recibe un nombre diferente
+                dependiendo de la capa en la que se encuentre.
+            </p>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Capa</th>
+                        <th>Unidad de información</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Transporte</td>
+                        <td><strong>Segmento</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>Red</td>
+                        <td><strong>Paquete</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>Enlace</td>
+                        <td><strong>Trama</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>Física</td>
+                        <td><strong>Bit</strong></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- ESTRUCTURA DE RED -->
+
+        <section id="estructura">
+
+            <h2>1.1.3. Estructura de red</h2>
+
+            <p>
+                Cuando un dispositivo necesita acceder a información
+                que no está almacenada localmente, puede utilizar una red
+                para acceder a ella de forma remota.
+            </p>
+
+            <p>
+                Existen principalmente dos modelos de organización:
+            </p>
+
+            <ul>
+
+                <li>
+                    <strong>Cliente/servidor</strong>
+                </li>
+
+                <li>
+                    <strong>Redes de igual a igual (P2P)</strong>
+                </li>
+
+            </ul>
+
+        </section>
+
+
+        <!-- CLIENTE SERVIDOR -->
+
+        <section id="cliente-servidor">
+
+            <h2>Modelo cliente/servidor</h2>
+
+            <p>
+                Una red cliente-servidor es aquella en la que los clientes
+                están conectados a uno o varios servidores que centralizan
+                diferentes recursos y servicios.
+            </p>
+
+            <div class="concepto">
+
+                <h3>👤 Cliente</h3>
+
+                <p>
+                    Dispositivo o proceso que solicita información
+                    o un servicio.
+                </p>
+
+            </div>
+
+            <div class="concepto">
+
+                <h3>🖥️ Servidor</h3>
+
+                <p>
+                    Dispositivo o proceso que responde a las solicitudes
+                    realizadas por los clientes.
+                </p>
+
+            </div>
+
+
+            <h3>Ejemplo: servidor de correo</h3>
+
+            <p>
+                En un entorno corporativo, los empleados pueden utilizar
+                un servidor de correo electrónico para enviar, recibir
+                y almacenar mensajes.
+            </p>
+
+            <p>
+                El cliente de correo del ordenador realiza una solicitud
+                al servidor y este responde enviando los datos solicitados.
+            </p>
+
+
+            <h3>Subida y bajada de datos</h3>
+
+            <ul>
+
+                <li>
+                    <strong>Subida:</strong>
+                    transferencia de datos desde el cliente hacia el servidor.
+                </li>
+
+                <li>
+                    <strong>Bajada:</strong>
+                    transferencia de datos desde el servidor hacia el cliente.
+                </li>
+
+            </ul>
+
+        </section>
+
+
+        <!-- P2P -->
+
+        <section id="p2p">
+
+            <h2>Redes de igual a igual (P2P)</h2>
+
+            <p>
+                En una red entre iguales, dos o más ordenadores están
+                conectados y pueden compartir recursos sin necesidad
+                de disponer de un servidor dedicado.
+            </p>
+
+            <p>
+                Cada dispositivo puede actuar como
+                <strong>cliente o servidor</strong> dependiendo de la
+                operación que esté realizando.
+            </p>
+
+
+            <div class="nota">
+
+                <h3>🏠 Ejemplo</h3>
+
+                <p>
+                    Una red doméstica formada por dos ordenadores que
+                    comparten una impresora y archivos puede funcionar
+                    mediante un modelo punto a punto.
+                </p>
+
+            </div>
+
+
+            <h3>Características de las redes P2P</h3>
+
+            <ul>
+
+                <li>No necesitan un servidor dedicado.</li>
+
+                <li>Los recursos están distribuidos entre los dispositivos.</li>
+
+                <li>Cada dispositivo puede actuar como cliente y servidor.</li>
+
+                <li>Son sencillas de implementar en redes pequeñas.</li>
+
+                <li>
+                    La administración de la seguridad resulta más compleja
+                    cuando aumenta el número de dispositivos.
+                </li>
+
+            </ul>
+
+
+            <h3>Cliente/servidor frente a P2P</h3>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Característica</th>
+                        <th>Cliente/Servidor</th>
+                        <th>P2P</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Servidor dedicado</td>
+                        <td>Sí</td>
+                        <td>No necesariamente</td>
+                    </tr>
+
+                    <tr>
+                        <td>Recursos</td>
+                        <td>Centralizados</td>
+                        <td>Distribuidos</td>
+                    </tr>
+
+                    <tr>
+                        <td>Administración</td>
+                        <td>Centralizada</td>
+                        <td>Descentralizada</td>
+                    </tr>
+
+                    <tr>
+                        <td>Uso habitual</td>
+                        <td>Empresas y organizaciones</td>
+                        <td>Redes pequeñas y domésticas</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <!-- CUESTIONARIO -->
+
+        <section id="cuestionario">
+
+            <h2>📝 Cuestionario</h2>
+
+            <ol>
+
+                <li>
+                    ¿Cuáles son las capas que forman el modelo OSI?
+                    Realiza un gráfico indicando las capas OSI y su relación
+                    con las capas de la familia TCP/IP.
+                </li>
+
+                <li>
+                    Indica el nombre de las PDU correspondientes a las
+                    diferentes capas y su sistema de direccionamiento.
+                </li>
+
+                <li>
+                    Pon ejemplos de protocolos de cada capa.
+                </li>
+
+                <li>
+                    ¿Qué es el encapsulamiento?
+                </li>
+
+                <li>
+                    ¿Qué dos tipos de estructura de redes hay?
+                    Explica sus diferencias.
+                </li>
+
+            </ol>
+
         </section>
 
     </main>
 
+
     <footer>
 
         <p>
-            <a href="../">← Volver a Servicios en red</a>
+            <a href="../">
+                ← Volver a Servicios en red
+            </a>
         </p>
 
         <p>
-            <a href="../../">← Volver a la página principal</a>
+            <a href="../../">
+                ← Volver a la página principal
+            </a>
         </p>
 
     </footer>
@@ -84,3 +673,4 @@
 </body>
 
 </html>
+```
