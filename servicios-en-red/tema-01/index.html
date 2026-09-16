@@ -34,25 +34,31 @@
 
                 <li>
                     <a href="#capas">
-                        1.1. Modelo de capas
+                                1.1. Modelo de capas
                     </a>
                 </li>
 
                 <li>
                     <a href="#servicio">
-                        1.2.¿Qué es un servicio de capa?
+                                1.2. ¿Qué es un servicio de capa?
                     </a>
                 </li>
 
                 <li>
                     <a href="#estructura">
-                        1.3. Estructura de red
+                                1.3. Estructura de red
                     </a>
                 </li>
 
                 <li>
                     <a href="#cuestionario">
-                        📝 Cuestionario
+                                📝 Cuestionario
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#protocolo-ip">
+                        2. El protocolo IP
                     </a>
                 </li>
             </ul>
@@ -603,11 +609,6 @@
                 </li>
 
                 <li>
-                    Indica el nombre de las PDU correspondientes a las
-                    diferentes capas y su sistema de direccionamiento.
-                </li>
-
-                <li>
                     Pon ejemplos de protocolos de cada capa.
                 </li>
 
@@ -623,6 +624,789 @@
             </ol>
 
         </section>
+
+        <!-- =========================
+     2. EL PROTOCOLO IP
+     ========================= -->
+
+<section id="protocolo-ip">
+
+    <h2>2. El protocolo IP</h2>
+
+    <h3>2.1. Interconexión de redes</h3>
+
+    <p>
+        La versión más utilizada actualmente del protocolo IP es
+        <strong>IPv4</strong>, definida en el RFC 791 de 1981.
+        Actualmente dispone de un sucesor, <strong>IPv6</strong>,
+        cuyo uso se está extendiendo progresivamente.
+    </p>
+
+    <p>
+        Todas las versiones del protocolo IP permiten el envío de
+        paquetes entre equipos sin establecer previamente una conexión.
+        Esto significa que el equipo origen envía los datos al
+        destinatario sin esperar una confirmación de que estos hayan
+        sido recibidos correctamente.
+    </p>
+
+    <div class="concepto">
+
+        <h4>📌 IP no garantiza la entrega</h4>
+
+        <p>
+            El protocolo IP proporciona un servicio
+            <strong>no orientado a conexión y no fiable</strong>.
+            No garantiza que los paquetes lleguen a su destino,
+            que lleguen en el orden correcto o que no se pierdan.
+        </p>
+
+        <p>
+            Por este motivo, cuando una aplicación necesita una
+            comunicación fiable se utiliza normalmente
+            <strong>TCP</strong> en la capa de transporte.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         2.1 CONFIGURACIÓN DE UN NODO IP
+         ========================= -->
+
+    <h3>2.2. Configuración de un nodo IP</h3>
+
+    <p>
+        Para que un equipo pueda comunicarse mediante TCP/IP es
+        necesario configurar los protocolos de red del sistema
+        operativo.
+    </p>
+
+    <p>
+        Como mínimo, el equipo deberá disponer de información
+        relacionada con su direccionamiento IP.
+    </p>
+
+    <h4>Configuración básica</h4>
+
+    <ul>
+
+        <li>
+            <strong>Dirección IP:</strong>
+            identifica la interfaz de red dentro de la red.
+        </li>
+
+        <li>
+            <strong>Máscara de subred:</strong>
+            permite determinar qué parte de la dirección corresponde
+            a la red y qué parte corresponde al equipo.
+        </li>
+
+    </ul>
+
+    <h4>Configuración adicional</h4>
+
+    <p>
+        Si el equipo necesita comunicarse con otras redes o acceder
+        a Internet, será necesario configurar además:
+    </p>
+
+    <ul>
+
+        <li>
+            <strong>Puerta de enlace predeterminada:</strong>
+            normalmente corresponde al router que permite enviar
+            tráfico hacia otras redes.
+        </li>
+
+        <li>
+            <strong>Servidores DNS:</strong>
+            permiten traducir nombres de dominio, como
+            <code>www.google.com</code>, a direcciones IP.
+        </li>
+
+    </ul>
+
+
+    <div class="nota">
+
+        <h4>💡 Parámetros principales</h4>
+
+        <p>
+            Un equipo conectado a una red TCP/IP suele necesitar,
+            como mínimo:
+        </p>
+
+        <ul>
+
+            <li>Dirección IP</li>
+            <li>Máscara de subred</li>
+            <li>Puerta de enlace</li>
+            <li>Servidores DNS</li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================
+         FUNCIONES DE IP
+         ========================= -->
+
+    <h3>2.3. Funciones del protocolo IP</h3>
+
+    <p>
+        El protocolo IP realiza principalmente las siguientes
+        funciones:
+    </p>
+
+    <ul>
+
+        <li>
+            Elegir el camino adecuado para enviar los paquetes
+            hacia su destino mediante el encaminamiento.
+        </li>
+
+        <li>
+            Proporcionar un sistema de
+            <strong>direccionamiento lógico</strong>
+            mediante las direcciones IP.
+        </li>
+
+        <li>
+            Permitir el envío de paquetes sin establecer previamente
+            una conexión.
+        </li>
+
+    </ul>
+
+
+    <div class="concepto">
+
+        <h4>Características del servicio IP</h4>
+
+        <ul>
+
+            <li>
+                <strong>No orientado a conexión:</strong>
+                no se establece una conexión antes de enviar
+                los paquetes.
+            </li>
+
+            <li>
+                <strong>No fiable:</strong>
+                IP no garantiza que los paquetes lleguen a su
+                destino.
+            </li>
+
+            <li>
+                <strong>Sin garantía de orden:</strong>
+                los paquetes pueden seguir diferentes caminos
+                y llegar en un orden diferente al de envío.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================
+         DIRECCIONAMIENTO IP
+         ========================= -->
+
+    <h3>2.4. Direccionamiento IP</h3>
+
+    <p>
+        En IPv4, una dirección IP tiene una longitud de
+        <strong>32 bits</strong>.
+    </p>
+
+    <p>
+        La dirección se divide en dos partes:
+    </p>
+
+    <ul>
+
+        <li>
+            <strong>Parte de red:</strong>
+            identifica la red a la que pertenece el dispositivo.
+        </li>
+
+        <li>
+            <strong>Parte de host:</strong>
+            identifica el dispositivo dentro de esa red.
+        </li>
+
+    </ul>
+
+    <p>
+        Para determinar qué bits corresponden a la red y cuáles
+        corresponden al host se utiliza la
+        <strong>máscara de subred</strong>.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>🔎 Ejemplo</h4>
+
+        <p>
+            Para la dirección:
+        </p>
+
+        <p>
+            <code>192.168.1.25</code>
+        </p>
+
+        <p>
+            utilizando la máscara:
+        </p>
+
+        <p>
+            <code>255.255.255.0</code>
+        </p>
+
+        <p>
+            la dirección de red es:
+        </p>
+
+        <p>
+            <strong><code>192.168.1.0</code></strong>
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         CLASES IPv4
+         ========================= -->
+
+    <h3>2.5. Clases de dirección IPv4</h3>
+
+    <p>
+        Históricamente, las direcciones IPv4 se dividieron en
+        diferentes clases. Las principales eran las clases A, B y C.
+    </p>
+
+    <ul>
+
+        <li>
+            <strong>Clase A:</strong>
+            el primer octeto identifica la red.
+        </li>
+
+        <li>
+            <strong>Clase B:</strong>
+            los dos primeros octetos identifican la red.
+        </li>
+
+        <li>
+            <strong>Clase C:</strong>
+            los tres primeros octetos identifican la red.
+        </li>
+
+        <li>
+            <strong>Clase D:</strong>
+            utilizada para multidifusión (multicast).
+        </li>
+
+        <li>
+            <strong>Clase E:</strong>
+            rango reservado para usos especiales y experimentales.
+        </li>
+
+    </ul>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Clase</th>
+                <th>Rango</th>
+                <th>Máscara estándar</th>
+                <th>Uso</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td><strong>A</strong></td>
+                <td>1.0.0.0 – 126.255.255.255</td>
+                <td>255.0.0.0</td>
+                <td>Redes de gran tamaño</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>B</strong></td>
+                <td>128.0.0.0 – 191.255.255.255</td>
+                <td>255.255.0.0</td>
+                <td>Redes de tamaño medio</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>C</strong></td>
+                <td>192.0.0.0 – 223.255.255.255</td>
+                <td>255.255.255.0</td>
+                <td>Redes pequeñas</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>D</strong></td>
+                <td>224.0.0.0 – 239.255.255.255</td>
+                <td>—</td>
+                <td>Multicast</td>
+
+            </tr>
+
+            <tr>
+
+                <td><strong>E</strong></td>
+                <td>240.0.0.0 – 255.255.255.255</td>
+                <td>—</td>
+                <td>Reservada</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="nota">
+
+        <h4>⚠️ Importante</h4>
+
+        <p>
+            El direccionamiento basado en clases es un sistema
+            histórico. Actualmente se utiliza principalmente
+            <strong>CIDR</strong>, que permite utilizar prefijos
+            de red de longitud variable.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         CIDR
+         ========================= -->
+
+    <h3>2.6. Direccionamiento sin clase (CIDR)</h3>
+
+    <p>
+        Con el crecimiento de Internet quedó patente que el
+        direccionamiento basado en clases no aprovechaba
+        eficientemente el espacio de direcciones IPv4.
+    </p>
+
+    <p>
+        En 1993 se introdujo
+        <strong>CIDR (Classless Inter-Domain Routing)</strong>,
+        o encaminamiento entre dominios sin clases.
+    </p>
+
+    <p>
+        CIDR permite indicar el número de bits utilizados para
+        identificar la red mediante una barra seguida del número
+        de bits.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>📐 Ejemplo de CIDR</h4>
+
+        <p>
+            La red:
+        </p>
+
+        <p>
+            <strong><code>192.168.0.0/16</code></strong>
+        </p>
+
+        <p>
+            indica que los primeros
+            <strong>16 bits</strong>
+            corresponden a la parte de red.
+        </p>
+
+        <p>
+            La máscara equivalente es:
+        </p>
+
+        <p>
+            <code>255.255.0.0</code>
+        </p>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Notación CIDR</th>
+                <th>Máscara</th>
+                <th>Bits de red</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><code>/8</code></td>
+                <td>255.0.0.0</td>
+                <td>8</td>
+            </tr>
+
+            <tr>
+                <td><code>/16</code></td>
+                <td>255.255.0.0</td>
+                <td>16</td>
+            </tr>
+
+            <tr>
+                <td><code>/24</code></td>
+                <td>255.255.255.0</td>
+                <td>24</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         DIRECCIONES ESPECIALES
+         ========================= -->
+
+    <h3>2.7. Direcciones reservadas y especiales</h3>
+
+    <p>
+        Existen determinados rangos de direcciones IPv4 que tienen
+        funciones especiales.
+    </p>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Rango</th>
+                <th>Nombre</th>
+                <th>Función</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td><code>0.0.0.0/0</code></td>
+
+                <td>
+                    Ruta por defecto / todas las direcciones
+                </td>
+
+                <td>
+                    Representa cualquier destino IPv4 en determinados
+                    contextos de configuración.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><code>127.0.0.0/8</code></td>
+
+                <td>
+                    Loopback
+                </td>
+
+                <td>
+                    Comunicación interna con el propio equipo.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><code>169.254.0.0/16</code></td>
+
+                <td>
+                    Link-local
+                </td>
+
+                <td>
+                    Direcciones asignadas automáticamente cuando
+                    no se obtiene una configuración DHCP válida.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><code>10.0.0.0/8</code></td>
+
+                <td>
+                    Privada
+                </td>
+
+                <td>
+                    Utilizada en redes privadas.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><code>172.16.0.0/12</code></td>
+
+                <td>
+                    Privada
+                </td>
+
+                <td>
+                    Utilizada en redes privadas.
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td><code>192.168.0.0/16</code></td>
+
+                <td>
+                    Privada
+                </td>
+
+                <td>
+                    Muy utilizada en redes domésticas y pequeñas
+                    redes locales.
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         MÉTODOS DE TRANSMISIÓN
+         ========================= -->
+
+    <h3>2.8. Métodos de transmisión</h3>
+
+    <p>
+        Dependiendo del número de destinatarios, podemos distinguir
+        tres métodos principales de transmisión.
+    </p>
+
+
+    <div class="concepto">
+
+        <h4>📡 Unidifusión — Unicast</h4>
+
+        <p>
+            La comunicación se establece entre un emisor y
+            un único destinatario.
+        </p>
+
+        <p>
+            <strong>1 → 1</strong>
+        </p>
+
+    </div>
+
+
+    <div class="concepto">
+
+        <h4>📡 Multidifusión — Multicast</h4>
+
+        <p>
+            El emisor envía información a un grupo determinado
+            de dispositivos.
+        </p>
+
+        <p>
+            <strong>1 → grupo</strong>
+        </p>
+
+    </div>
+
+
+    <div class="concepto">
+
+        <h4>📡 Difusión — Broadcast</h4>
+
+        <p>
+            El mensaje se envía a todos los dispositivos de una
+            determinada red IPv4.
+        </p>
+
+        <p>
+            <strong>1 → todos</strong>
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         CONFIGURACIÓN LINUX
+         ========================= -->
+
+    <h2>3. Configurar una tarjeta de red usando el terminal</h2>
+
+    <p>
+        En sistemas Linux podemos utilizar diferentes herramientas
+        para consultar y configurar las interfaces de red.
+    </p>
+
+
+    <h3>3.1. Identificar la interfaz de red</h3>
+
+    <p>
+        Los sistemas Linux actuales utilizan normalmente nombres
+        predecibles para las interfaces de red, como
+        <code>enp2s0</code> o <code>wlp3s0</code>.
+    </p>
+
+    <p>
+        Para mostrar las interfaces disponibles podemos utilizar:
+    </p>
+
+    <pre><code>ifconfig -a</code></pre>
+
+    <div class="nota">
+
+        <p>
+            En sistemas Linux modernos también es habitual utilizar
+            el comando <code>ip</code>, por ejemplo:
+        </p>
+
+        <pre><code>ip addr</code></pre>
+
+    </div>
+
+
+    <h3>3.2. Configurar una interfaz mediante DHCP</h3>
+
+    <p>
+        En sistemas que utilizan el archivo tradicional
+        <code>/etc/network/interfaces</code>, una configuración
+        DHCP puede ser similar a la siguiente:
+    </p>
+
+    <pre><code>auto enp2s0
+iface enp2s0 inet dhcp</code></pre>
+
+
+    <h3>3.3. Activar la interfaz</h3>
+
+    <p>
+        Una vez configurada, la interfaz puede activarse mediante:
+    </p>
+
+    <pre><code>sudo ifup enp2s0</code></pre>
+
+
+    <h3>3.4. Desactivar la interfaz</h3>
+
+    <p>
+        Para desactivar la interfaz:
+    </p>
+
+    <pre><code>sudo ifdown enp2s0</code></pre>
+
+
+    <div class="nota">
+
+        <h4>⚠️ Sistemas Linux actuales</h4>
+
+        <p>
+            La configuración mediante
+            <code>/etc/network/interfaces</code> y
+            <code>ifup/ifdown</code> depende de la distribución
+            y de cómo esté configurada la gestión de red.
+            En muchas distribuciones actuales se utilizan
+            herramientas como NetworkManager o systemd-networkd.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         CUESTIONARIO
+         ========================= -->
+
+    <h2>Cuestionario</h2>
+
+    <div class="concepto">
+
+        <ol>
+
+            <li>
+                ¿Cuáles son los parámetros mínimos que se deben
+                configurar en un nodo para que pueda conectarse
+                a una red basada en TCP/IP?
+            </li>
+
+            <li>
+                ¿Cuáles son las principales funciones del
+                protocolo IP?
+            </li>
+
+            <li>
+                ¿Por qué se implementó el direccionamiento
+                sin clases (CIDR)? Razona la respuesta.
+            </li>
+
+            <li>
+                Explica qué son las direcciones de
+                <strong>loopback</strong> y
+                <strong>link-local</strong>.
+            </li>
+
+            <li>
+                ¿Qué diferencia existe entre
+                <strong>Unicast</strong>,
+                <strong>Multicast</strong> y
+                <strong>Broadcast</strong>?
+            </li>
+
+            <li>
+                ¿Qué información proporciona una máscara de subred?
+            </li>
+
+            <li>
+                ¿Qué significa la notación
+                <strong>192.168.1.0/24</strong>?
+            </li>
+
+        </ol>
+
+    </div>
+
+</section>
 
     </main>
 
