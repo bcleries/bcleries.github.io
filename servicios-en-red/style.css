@@ -57,3 +57,23 @@ main section {
     width: 100%;
     box-sizing: border-box;
 }
+
+/* =========================
+   IMAGEN MODELO DE CAPAS
+   ========================= */
+
+.imagen-modelo-capas {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.imagen-modelo-capas img {
+    display: block;
+    max-width: 850px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
