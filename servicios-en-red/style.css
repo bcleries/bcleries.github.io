@@ -1,34 +1,110 @@
-body {
-    font-family: Arial, sans-serif;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px 20px;
+/* =========================
+   TEMA 1
+   ========================= */
+
+main section {
+    margin-bottom: 45px;
 }
 
-header {
-    text-align: center;
-    margin-bottom: 40px;
+main h2 {
+    margin-top: 35px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
 }
 
-h1 {
-    font-size: 40px;
-}
-
-section {
+main h3 {
     margin-top: 30px;
 }
 
-section div {
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 10px;
-    background: #f2f2f2;
+main h4 {
+    margin-top: 20px;
 }
+
+
+/* Enlaces del índice */
+
+main section:first-child ul {
+    list-style: none;
+    padding: 0;
+}
+
+main section:first-child li {
+    margin: 10px 0;
+}
+
+main section:first-child a {
+    display: block;
+    padding: 12px 15px;
+    background: #f2f2f2;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+main section:first-child a:hover {
+    transform: translateX(5px);
+}
+
+
+/* Cajas de conceptos */
+
+.concepto {
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 5px solid #555;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+
+/* Cajas de notas */
+
+.nota {
+    padding: 20px;
+    margin: 25px 0;
+    background: #fff8dc;
+    border-radius: 8px;
+}
+
+
+/* Tablas */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background: #f5f5f5;
+}
+
+
+/* Listas */
+
+main li {
+    margin-bottom: 8px;
+}
+
+
+/* Pie de página */
 
 footer {
     margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
 }
 
-a {
-    text-decoration: none;
+footer p {
+    margin: 10px 0;
 }
