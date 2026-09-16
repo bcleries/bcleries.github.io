@@ -150,6 +150,7 @@
                 de una red en diferentes capas.
             </p>
 
+            
 
             <h3>🔵 Capa de aplicación</h3>
 
@@ -186,6 +187,129 @@
                 al destino.
             </p>
 
+        
+            <!-- COMPARACIÓN OSI / TCP-IP -->
+
+            <div class="modelo-red">
+
+                <div class="modelo-columna">
+
+                    <h3>Modelo OSI</h3>
+
+                    <div class="capa osi">
+                        <strong>7. Aplicación</strong>
+                        <span>HTTP · FTP · SMTP · SSH</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>6. Presentación</strong>
+                        <span>Formato y representación de datos</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>5. Sesión</strong>
+                        <span>Control de las sesiones</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>4. Transporte</strong>
+                        <span>TCP · UDP</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>3. Red</strong>
+                        <span>IP · direccionamiento</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>2. Enlace</strong>
+                        <span>Tramas · MAC</span>
+                    </div>
+
+                    <div class="capa osi">
+                        <strong>1. Física</strong>
+                        <span>Bits · señales · medios</span>
+                    </div>
+
+                </div>
+
+
+                <div class="flechas">
+
+                    <div>↔</div>
+                    <div>↔</div>
+                    <div>↔</div>
+                    <div>↔</div>
+
+                </div>
+
+
+                <div class="modelo-columna">
+
+                    <h3>Modelo TCP/IP</h3>
+
+                    <div class="capa tcpip aplicacion">
+                        <strong>Aplicación</strong>
+                        <span>HTTP · FTP · SMTP · SSH</span>
+                    </div>
+
+                    <div class="capa tcpip transporte">
+                        <strong>Transporte</strong>
+                        <span>TCP · UDP</span>
+                    </div>
+
+                    <div class="capa tcpip internet">
+                        <strong>Internet</strong>
+                        <span>IP</span>
+                    </div>
+
+                    <div class="capa tcpip acceso">
+                        <strong>Acceso a la red</strong>
+                        <span>Ethernet · Wi-Fi</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="leyenda-modelo">
+
+                <h3>🔎 ¿Cómo se relacionan?</h3>
+
+                <p>
+                    El modelo TCP/IP agrupa algunas de las funciones
+                    que en el modelo OSI aparecen separadas.
+                </p>
+
+                <ul>
+
+                    <li>
+                        <strong>OSI 7 + 6 + 5</strong>
+                        → <strong>TCP/IP Aplicación</strong>
+                    </li>
+
+                    <li>
+                        <strong>OSI 4</strong>
+                        → <strong>TCP/IP Transporte</strong>
+                    </li>
+
+                    <li>
+                        <strong>OSI 3</strong>
+                        → <strong>TCP/IP Internet</strong>
+                    </li>
+
+                    <li>
+                        <strong>OSI 2 + 1</strong>
+                        → <strong>TCP/IP Acceso a la red</strong>
+                    </li>
+
+                </ul>
+
+            </div>
+            ```
+
+            
 
             <h4>TCP</h4>
 

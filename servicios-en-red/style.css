@@ -108,3 +108,115 @@ footer {
 footer p {
     margin: 10px 0;
 }
+
+/* =========================
+   MODELO OSI / TCP-IP
+   ========================= */
+
+.modelo-red {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 20px;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.modelo-columna {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modelo-columna h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+/* Capas */
+
+.capa {
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.capa strong {
+    display: block;
+    font-size: 16px;
+}
+
+.capa span {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+
+/* Efecto al pasar el ratón */
+
+.capa:hover {
+    transform: scale(1.03);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Capas OSI */
+
+.osi {
+    background: #eeeeee;
+}
+
+
+/* Capas TCP/IP */
+
+.tcpip {
+    background: #eeeeee;
+}
+
+
+/* Flechas centrales */
+
+.flechas {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    padding-top: 50px;
+}
+
+.flechas div {
+    text-align: center;
+    font-size: 25px;
+}
+
+
+/* Leyenda */
+
+.leyenda-modelo {
+    margin: 30px 0;
+    padding: 25px;
+    border-radius: 10px;
+    background: #f5f5f5;
+}
+
+.leyenda-modelo h3 {
+    margin-top: 0;
+}
+
+
+/* Adaptación para móvil */
+
+@media (max-width: 700px) {
+
+    .modelo-red {
+        grid-template-columns: 1fr;
+    }
+
+    .flechas {
+        display: none;
+    }
+
+}
