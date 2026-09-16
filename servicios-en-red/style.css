@@ -32,3 +32,28 @@ footer {
 a {
     text-decoration: none;
 }
+
+/* =========================
+   AJUSTE DEL CONTENIDO
+   ========================= */
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+main section {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modelo-red {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.leyenda-modelo {
+    width: 100%;
+    box-sizing: border-box;
+}
