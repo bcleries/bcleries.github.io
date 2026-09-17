@@ -190,3 +190,96 @@ main section {
     }
 
 }
+
+/* =========================
+   5. COMANDOS
+   ========================= */
+
+#comandos {
+    margin-top: 50px;
+}
+
+#comandos h3 {
+    margin-top: 30px;
+}
+
+#comandos h4 {
+    margin-top: 25px;
+}
+
+
+/* Comandos */
+
+#comandos pre {
+    background: #1e1e1e;
+    color: #f5f5f5;
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+#comandos pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+
+/* Actividades */
+
+#comandos .actividad {
+    margin: 40px 0;
+    padding: 25px;
+    background: #f5f7ed;
+    border: 1px solid #d5dcb9;
+    border-radius: 12px;
+}
+
+#comandos .actividad h3 {
+    margin-top: 0;
+    color: #31586a;
+}
+
+#comandos .actividad h4 {
+    color: #31586a;
+}
+
+#comandos .actividad ul {
+    margin: 20px 0;
+}
+
+#comandos .actividad li {
+    margin-bottom: 10px;
+}
+
+
+/* Conceptos */
+
+#comandos .concepto {
+    margin: 35px 0;
+}
+
+
+/* Código dentro de párrafos */
+
+#comandos code {
+    font-family: Consolas, "Courier New", monospace;
+}
+
+
+/* Adaptación para móvil */
+
+@media (max-width: 700px) {
+
+    #comandos .actividad {
+        padding: 18px;
+    }
+
+    #comandos pre {
+        font-size: 13px;
+        padding: 15px;
+    }
+
+}
