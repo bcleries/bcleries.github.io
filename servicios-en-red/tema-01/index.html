@@ -3109,38 +3109,6 @@ Address:    172.217.17.36</code></pre>
     <pre><code>up route add -net 192.168.40.0/24 gw 192.168.30.1 dev enp2s0</code></pre>
 
 
-    <!-- ACTIVIDAD ENCAMINAMIENTO -->
-
-    <div class="actividad">
-
-        <h3>📝 Actividad: Encaminamiento entre redes</h3>
-
-        <p>
-            Configura las tablas de encaminamiento del servidor Ubuntu
-            de forma que los equipos de la red interna puedan comunicarse
-            con los equipos de la red interna de un compañero.
-        </p>
-
-        <h4>Entregable</h4>
-
-        <ol>
-            <li>
-                Captura de un <code>ping</code> entre dos equipos de
-                las redes internas.
-            </li>
-
-            <li>
-                Captura de la tabla de rutas de tu Ubuntu Server.
-            </li>
-
-            <li>
-                Captura de un <code>traceroute</code> entre los dos
-                equipos de las redes internas.
-            </li>
-        </ol>
-
-    </div>
-
 
     <!-- CASO PRÁCTICO -->
 
@@ -3225,33 +3193,9 @@ Address:    172.217.17.36</code></pre>
         que deben permanecer accesibles desde la red exterior.
     </p>
 
-    <div class="diagrama-dmz">
-
-        <div class="zona-red">
-            <strong>Red interna</strong>
-            <span>Red corporativa</span>
-        </div>
-
-        <div class="firewall-icon">
-            🧱
-            <small>Firewall</small>
-        </div>
-
-        <div class="zona-red">
-            <strong>DMZ</strong>
-            <span>Servidores públicos</span>
-        </div>
-
-        <div class="firewall-icon">
-            🧱
-            <small>Firewall</small>
-        </div>
-
-        <div class="zona-red">
-            <strong>Internet</strong>
-            <span>Red pública</span>
-        </div>
-
+    <div class="imagen-tema">
+     <img src="xarxa-desmilitaritzada.png"
+         alt="Ejemplo de zona desmilitarizada DMZ">
     </div>
 
 
