@@ -93,6 +93,24 @@
                 </li>
 
                 <li>
+                    <a href="#comandos">
+                         5. Comandos
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#actividad2">
+                                📝 Actividad 2
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#actividad3">
+                                📝 Actividad 3
+                    </a>
+                </li>
+
+                <li>
                     <a href="#bibliografia">
                         Bibliografía
                     </a>
@@ -2071,9 +2089,7 @@ iface enp2s0 inet dhcp</code></pre>
 </section>
     <!-- ACTIVIDAD -->
 
-    <section id="actividad1">
-    
-        <h2>📝 Cuestionario 3</h2>    
+    <section id="actividad1">  
 
     <div class="actividad">
 
@@ -2230,6 +2246,259 @@ iface enp2s0 inet dhcp</code></pre>
             </li>
 
         </ol>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     5. COMANDOS
+     ========================= -->
+
+<section id="comandos">
+
+    <h2>5. Comandos</h2>
+
+    <p>
+        Las siguientes utilidades son empleadas en la mayoría de sistemas
+        operativos y permiten diagnosticar problemas, controlar los servicios
+        y analizar la configuración de red.
+    </p>
+
+
+    <!-- PING -->
+
+    <h3>ping</h3>
+
+    <p>
+        <strong>Ping</strong> (<em>Packet Internet Groper</em>) es una utilidad
+        que sirve para enviar mensajes a una dirección concreta de la red con
+        la finalidad de realizar una prueba utilizando el protocolo ICMP.
+        El nodo destinatario está obligado a enviar una respuesta al recibir
+        un paquete para confirmar que los dos nodos pueden comunicarse
+        correctamente.
+    </p>
+
+
+    <!-- IFCONFIG -->
+
+    <h3>ifconfig</h3>
+
+    <p>
+        Permite obtener información de la configuración IP del nodo, así como
+        modificarla de forma no permanente. El comando <code>ifconfig</code>
+        permite ver la configuración IP de las conexiones sin cables.
+    </p>
+
+
+    <!-- NETSTAT -->
+
+    <h3>netstat</h3>
+
+    <p>
+        <code>netstat</code> proporciona información sobre las conexiones
+        de red.
+    </p>
+
+
+    <!-- IP ROUTE -->
+
+    <h3>ip route</h3>
+
+    <p>
+        <code>ip route</code> muestra la tabla de encaminamiento del nodo
+        en el que se ejecuta.
+    </p>
+
+
+    <!-- TRACEROUTE -->
+
+    <h3>traceroute</h3>
+
+    <p>
+        <code>traceroute</code> nos muestra los encaminadores (routers) por
+        los que pasa un paquete hasta llegar a su destino.
+    </p>
+
+
+    <!-- NSLOOKUP -->
+
+    <h3>nslookup</h3>
+
+    <p>
+        <code>nslookup</code> permite realizar consultas de nombres de dominio
+        y comprobar qué servidor DNS nos ofrece la respuesta.
+    </p>
+
+
+    <!-- IFUP / IFDOWN -->
+
+    <h3>ifup / ifdown</h3>
+
+    <p>
+        Los comandos <code>ifup</code> e <code>ifdown</code> permiten activar
+        o desactivar la interfaz de red indicada.
+    </p>
+
+
+    <!-- AYUDA -->
+
+    <div class="concepto">
+
+        <h3>💡 Obtener información sobre los comandos</h3>
+
+        <p>
+            Para obtener más información sobre cada utilidad puedes utilizar
+            el comando <code>man</code>, seguido del nombre de la utilidad
+            sobre la que deseas consultar información.
+        </p>
+
+        <p>Por ejemplo:</p>
+
+        <pre><code>man nslookup</code></pre>
+
+    </div>
+
+</section>
+
+
+    <!-- ACTIVIDAD -->
+
+    <section id="actividad2">       
+
+    <div class="actividad2">
+
+        <h3>📝 Actividad2: Comandos</h3>
+
+        <p>
+            Realiza, utilizando los comandos anteriores, las tareas necesarias
+            para descubrir cuál es la configuración de la red, mostrando
+            mediante capturas la justificación de la respuesta:
+        </p>
+
+        <ul>
+            <li>Dirección IP</li>
+            <li>Máscara de red</li>
+            <li>Puerta de enlace</li>
+            <li>Servidores DNS</li>
+        </ul>
+
+        <p>
+            Para terminar, añade una captura de pantalla de la configuración
+            de red para comprobar que los datos son correctos.
+            <strong>¿Lo son?</strong>
+        </p>
+
+    </div>
+
+    </section>
+    
+
+
+    <!-- =========================
+         GESTIÓN DE SERVICIOS
+         ========================= -->
+
+    <section>
+    <h3>5.1. Gestión de servicios</h3>
+
+    <p>
+        Para la gestión de los servicios se utiliza la utilidad
+        <code>service</code> de la siguiente forma:
+    </p>
+
+    <pre><code>service nombre-del-servicio [stop|start|force-load|restart]</code></pre>
+
+
+    <!-- =========================
+         REGISTRO DEL SISTEMA
+         ========================= -->
+
+    <h3>5.2. Registro del sistema (logs)</h3>
+
+    <p>
+        Todos los sistemas operativos incluyen un sistema para registrar
+        los eventos que ocurren en el sistema operativo. En el caso de Linux,
+        nuestros registros son archivos de texto que se encuentran en la
+        carpeta <code>/var/log</code>.
+    </p>
+
+    <p>
+        En la configuración y monitorización de los servicios de red tienen
+        un papel muy importante, porque nos pueden ayudar a diagnosticar
+        los problemas que surgen.
+    </p>
+
+    <p>
+        Los servicios pueden tener su propio archivo de registro o utilizar
+        el registro del sistema. El registro del sistema se guarda en el
+        archivo <code>/var/log/syslog</code> y, al tratarse de un archivo de
+        texto, lo podemos consultar simplemente utilizando el comando
+        <code>cat</code>.
+    </p>
+
+    <pre><code>cat /var/log/syslog</code></pre>
+
+
+    <p>
+        Otra utilidad interesante es el comando <code>tail</code>, que permite
+        visualizar las últimas líneas de los archivos de texto.
+        El argumento <code>-f</code> muestra las últimas líneas en tiempo real,
+        es decir, a medida que se van modificando los archivos.
+    </p>
+
+    <p>
+        También podemos indicar el número de líneas que queremos visualizar.
+        En el siguiente ejemplo mostramos en tiempo real las últimas
+        20 líneas del archivo de registro del sistema.
+    </p>
+
+    <pre><code>tail -fn 20 /var/log/syslog</code></pre>
+
+</section>
+
+
+    <!-- =========================
+         ACTIVIDAD RESOLUCIÓN
+         ========================= -->
+
+    <section id="actividad3">       
+
+
+    <div class="actividad">
+
+        <h3>📝 Actividad 3: Resolución</h3>
+
+        <p>
+            Imagina que vas a configurar un nodo IP pero desconoces la
+            configuración IP de la red. Solo dispones de la siguiente
+            información:
+        </p>
+
+        <h4>Tabla de encaminamiento</h4>
+
+        <pre><code>ip route
+
+default via 192.168.1.1 dev eth1 proto static
+192.168.1.0/24 dev eth1 proto kernel scope link src 192.168.1.132 metric 1</code></pre>
+
+
+        <h4>Consulta DNS</h4>
+
+        <pre><code>nslookup www.google.com
+
+Server:     201.20.1.1
+Address:    201.20.1.1#53
+
+Non-authoritative answer:
+Name:       www.google.com
+Address:    172.217.17.36</code></pre>
+
+
+        <p>
+            <strong>Plantea una posible configuración para el nodo IP.
+            ¿Sería suficiente? Justifica la respuesta.</strong>
+        </p>
 
     </div>
 
