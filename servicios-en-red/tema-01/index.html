@@ -111,6 +111,12 @@
                 </li>
 
                 <li>
+                    <a href="#elementos-interconexion">
+                         6. Elementos de interconexión
+                    </a>
+                </li>
+
+                <li>
                     <a href="#bibliografia">
                         Bibliografía
                     </a>
@@ -2499,6 +2505,361 @@ Address:    172.217.17.36</code></pre>
             <strong>Plantea una posible configuración para el nodo IP.
             ¿Sería suficiente? Justifica la respuesta.</strong>
         </p>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     6. ELEMENTOS DE INTERCONEXIÓN
+     ========================= -->
+
+<section id="elementos-interconexion">
+
+    <h2>6. Elementos de interconexión</h2>
+
+    <p>
+        Los dispositivos de interconexión permiten conectar los diferentes
+        dispositivos de una red con diversos objetivos.
+    </p>
+
+
+    <!-- REPETIDOR -->
+
+    <h3>Repetidor</h3>
+
+    <p>
+        Un <strong>repetidor</strong> (en inglés <em>repeater</em>) es un
+        dispositivo electrónico que recibe una señal débil de bajo nivel y
+        la retransmite a un nivel más alto y/o con mayor potencia, de manera
+        que la señal pueda cubrir distancias más largas sin degradación.
+    </p>
+
+
+    <!-- CONCENTRADOR -->
+
+    <h3>Concentrador</h3>
+
+    <p>
+        Los <strong>concentradores</strong> (en inglés <em>hub</em>) permiten
+        interconectar los diferentes nodos existentes en una red de área local.
+        Funcionan de una forma muy sencilla: reciben la información por todos
+        los puertos y la reenvían por todos los puertos hacia los que llega.
+    </p>
+
+    <p>
+        No obstante, el principal inconveniente de los concentradores es que
+        el uso de la red no es óptimo, ya que todos los dispositivos reciben
+        las tramas aunque no sean sus destinatarios.
+    </p>
+
+
+    <!-- PUENTE -->
+
+    <h3>Puente</h3>
+
+    <p>
+        Un <strong>puente de red</strong> (o <em>bridge</em>) es un dispositivo
+        de interconexión de redes de ordenadores que opera en la
+        <strong>capa 2 (nivel de enlace de datos)</strong> del modelo OSI.
+    </p>
+
+    <p>
+        Interconecta dos segmentos de red, o divide una red en segmentos,
+        y permite el traslado de datos de una red a otra utilizando como
+        referencia la <strong>dirección física de destino</strong> de cada
+        paquete.
+    </p>
+
+    <p>
+        Un <em>bridge</em> conecta dos segmentos de red con una sola red
+        física y utiliza el mismo protocolo de nivel de red.
+    </p>
+
+
+    <!-- CONMUTADOR -->
+
+    <h3>Conmutador</h3>
+
+    <p>
+        Un <strong>conmutador</strong> (en inglés <em>switch</em>) es un
+        dispositivo de red que permite agrupar un conjunto de ordenadores
+        y hacer que se comuniquen a través del mismo medio físico.
+    </p>
+
+    <p>
+        A diferencia de los concentradores, por cada paquete que recibe,
+        el conmutador intenta enviarlo únicamente a su destinatario.
+    </p>
+
+    <p>
+        El conmutador aprende qué dirección <strong>MAC</strong> corresponde
+        a cada dispositivo conectado a sus puertos. Para ello, internamente
+        guarda una tabla de correspondencias que va actualizando a medida
+        que recibe paquetes de los diferentes dispositivos.
+    </p>
+
+    <p>
+        Cuando no conoce una dirección de destino, utiliza una dirección de
+        <strong>difusión (broadcast)</strong> para preguntar a todos los
+        dispositivos conectados.
+    </p>
+
+
+    <div class="concepto">
+
+        <h3>💡 Switch frente a Hub</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Característica</th>
+                    <th>Hub</th>
+                    <th>Switch</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Funcionamiento</td>
+                    <td>Reenvía a todos los puertos</td>
+                    <td>Reenvía al puerto correspondiente</td>
+                </tr>
+
+                <tr>
+                    <td>Direcciones MAC</td>
+                    <td>No mantiene una tabla MAC</td>
+                    <td>Mantiene una tabla MAC</td>
+                </tr>
+
+                <tr>
+                    <td>Eficiencia</td>
+                    <td>Menor</td>
+                    <td>Mayor</td>
+                </tr>
+
+                <tr>
+                    <td>Capa OSI</td>
+                    <td>Capa 1</td>
+                    <td>Capa 2</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <!-- ENCAMINADOR -->
+
+    <h3>Encaminador</h3>
+
+    <p>
+        Un <strong>encaminador</strong> (en inglés <em>router</em>) es un
+        dispositivo de red que reenvía paquetes de datos entre diferentes
+        redes de ordenadores.
+    </p>
+
+    <p>
+        El encaminador pertenece al <strong>nivel 3 del modelo OSI</strong>.
+        Como el encaminador está conectado a dos o más redes diferentes,
+        cuando un paquete de datos llega por una de sus interfaces, el
+        <em>router</em> analiza la información de direccionamiento de red
+        y determina su siguiente destino.
+    </p>
+
+    <p>
+        Después, utilizando una política de encaminamiento, dirige los
+        paquetes en función de diferentes parámetros, como el origen,
+        el destino, la congestión o el número de saltos.
+    </p>
+
+    <p>
+        El encaminamiento puede realizarse mediante rutas estáticas
+        (introducidas manualmente) o mediante protocolos de encaminamiento
+        dinámico, como <strong>RIP</strong> o <strong>BGP</strong>.
+    </p>
+
+    <p>
+        De esta manera, los encaminadores permiten dirigir el tráfico
+        de datos entre diferentes redes y, en particular, hacia Internet.
+    </p>
+
+
+    <!-- DIAGRAMA ROUTER -->
+
+    <div class="diagrama-router">
+
+        <div class="red-router">
+            <strong>Red A</strong>
+            <span>192.168.1.0/24</span>
+        </div>
+
+        <div class="flecha-router">
+            →
+        </div>
+
+        <div class="router-centro">
+            <span class="router-icon">🌐</span>
+            <strong>ROUTER</strong>
+            <small>Capa 3 · IP</small>
+        </div>
+
+        <div class="flecha-router">
+            →
+        </div>
+
+        <div class="red-router">
+            <strong>Red B</strong>
+            <span>192.168.2.0/24</span>
+        </div>
+
+    </div>
+
+
+    <p>
+        Los routers más comunes son los que encontramos en nuestros hogares
+        y pequeñas oficinas, que simplemente pasan los paquetes de una red
+        a otra.
+    </p>
+
+    <p>
+        Un ejemplo sería el router que proporciona un ISP. También existen
+        routers más sofisticados, como los utilizados en empresas para
+        conectar grandes redes o como routers centrales que reenvían datos
+        a alta velocidad por las redes de fibra óptica.
+    </p>
+
+    <p>
+        Normalmente, los routers se dedican a dispositivos hardware, aunque
+        cada vez es más habitual encontrar encaminadores basados en software.
+    </p>
+
+
+    <!-- PASARELA -->
+
+    <h3>Pasarela</h3>
+
+    <p>
+        Una <strong>pasarela</strong> (en inglés <em>gateway</em>) es un
+        dispositivo que permite interconectar redes que utilizan
+        arquitecturas o protocolos diferentes.
+    </p>
+
+    <p>
+        Es una puerta de enlace en una red y puede actuar en el
+        <strong>nivel 4 (capa de transporte) y superiores</strong>
+        del modelo OSI.
+    </p>
+
+    <p>
+        La mayoría de las pasarelas se implementan mediante software.
+    </p>
+
+    <p>
+        Las pasarelas también se denominan
+        <strong>convertidores de protocolo</strong> y son más complejas
+        que los encaminadores o los conmutadores de red.
+    </p>
+
+    <p>
+        Son una parte importante de muchos encaminadores, ya que permiten
+        interconectar redes Ethernet con redes Wi-Fi y otros tipos de redes.
+    </p>
+
+
+    <!-- CONCEPTOS IMPORTANTES -->
+
+    <div class="concepto">
+
+        <h3>🔎 Conceptos importantes</h3>
+
+        <ul>
+
+            <li>
+                <strong>Segmento de red:</strong>
+                en el ámbito lógico, forma un único segmento toda sección
+                de una red Ethernet que comparte un mismo dominio de
+                colisión, de manera que los diferentes segmentos se
+                pueden unir mediante encaminadores o conmutadores.
+            </li>
+
+            <li>
+                <strong>Dominio de colisión:</strong>
+                segmento físico de una red de ordenadores en el que es
+                posible que las tramas puedan colisionar entre sí.
+            </li>
+
+            <li>
+                <strong>Dominio de difusión:</strong>
+                conjunto de todos los dispositivos que reciben tramas
+                de difusión (<em>broadcast</em>) que se originan en
+                cualquier dispositivo del conjunto.
+                Los encaminadores dividen los dominios de difusión,
+                ya que no reenvían las tramas de difusión entre redes.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- RESUMEN -->
+
+    <div class="nota">
+
+        <h3>📌 Resumen de los dispositivos</h3>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Dispositivo</th>
+                    <th>Función principal</th>
+                    <th>Capa OSI</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><strong>Repetidor</strong></td>
+                    <td>Regenera y retransmite la señal</td>
+                    <td>1 · Física</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Hub</strong></td>
+                    <td>Reenvía la información a todos los puertos</td>
+                    <td>1 · Física</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Bridge</strong></td>
+                    <td>Conecta segmentos utilizando direcciones MAC</td>
+                    <td>2 · Enlace</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Switch</strong></td>
+                    <td>Conmuta las tramas hacia el destino</td>
+                    <td>2 · Enlace</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Router</strong></td>
+                    <td>Interconecta redes utilizando direcciones IP</td>
+                    <td>3 · Red</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Gateway</strong></td>
+                    <td>Interconecta redes con diferentes protocolos</td>
+                    <td>4 y superiores</td>
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
 
