@@ -72,6 +72,14 @@
                          3. El protocolo TCP
                     </a>
                 </li>
+
+
+                <li>
+                    <a href="#servicios-red">
+                         4. El protocolo TCP
+                    </a>
+                </li>
+
                 <li>
                     <a href="#bibliografia">
                         Bibliografía
@@ -2002,6 +2010,162 @@ iface enp2s0 inet dhcp</code></pre>
         </tbody>
 
     </table>
+
+    <!-- =========================
+     4. LOS SERVICIOS DE RED
+     ========================= -->
+
+<section id="servicios-red">
+
+    <h2>4. Los servicios de red</h2>
+
+    <p>
+        Cuando hablamos de servicios de red nos referimos a aquellas aplicaciones
+        que se ejecutan en segundo plano (<em>background</em>), normalmente sin
+        interacción por parte del usuario, y que están continuamente esperando
+        (<em>listening</em>) la petición por parte de un cliente.
+        Una vez reciben una petición, se encargan de gestionar la respuesta adecuada.
+    </p>
+
+    <p>
+        El orden <code>netstat -tln</code> nos muestra los servicios que actualmente
+        están escuchando peticiones por TCP.
+    </p>
+
+    <div class="comando-red">
+        <pre><code>netstat -tln</code></pre>
+        <p><em>Servicios esperando peticiones por TCP</em></p>
+    </div>
+
+
+    <h3>Servicios de red más habituales</h3>
+
+    <p>
+        Los servicios de red se sitúan en el nivel más alto de la estructura de
+        capas, el de aplicación. Algunos de los servicios más significativos son:
+    </p>
+
+    <ul class="lista-servicios">
+        <li><strong>HTTP</strong></li>
+        <li><strong>DHCP</strong></li>
+        <li><strong>DNS</strong></li>
+        <li><strong>FTP</strong></li>
+        <li><strong>SMTP</strong></li>
+        <li><strong>SSH</strong></li>
+        <li><strong>POP</strong></li>
+        <li><strong>IMAP</strong></li>
+    </ul>
+
+
+    <!-- ACTIVIDAD -->
+
+    <div class="actividad">
+
+        <h3>📝 Actividad: Servicios de red</h3>
+
+        <ol>
+
+            <li>
+                <p>
+                    Crea una tabla en un documento de texto con las siguientes
+                    columnas:
+                    <strong>servicio, significado de las siglas, función,
+                    puerto/s que utiliza y protocolo de transporte</strong>.
+                </p>
+
+                <p>Por ejemplo:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Nombre</th>
+                            <th>Función</th>
+                            <th>Puertos</th>
+                            <th>Protocolo de transporte</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>HTTP</td>
+                            <td>HyperText Transfer Protocol</td>
+                            <td>
+                                Intercambiar documentos de hipertexto y multimedia
+                            </td>
+                            <td>80</td>
+                            <td>TCP</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+
+            <li>
+                <p>
+                    Comprueba qué servicios están actualmente ejecutándose en
+                    tu equipo, tanto en <strong>TCP</strong> como en
+                    <strong>UDP</strong>.
+                </p>
+
+                <p>
+                    ¿Hay alguno que esté conectado?
+                </p>
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <!-- /ETC/SERVICES -->
+
+    <div class="nota">
+
+        <h3>📄 El fichero <code>/etc/services</code></h3>
+
+        <p>
+            Cada línea de este fichero especifica el <strong>nombre</strong>,
+            el <strong>número de puerto</strong>, el <strong>protocolo utilizado</strong>
+            y los <strong>alias</strong> de todos los servicios de red existentes
+            o, si no están todos los existentes, de un subconjunto suficientemente
+            amplio para que determinados programas de red funcionen correctamente.
+        </p>
+
+        <p>
+            Por ejemplo, para especificar que el servicio <strong>SMTP</strong>
+            utilizará el puerto <strong>25</strong>, el protocolo <strong>TCP</strong>
+            y que tendrá un alias <strong>mail</strong>, habría una línea similar
+            a la siguiente:
+        </p>
+
+        <pre><code>smtp 25 / tcp mail</code></pre>
+
+    </div>
+
+    <div class="concepto">
+
+    <h3>💡 TCP y UDP</h3>
+
+    <p>
+        La opción <code>-t</code> muestra conexiones TCP y la opción
+        <code>-u</code> muestra conexiones UDP. Por tanto:
+    </p>
+
+    <ul>
+        <li>
+            <code>netstat -tln</code> → servicios TCP en escucha.
+        </li>
+        <li>
+            <code>netstat -uln</code> → servicios UDP en escucha.
+        </li>
+        <li>
+            <code>netstat -tuln</code> → servicios TCP y UDP en escucha.
+        </li>
+    </ul>
+
+</div>
+
+</section>
 
 
     <!-- =========================
