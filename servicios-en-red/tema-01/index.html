@@ -27,8 +27,8 @@
 
             <ul>
                 <li>
-                    <a href="#interconexion">
-                        1. Interconexión de redes
+                    <a href="#arquitectura">
+                        1. Arquitectura de redes TCP/IP
                     </a>
                 </li>
 
@@ -117,6 +117,12 @@
                 </li>
 
                 <li>
+                    <a href="#interconexion-redes">
+                         7. Interconexión de redes
+                    </a>
+                </li>
+
+                <li>
                     <a href="#bibliografia">
                         Bibliografía
                     </a>
@@ -127,11 +133,11 @@
         </section>
 
 
-        <!-- 1. INTERCONEXIÓN DE REDES -->
+        <!-- 1. ARQUITECTURA DE REDES TCP/IP -->
 
-        <section id="interconexion">
+        <section id="arquitectura">
 
-            <h2>1. Interconexión de redes</h2>
+            <h2>1. Arquitectura de redes TCP/IP</h2>
 
             <p>
                 Internet es una red pública y global de ordenadores
@@ -2860,6 +2866,1170 @@ Address:    172.217.17.36</code></pre>
             </tbody>
 
         </table>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     7. INTERCONEXIÓN DE REDES
+     ========================= -->
+
+<section id="interconexion-redes">
+
+    <h2>7. Interconexión de redes</h2>
+
+
+    <!-- ==================================================
+         7.1. ENCAMINAMIENTO
+         ================================================== -->
+
+    <h3>7.1. Encaminamiento</h3>
+
+    <p>
+        El <strong>encaminamiento IP</strong> es una de las funciones
+        fundamentales que deben realizar los dispositivos encaminadores.
+        Consiste fundamentalmente en determinar cuál es la ruta que debe
+        seguir un paquete de datos desde un nodo de origen hasta un host
+        de destino.
+    </p>
+
+    <p>
+        Para determinar la ruta pueden tenerse en cuenta diferentes factores,
+        como:
+    </p>
+
+    <ul>
+        <li>Número de saltos desde el origen hasta el destino.</li>
+        <li>Ancho de banda de la línea.</li>
+        <li>Número de usuarios conectados.</li>
+        <li>Prioridades.</li>
+    </ul>
+
+    <p>
+        Este tipo de encaminamiento lógico proporciona una gran flexibilidad,
+        ya que los paquetes pueden viajar por diferentes rutas dependiendo
+        del estado de la red en un momento determinado.
+    </p>
+
+    <div class="concepto">
+
+        <h3>💡 Tipos de encaminamiento</h3>
+
+        <p>
+            El encaminamiento puede realizarse de dos formas:
+        </p>
+
+        <ul>
+            <li><strong>Rutas estáticas.</strong></li>
+            <li><strong>Rutas dinámicas.</strong></li>
+        </ul>
+
+    </div>
+
+
+    <!-- RUTAS ESTÁTICAS -->
+
+    <h4>7.1.1. Encaminamiento IP mediante rutas estáticas</h4>
+
+    <p>
+        Las <strong>rutas estáticas</strong> son aquellas que el administrador
+        introduce manualmente en los encaminadores.
+    </p>
+
+    <p>
+        Esto implica que es necesario tener un conocimiento profundo de la
+        red que estamos configurando. Además, es un sistema que no cambia
+        automáticamente con el tiempo y las tablas de encaminamiento no se
+        actualizan de forma automática cuando se producen modificaciones
+        en la red.
+    </p>
+
+
+    <h4>Rutas por defecto</h4>
+
+    <p>
+        Las <strong>rutas por defecto</strong> permiten sustituir varias
+        rutas estáticas que utilizan una misma puerta de enlace. Esto reduce
+        la tarea administrativa, ya que no es necesario especificar
+        individualmente todas las rutas.
+    </p>
+
+    <p>
+        Para configurar una ruta utilizamos el comando
+        <code>ip route</code>.
+    </p>
+
+    <pre><code>ip route add default via 192.168.1.1</code></pre>
+
+    <p>
+        Una ruta por defecto indica qué encaminador debe utilizarse cuando
+        no existe una ruta más específica para el destino.
+    </p>
+
+
+    <!-- RUTAS DINÁMICAS -->
+
+    <h4>7.1.2. Rutas dinámicas</h4>
+
+    <p>
+        Las rutas dinámicas se generan automáticamente cuando se configura
+        un protocolo de encaminamiento dinámico en varios encaminadores.
+        Estos dispositivos comparten sus tablas de encaminamiento
+        periódicamente.
+    </p>
+
+    <p>
+        A diferencia de las rutas estáticas, las tablas de encaminamiento
+        pueden configurarse automáticamente ante cambios en la red.
+        Esto permite una mayor <strong>escalabilidad y fiabilidad</strong>
+        en la gestión y resolución de rutas.
+    </p>
+
+    <p>
+        No obstante, pueden aparecer problemas de redundancia de rutas y
+        pueden generarse <strong>bucles de encaminamiento</strong>.
+    </p>
+
+    <p>
+        Cuando los encaminadores han generado sus tablas y las han
+        actualizado con sus dispositivos vecinos, se dice que la red
+        ha alcanzado la <strong>convergencia</strong>.
+    </p>
+
+
+    <!-- ENCAMINAMIENTO EN UN NODO -->
+
+    <h3>Encaminamiento en un nodo</h3>
+
+    <p>
+        Cuando un host tiene que enviar un paquete, realiza básicamente
+        los siguientes pasos:
+    </p>
+
+    <ol>
+
+        <li>
+            Extrae del paquete la dirección de destino.
+        </li>
+
+        <li>
+            Obtiene de la dirección de destino la parte correspondiente
+            a la red.
+        </li>
+
+        <li>
+            Compara la red de destino con su propia dirección de red.
+        </li>
+
+        <li>
+            Si ambas coinciden, el destino se encuentra en la misma
+            <strong>LAN</strong> y el paquete se envía directamente
+            al destinatario.
+        </li>
+
+        <li>
+            Si no coinciden, el paquete se envía al
+            <strong>encaminador predeterminado</strong>, que se encargará
+            de enviarlo hacia su destino.
+        </li>
+
+    </ol>
+
+    <div class="nota">
+
+        <strong>📌 Recuerda:</strong>
+
+        <p>
+            El encaminador predeterminado siempre debe encontrarse en la
+            misma red local que el host que lo utiliza.
+        </p>
+
+    </div>
+
+
+    <!-- CONVERTIR UBUNTU EN ROUTER -->
+
+    <h3>Convertir Ubuntu Server en un encaminador</h3>
+
+    <h4>1. Activar el encaminamiento</h4>
+
+    <p>
+        El primer paso para convertir un servidor Ubuntu en un encaminador
+        es activar el <strong>reenvío de paquetes IPv4</strong>.
+    </p>
+
+    <p>
+        Para ello podemos editar el archivo:
+    </p>
+
+    <pre><code>/etc/sysctl.conf</code></pre>
+
+    <p>
+        y activar la siguiente línea:
+    </p>
+
+    <pre><code>net.ipv4.ip_forward=1</code></pre>
+
+    <p>
+        Si también queremos habilitar el reenvío de paquetes IPv6:
+    </p>
+
+    <pre><code>net.ipv6.conf.default.forwarding=1</code></pre>
+
+    <p>
+        Después podemos aplicar la nueva configuración mediante:
+    </p>
+
+    <pre><code>sudo sysctl -p</code></pre>
+
+
+    <h4>2. Añadir rutas estáticas</h4>
+
+    <p>
+        El comando <code>route</code> permite añadir rutas estáticas.
+        Su sintaxis es:
+    </p>
+
+    <pre><code>route add -net red/máscara gw gateway dev interfaz</code></pre>
+
+    <p>Por ejemplo:</p>
+
+    <pre><code>route add -net 192.168.40.0/24 gw 192.168.30.1 dev enp2s0</code></pre>
+
+
+    <h4>Rutas persistentes</h4>
+
+    <p>
+        Para crear rutas persistentes se puede utilizar la configuración
+        de red del sistema y añadir el comando <code>up</code> seguido
+        de la ruta deseada.
+    </p>
+
+    <pre><code>up route add -net 192.168.40.0/24 gw 192.168.30.1 dev enp2s0</code></pre>
+
+
+    <!-- ACTIVIDAD ENCAMINAMIENTO -->
+
+    <div class="actividad">
+
+        <h3>📝 Actividad: Encaminamiento entre redes</h3>
+
+        <p>
+            Configura las tablas de encaminamiento del servidor Ubuntu
+            de forma que los equipos de la red interna puedan comunicarse
+            con los equipos de la red interna de un compañero.
+        </p>
+
+        <h4>Entregable</h4>
+
+        <ol>
+            <li>
+                Captura de un <code>ping</code> entre dos equipos de
+                las redes internas.
+            </li>
+
+            <li>
+                Captura de la tabla de rutas de tu Ubuntu Server.
+            </li>
+
+            <li>
+                Captura de un <code>traceroute</code> entre los dos
+                equipos de las redes internas.
+            </li>
+        </ol>
+
+    </div>
+
+
+    <!-- CASO PRÁCTICO -->
+
+    <div class="concepto">
+
+        <h3>🔎 Encaminamiento en un nodo: caso práctico</h3>
+
+        <p>
+            Supongamos que tenemos un nodo A con dirección IP
+            <code>10.0.2.1</code> y queremos enviar un paquete al nodo
+            <code>10.0.2.2</code>.
+        </p>
+
+        <h4>Supuesto 1: ping del nodo A a 10.0.2.2</h4>
+
+        <ol>
+
+            <li>
+                Extraemos del paquete la dirección de destino:
+                <code>10.0.2.2</code>.
+            </li>
+
+            <li>
+                Extraemos de la dirección de destino la parte de red:
+                <code>10.0.2.0</code>.
+            </li>
+
+            <li>
+                Comparamos la red de destino con la propia red:
+                <code>10.0.2.0</code> frente a <code>10.0.2.0</code>.
+            </li>
+
+            <li>
+                Como coinciden, el destino se encuentra en la misma LAN.
+            </li>
+
+            <li>
+                Por tanto, el paquete se envía directamente al destinatario
+                sin necesidad de utilizar el encaminador predeterminado.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <!-- ==================================================
+         7.2. CORTAFUEGOS
+         ================================================== -->
+
+    <h3>7.2. Cortafuegos (firewall)</h3>
+
+    <p>
+        Un <strong>cortafuegos</strong> (<em>firewall</em>) es un mecanismo,
+        de software o hardware, utilizado para proteger redes.
+    </p>
+
+    <p>
+        Actúa como una barrera o muro de protección entre dos redes,
+        normalmente una red privada y otra pública e insegura, como puede
+        ser Internet.
+    </p>
+
+    <p>
+        La ubicación habitual de un cortafuegos es el punto de conexión
+        de la red interna de una organización con la red exterior,
+        normalmente Internet.
+    </p>
+
+
+    <!-- DMZ -->
+
+    <h4>Zona desmilitarizada (DMZ)</h4>
+
+    <p>
+        Es frecuente conectar al cortafuegos una tercera red denominada
+        <strong>zona desmilitarizada (DMZ)</strong>.
+    </p>
+
+    <p>
+        En la DMZ se ubican normalmente los servidores de la organización
+        que deben permanecer accesibles desde la red exterior.
+    </p>
+
+    <div class="diagrama-dmz">
+
+        <div class="zona-red">
+            <strong>Red interna</strong>
+            <span>Red corporativa</span>
+        </div>
+
+        <div class="firewall-icon">
+            🧱
+            <small>Firewall</small>
+        </div>
+
+        <div class="zona-red">
+            <strong>DMZ</strong>
+            <span>Servidores públicos</span>
+        </div>
+
+        <div class="firewall-icon">
+            🧱
+            <small>Firewall</small>
+        </div>
+
+        <div class="zona-red">
+            <strong>Internet</strong>
+            <span>Red pública</span>
+        </div>
+
+    </div>
+
+
+    <!-- ELEMENTOS -->
+
+    <h4>Elementos de un cortafuegos</h4>
+
+    <p>
+        Por norma general, un cortafuegos contiene los siguientes elementos:
+    </p>
+
+    <ul>
+
+        <li>
+            <strong>Filtros:</strong>
+            elementos de hardware o software encargados de analizar los
+            paquetes y decidir si deben aceptarse o rechazarse.
+        </li>
+
+        <li>
+            <strong>Nodo bastión:</strong>
+            dispositivo intermediario situado entre las dos redes y que
+            está expuesto a posibles ataques procedentes del exterior.
+        </li>
+
+    </ul>
+
+
+    <!-- OBJETIVOS -->
+
+    <h4>Objetivos de un cortafuegos</h4>
+
+    <ul>
+
+        <li>
+            Garantizar que no se pueda acceder a los recursos internos
+            desde el exterior sin autorización.
+        </li>
+
+        <li>
+            Filtrar los paquetes de entrada y salida, permitiendo o
+            denegando el acceso según el origen o el destino, tanto en
+            lo relativo a direcciones IP como a puertos.
+        </li>
+
+        <li>
+            Utilizar herramientas de software para controlar el tráfico
+            de red.
+        </li>
+
+    </ul>
+
+
+    <!-- DIRECCIONES -->
+
+    <h4>Direcciones del firewall</h4>
+
+    <div class="firewall-direcciones">
+
+        <div>
+            <strong>IN</strong>
+            <span>Tráfico entrante</span>
+        </div>
+
+        <div>
+            <strong>OUT</strong>
+            <span>Tráfico saliente</span>
+        </div>
+
+        <div>
+            <strong>FORWARD</strong>
+            <span>Tráfico reenviado</span>
+        </div>
+
+    </div>
+
+
+    <!-- PERMISIVO / RESTRICTIVO -->
+
+    <h4>Configuración permisiva y restrictiva</h4>
+
+    <p>
+        Un cortafuegos puede configurarse de forma
+        <strong>permisiva</strong> o <strong>restrictiva</strong>.
+    </p>
+
+    <div class="comparacion-firewall">
+
+        <div>
+            <h4>🟢 Configuración permisiva</h4>
+
+            <p>
+                Permite inicialmente el tráfico y el administrador se
+                encarga de restringir aquello que considere necesario.
+            </p>
+
+            <p>
+                Se basa en una estrategia similar a una
+                <strong>lista negra (blacklist)</strong>.
+            </p>
+        </div>
+
+        <div>
+            <h4>🔴 Configuración restrictiva</h4>
+
+            <p>
+                Bloquea inicialmente el tráfico y el administrador debe
+                permitir explícitamente aquello que considere necesario.
+            </p>
+
+            <p>
+                Se basa en una estrategia similar a una
+                <strong>lista blanca (whitelist)</strong>.
+            </p>
+        </div>
+
+    </div>
+
+    <p>
+        También es posible utilizar configuraciones mixtas en las que
+        algunas direcciones o tipos de tráfico estén restringidos y
+        otros permitidos.
+    </p>
+
+
+    <!-- UFW -->
+
+    <h4>Configurar un cortafuegos restrictivo con UFW</h4>
+
+    <p>
+        El núcleo de Linux incluye el subsistema
+        <strong>Netfilter</strong>, utilizado para manipular y decidir
+        el destino del tráfico de red.
+    </p>
+
+    <p>
+        Las soluciones de cortafuegos de Linux utilizan este subsistema
+        para realizar el filtrado de paquetes.
+    </p>
+
+    <p>
+        En Ubuntu, una herramienta habitual para configurar el cortafuegos
+        es <strong>UFW (Uncomplicated Firewall)</strong>.
+    </p>
+
+    <p>
+        Para activar UFW:
+    </p>
+
+    <pre><code>sudo ufw enable</code></pre>
+
+    <p>
+        Para establecer la política predeterminada:
+    </p>
+
+    <pre><code>sudo ufw default [deny|allow] [incoming|outgoing|routed]</code></pre>
+
+    <p>
+        Por ejemplo, para configurar una política restrictiva de entrada:
+    </p>
+
+    <pre><code>sudo ufw default deny incoming</code></pre>
+
+    <p>
+        Para permitir un puerto concreto, por ejemplo el puerto 22:
+    </p>
+
+    <pre><code>sudo ufw allow 22</code></pre>
+
+    <p>
+        Para permitir un puerto utilizando un protocolo determinado:
+    </p>
+
+    <pre><code>sudo ufw allow 22/tcp</code></pre>
+
+    <p>
+        Para permitir tráfico saliente por un puerto:
+    </p>
+
+    <pre><code>sudo ufw allow out 22</code></pre>
+
+
+    <!-- ==================================================
+         PRÁCTICA 2
+         ================================================== -->
+
+    <div class="actividad practica-firewall">
+
+        <h3>🛠️ Práctica 2: Instalación y configuración de un cortafuegos restrictivo</h3>
+
+        <h4>Objetivos</h4>
+
+        <p>
+            El objetivo de esta práctica es aprender a configurar un
+            cortafuegos de forma que se puedan establecer políticas de
+            acceso y se permita acceder únicamente a determinados servicios.
+        </p>
+
+        <h4>Recursos</h4>
+
+        <p>
+            Disponer de un equipo o máquina virtual con sistema operativo
+            Ubuntu y conexión a Internet.
+        </p>
+
+        <h4>Enunciado</h4>
+
+        <ol>
+
+            <li>
+                Configura el cortafuegos de forma restrictiva, excepto
+                para el encaminamiento, que estará permitido.
+            </li>
+
+            <li>
+                El cortafuegos deberá permitir realizar
+                <strong>ping hacia el exterior</strong> y realizar
+                <strong>consultas DNS</strong>.
+            </li>
+
+            <li>
+                También deberá permitir el acceso a
+                <strong>Webmin</strong>.
+            </li>
+
+        </ol>
+
+        <h4>Entregable</h4>
+
+        <ol>
+
+            <li>
+                Realiza una memoria de la práctica explicando los pasos
+                realizados, la configuración final y la comprobación del
+                funcionamiento de todo lo solicitado.
+            </li>
+
+            <li>
+                Incluye en la memoria la ejecución y las diferencias entre:
+            </li>
+
+        </ol>
+
+        <pre><code>ufw status
+ufw status verbose
+ufw status numbered</code></pre>
+
+        <ol start="3">
+
+            <li>
+                Incluye también todas las dificultades encontradas durante
+                la práctica y explica cómo se han solucionado.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <!-- SOLUCIÓN PROPUESTA -->
+
+    <div class="solucion">
+
+        <h3>✅ Solución propuesta: cortafuegos restrictivo</h3>
+
+        <p>
+            Una posible solución consiste en aplicar una política
+            <strong>restrictiva por defecto</strong> y abrir únicamente
+            el tráfico necesario para cumplir el enunciado.
+        </p>
+
+        <h4>1. Comprobar el estado de UFW</h4>
+
+        <pre><code>sudo ufw status verbose</code></pre>
+
+        <h4>2. Activar UFW</h4>
+
+        <pre><code>sudo ufw enable</code></pre>
+
+        <h4>3. Establecer políticas restrictivas</h4>
+
+        <pre><code>sudo ufw default deny incoming
+sudo ufw default deny outgoing
+sudo ufw default allow routed</code></pre>
+
+        <p>
+            De esta forma, las conexiones entrantes y salientes quedan
+            bloqueadas inicialmente, mientras que el tráfico reenviado
+            queda permitido para cumplir el requisito de encaminamiento.
+        </p>
+
+
+        <h4>4. Permitir DNS</h4>
+
+        <p>
+            Para poder realizar consultas DNS necesitamos permitir las
+            comunicaciones DNS, normalmente mediante UDP y, en determinados
+            casos, TCP.
+        </p>
+
+        <pre><code>sudo ufw allow out 53/udp
+sudo ufw allow out 53/tcp</code></pre>
+
+
+        <h4>5. Permitir ping hacia el exterior</h4>
+
+        <p>
+            El comando <code>ping</code> utiliza ICMP, por lo que no se
+            configura mediante un puerto TCP o UDP.
+        </p>
+
+        <p>
+            En UFW se puede permitir el tráfico ICMP mediante reglas
+            específicas. Una forma habitual es modificar las reglas
+            correspondientes de UFW para permitir los mensajes ICMP
+            necesarios.
+        </p>
+
+        <p>
+            Como comprobación podemos utilizar:
+        </p>
+
+        <pre><code>ping 8.8.8.8</code></pre>
+
+
+        <h4>6. Permitir Webmin</h4>
+
+        <p>
+            Webmin utiliza habitualmente el puerto <strong>10000/TCP</strong>.
+            Por tanto, podemos permitir el acceso al servicio mediante:
+        </p>
+
+        <pre><code>sudo ufw allow 10000/tcp</code></pre>
+
+
+        <h4>7. Comprobar la configuración</h4>
+
+        <pre><code>sudo ufw status
+sudo ufw status verbose
+sudo ufw status numbered</code></pre>
+
+        <p>
+            Las tres órdenes muestran información diferente:
+        </p>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Comando</th>
+                    <th>Información</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><code>ufw status</code></td>
+                    <td>
+                        Muestra si UFW está activo y las reglas básicas.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><code>ufw status verbose</code></td>
+                    <td>
+                        Muestra información adicional sobre las políticas
+                        predeterminadas y las reglas.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><code>ufw status numbered</code></td>
+                    <td>
+                        Muestra las reglas numeradas, facilitando su
+                        identificación y eliminación.
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <h4>8. Comprobaciones finales</h4>
+
+        <p>El alumno debería comprobar:</p>
+
+        <ul>
+
+            <li>
+                <strong>Ping exterior:</strong>
+                debe funcionar.
+            </li>
+
+            <li>
+                <strong>Consultas DNS:</strong>
+                deben funcionar.
+            </li>
+
+            <li>
+                <strong>Acceso a Webmin:</strong>
+                debe funcionar en el puerto 10000/TCP.
+            </li>
+
+            <li>
+                <strong>Tráfico no autorizado:</strong>
+                debe quedar bloqueado por la política restrictiva.
+            </li>
+
+            <li>
+                <strong>Encaminamiento:</strong>
+                debe continuar funcionando.
+            </li>
+
+        </ul>
+
+        <div class="nota">
+
+            <strong>⚠️ Importante:</strong>
+
+            <p>
+                Las reglas exactas necesarias para ICMP y para el
+                encaminamiento pueden depender de la topología de la práctica
+                y de la versión de Ubuntu/UFW utilizada. Por ello, el alumno
+                debe comprobar siempre el resultado mediante pruebas y
+                capturas, no limitarse a introducir los comandos.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         7.3. NAT
+         ================================================== -->
+
+    <h3>7.3. Traducción de direcciones de red (NAT)</h3>
+
+    <p>
+        La <strong>traducción de direcciones de red</strong>
+        (<em>Network Address Translation</em>, NAT) es el proceso mediante
+        el cual se modifica la información de las direcciones de la
+        cabecera de un paquete IPv4 mientras este se encuentra en tránsito
+        por un dispositivo de encaminamiento.
+    </p>
+
+    <p>
+        NAT es muy habitual en situaciones en las que dispositivos con
+        direcciones IP privadas, por ejemplo los equipos de una LAN,
+        necesitan acceder a una red con direcciones IP públicas, como
+        Internet.
+    </p>
+
+    <p>
+        En un escenario NAT de uno a muchos, además de modificar la dirección
+        IP, puede ser necesario modificar información de nivel superior,
+        como los puertos TCP/UDP.
+    </p>
+
+    <p>
+        El dispositivo NAT mantiene una <strong>tabla de traducción</strong>
+        para poder traducir correctamente los paquetes de respuesta.
+    </p>
+
+
+    <div class="concepto">
+
+        <h3>💡 Nombres utilizados para este tipo de NAT</h3>
+
+        <ul>
+
+            <li>
+                <strong>NAPT</strong> —
+                Network Address and Port Translation.
+            </li>
+
+            <li>
+                <strong>PAT</strong> —
+                Port Address Translation.
+            </li>
+
+            <li>
+                <strong>NAT Overload.</strong>
+            </li>
+
+            <li>
+                <strong>Many-to-one NAT.</strong>
+            </li>
+
+            <li>
+                <strong>IP masquerading.</strong>
+            </li>
+
+        </ul>
+
+        <p>
+            Como este es el tipo de NAT más habitual, muchas veces se
+            utiliza simplemente el término <strong>NAT</strong>.
+        </p>
+
+    </div>
+
+
+    <!-- NAT DE SALIDA -->
+
+    <h4>NAT de salida</h4>
+
+    <p>
+        Este método permite la comunicación a través del router cuando
+        la conversación se inicia desde el interior de la red privada.
+    </p>
+
+    <p>
+        Por ejemplo, un navegador web situado dentro de una red privada
+        puede acceder a una página web situada en Internet.
+    </p>
+
+    <p>
+        En cambio, un equipo externo no puede iniciar directamente una
+        conexión hacia un equipo situado dentro de la red privada mediante
+        este mecanismo.
+    </p>
+
+
+    <!-- NAT ESTÁTICO -->
+
+    <h4>NAT estático y redirección de puertos</h4>
+
+    <p>
+        Muchos dispositivos NAT permiten al administrador configurar
+        traducciones permanentes.
+    </p>
+
+    <p>
+        Esta funcionalidad suele conocerse como
+        <strong>NAT estático</strong> o
+        <strong>redirección de puertos (port forwarding)</strong>.
+    </p>
+
+    <p>
+        Permite que el tráfico iniciado desde el exterior llegue a un
+        equipo concreto de la red privada.
+    </p>
+
+
+    <h4>Importancia de NAT en IPv4</h4>
+
+    <p>
+        NAT se popularizó especialmente para aliviar los problemas
+        provocados por el agotamiento del espacio de direcciones IPv4.
+    </p>
+
+    <p>
+        Actualmente es habitual que varios equipos de una red privada
+        accedan a Internet utilizando una única dirección IP pública.
+    </p>
+
+
+    <!-- MASQUERADING -->
+
+    <h3>Enmascaramiento IP en Ubuntu Server</h3>
+
+    <p>
+        El <strong>enmascaramiento IP</strong> es una forma habitual de
+        NAT que permite que los equipos de una red privada accedan a
+        Internet utilizando la dirección pública del router.
+    </p>
+
+    <p>
+        En Ubuntu, una posible configuración mediante UFW requiere
+        modificar los archivos de reglas situados en:
+    </p>
+
+    <pre><code>/etc/ufw/*.rules</code></pre>
+
+
+    <p>
+        Las reglas se dividen entre aquellas que se ejecutan antes y
+        después de las reglas introducidas mediante la línea de comandos
+        de UFW.
+    </p>
+
+    <p>
+        Primero debemos asegurarnos de que el reenvío de paquetes está
+        habilitado.
+    </p>
+
+
+    <h4>Reglas NAT</h4>
+
+    <p>
+        En el archivo <code>/etc/ufw/before.rules</code> podemos añadir
+        las reglas necesarias para la tabla <code>nat</code>.
+    </p>
+
+    <pre><code># Reglas de la tabla NAT
+
+*nat
+:POSTROUTING ACCEPT [0:0]
+
+# Reenviar tráfico de la red interna hacia eth0
+-A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+
+# No eliminar COMMIT
+COMMIT</code></pre>
+
+    <p>
+        Los comentarios no son estrictamente necesarios, pero documentar
+        la configuración es una buena práctica.
+    </p>
+
+    <p>
+        Cada tabla necesita su correspondiente declaración
+        <code>COMMIT</code>.
+    </p>
+
+    <p>
+        En el ejemplo anterior hay que sustituir
+        <code>eth0</code>, <code>eth1</code> y
+        <code>192.168.0.0/24</code> por las interfaces y la red que
+        correspondan a nuestra instalación.
+    </p>
+
+
+    <h4>Aplicar los cambios</h4>
+
+    <pre><code>sudo ufw disable
+sudo ufw enable</code></pre>
+
+    <p>
+        También podemos ejecutar ambas órdenes en una sola línea:
+    </p>
+
+    <pre><code>sudo ufw disable && sudo ufw enable</code></pre>
+
+
+    <!-- CASO PRÁCTICO NAT -->
+
+    <div class="actividad">
+
+        <h3>📝 Caso práctico: tablas de encaminamiento y NAT</h3>
+
+        <p>
+            Disponemos de una red formada por dos encaminadores.
+            El dispositivo <strong>R2</strong> puede realizar NAT.
+        </p>
+
+        <p>
+            Los equipos de la red <code>192.168.2.0/24</code> deben poder
+            acceder a Internet.
+        </p>
+
+        <p>
+            Crea las tablas de rutas de <strong>R1</strong> y
+            <strong>R2</strong> y las reglas NAT que consideres necesarias
+            para que los equipos de la red
+            <code>192.168.2.0/24</code> puedan acceder a Internet.
+        </p>
+
+    </div>
+
+
+    <!-- ESQUEMA NAT -->
+
+    <div class="diagrama-nat">
+
+        <div class="nat-red">
+            <strong>Red interna</strong>
+            <span>192.168.2.0/24</span>
+            <small>PC01 · PC02 · PC03</small>
+        </div>
+
+        <div class="nat-router">
+            <strong>R1</strong>
+            <span>192.168.2.254</span>
+            <span>10.0.35.2</span>
+        </div>
+
+        <div class="nat-router">
+            <strong>R2</strong>
+            <span>10.0.35.254</span>
+            <span>7.8.9.10</span>
+        </div>
+
+        <div class="nat-internet">
+            <strong>Internet</strong>
+        </div>
+
+    </div>
+
+
+    <!-- PORT FORWARDING -->
+
+    <h3>Redirección de puertos</h3>
+
+    <p>
+        La <strong>redirección de puertos</strong>
+        (<em>port forwarding</em>) consiste en redirigir un puerto de
+        red de un nodo hacia otro nodo de la red.
+    </p>
+
+    <p>
+        Esta técnica permite que un usuario externo pueda acceder a un
+        puerto de una dirección IP privada desde el exterior mediante
+        un encaminador que tenga NAT activado.
+    </p>
+
+    <p>
+        De esta forma, ordenadores remotos, como máquinas situadas en
+        Internet, pueden conectarse a un equipo concreto dentro de una
+        LAN privada.
+    </p>
+
+
+    <h4>Ejemplo: servidor web interno</h4>
+
+    <p>
+        Supongamos que tenemos un servidor web dentro de la red privada
+        con dirección:
+    </p>
+
+    <pre><code>192.168.0.2</code></pre>
+
+    <p>
+        y que la dirección IP pública del encaminador es:
+    </p>
+
+    <pre><code>214.15.11.12</code></pre>
+
+    <p>
+        Queremos que las peticiones HTTP recibidas desde Internet en el
+        puerto TCP/80 sean redirigidas al servidor interno.
+    </p>
+
+    <p>
+        Podemos utilizar una regla DNAT en la cadena
+        <code>PREROUTING</code>:
+    </p>
+
+    <pre><code>*nat
+:PREROUTING ACCEPT [0:0]
+
+# Redirigir el puerto 80 hacia el servidor interno
+-A PREROUTING -i eth0 -p tcp --dport 80 \
+-j DNAT --to-destination 192.168.0.2:80
+
+COMMIT</code></pre>
+
+    <p>
+        Con esta regla, las peticiones recibidas por el encaminador en
+        el puerto TCP/80 son redirigidas hacia la dirección
+        <code>192.168.0.2</code>, utilizando el mismo puerto.
+    </p>
+
+
+    <div class="nota">
+
+        <h3>📌 DNAT y SNAT</h3>
+
+        <ul>
+
+            <li>
+                <strong>DNAT:</strong>
+                modifica la dirección de destino del paquete.
+                Es habitual utilizarlo para implementar redirecciones
+                de puertos.
+            </li>
+
+            <li>
+                <strong>SNAT:</strong>
+                modifica la dirección de origen del paquete.
+                Es habitual en las conexiones de salida desde una red
+                privada hacia Internet.
+            </li>
+
+        </ul>
 
     </div>
 
