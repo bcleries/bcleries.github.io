@@ -40,6 +40,8 @@
                 <li><a href="#bootp">7. Protocolo BOOTP</a></li>
                 <li><a href="#actividad1">📝 Actividad</a></li>
                 <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#ejercicios-propuestos">📝 Ejercicios propuestos</a></li>
+                <li><a href="#supuestos-practicos">📝 Supuestos prácticos</a></li>
                 <li><a href="#autoevaluacion">Autoevaluación</a></li>
                 <li><a href="#bibliografia">Bibliografía</a></li>
             </ul>
@@ -1210,6 +1212,156 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
         </section>
 
 
+        <!-- EJERCICIOS PROPUESTOS -->
+
+        <section id="ejercicios-propuestos">
+
+            <h2>📝 Ejercicios propuestos</h2>
+
+            <ol>
+                <li>
+                    Describe la diferencia existente entre un servidor DHCP
+                    autorizado y uno no autorizado.
+                </li>
+                <li>
+                    ¿Qué mensaje permite notificar a un servidor DHCP que su
+                    oferta es inválida?
+                </li>
+                <li>
+                    ¿Qué mensaje o mensajes intercambiados entre cliente y
+                    servidor DHCP van enviados a la dirección de broadcast?
+                </li>
+                <li>
+                    ¿Cuántos servidores DHCP es posible instalar en una red?
+                    Justifica tu respuesta.
+                </li>
+                <li>
+                    ¿Es posible que un servidor DHCP atienda peticiones de
+                    clientes que se encuentran ubicados físicamente en una
+                    red diferente? Justifica tu respuesta.
+                </li>
+                <li>
+                    Dado que el servicio DHCP permite que los equipos de una
+                    red se configuren automáticamente, ¿es posible
+                    configurar el equipo que ofrece el servicio DHCP a
+                    partir del servicio que él mismo está ofreciendo?
+                    Justifica tu respuesta.
+                </li>
+                <li>
+                    Define qué es un ámbito en DHCP.
+                </li>
+            </ol>
+
+        </section>
+
+
+        <!-- SUPUESTOS PRÁCTICOS -->
+
+        <section id="supuestos-practicos">
+
+            <h2>📝 Supuestos prácticos</h2>
+
+            <ol>
+                <li>
+                    <p>
+                        Establece la configuración de un equipo servidor
+                        Windows Server de forma manual, para que quede
+                        preparado antes de realizar la instalación del
+                        servidor DHCP. Dispondrá de dos interfaces de red
+                        independientes y los parámetros de conexión deben
+                        ser los siguientes:
+                    </p>
+                    <ul class="lista-servicios">
+                        <li>Direcciones: 192.168.1.2/25, 192.168.1.130/25.</li>
+                        <li>Puerta de enlace: 192.168.1.1.</li>
+                        <li>Dominio de búsqueda: «sintesis.local».</li>
+                        <li>Direcciones de los servidores DNS: 192.168.1.2, 192.168.1.3.</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>
+                        Establece la configuración manual de un equipo
+                        servidor Ubuntu Server, para que quede preparado
+                        antes de realizar la instalación del servidor DHCP.
+                        Los parámetros de conexión deben ser los mismos que
+                        los del supuesto práctico anterior.
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        En el siguiente supuesto práctico se llevará a cabo
+                        la instalación y configuración de un servidor DHCP
+                        que pueda dar soporte a una organización. Sigue los
+                        siguientes pasos:
+                    </p>
+                    <ul class="lista-servicios">
+                        <li>Realiza la instalación de un servidor DHCP sobre Linux Ubuntu Server.</li>
+                        <li>Establece la dirección IP fija <strong>192.168.100.100/24</strong>.</li>
+                        <li>
+                            Configura el servidor para que realice el
+                            reparto del resto de direcciones IP de la red
+                            entre los clientes. Deberán excluirse del
+                            reparto:
+                            <ul class="lista-servicios">
+                                <li>La dirección 192.168.100.1 por ser la dirección del router.</li>
+                                <li>La propia dirección del servidor DHCP.</li>
+                                <li>
+                                    Las direcciones de red y broadcast que
+                                    no podrán ser empleadas por los clientes
+                                    como direcciones unicast válidas.
+                                </li>
+                            </ul>
+                            Entre los parámetros para conceder estará la
+                            dirección de la puerta de enlace (gateway), que
+                            deberá coincidir con la que tiene configurada el
+                            router (192.168.100.1).
+                        </li>
+                        <li>
+                            Configura un cliente desde un entorno de
+                            virtualización para que disponga de una
+                            dirección MAC concreta, así como para que reciba
+                            sus parámetros de conexión de forma automática.
+                            Acto seguido, da de alta una reserva en el
+                            servidor DHCP para que a dicho cliente siempre
+                            se le asigne la dirección
+                            <strong>192.168.100.200</strong>. Arranca el
+                            cliente y comprueba si recibe la configuración
+                            establecida en la reserva.
+                        </li>
+                        <li>
+                            Arranca nuevos clientes configurados para
+                            obtener sus parámetros de red de forma
+                            automática y comprueba que son configurados
+                            correctamente por el servidor.
+                        </li>
+                        <li>Monitoriza el estado del servidor y las concesiones realizadas a los clientes.</li>
+                        <li>Libera desde algún cliente la configuración recibida.</li>
+                    </ul>
+                </li>
+                <li>
+                    Utiliza una herramienta de monitorización de redes para
+                    analizar el tráfico DHCP intercambiado entre servidor y
+                    clientes. Presta atención a los campos de cada mensaje.
+                </li>
+                <li>
+                    Repite el escenario creado en el ejercicio propuesto
+                    anterior utilizando ahora el servidor que ofrece el
+                    sistema operativo Microsoft Windows Server.
+                </li>
+                <li>
+                    Accede desde la página web de Editorial Síntesis
+                    (www.sintesis.com) al recurso digital «Servidor DHCP con
+                    Simple DNS Plus» y estudia cómo realizar la instalación
+                    de un servidor DHCP con esta tecnología. A continuación,
+                    repite el escenario creado en el ejercicio propuesto
+                    anterior utilizando el servidor Simple DNS Plus sobre un
+                    sistema operativo Microsoft Windows.
+                </li>
+            </ol>
+
+        </section>
+
+
         <!-- AUTOEVALUACIÓN -->
 
         <section id="autoevaluacion">
@@ -1255,6 +1407,66 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                         <li data-op="b">Redes WAN.</li>
                         <li data-op="c">Las respuestas a) y b) son verdaderas.</li>
                         <li data-op="d">Todas las anteriores son falsas.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>5.</strong> ¿Qué rango de direcciones privadas IPv4 son empleadas por APIPA?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">169.255.0.0/16.</li>
+                        <li data-op="b">169.255.0.0/8.</li>
+                        <li data-op="c">169.254.0.0/16.</li>
+                        <li data-op="d">169.254.0.0/8.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="d">
+                    <p><strong>6.</strong> ¿Qué comando libera la concesión recibida desde un servidor DHCP en un sistema Microsoft?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">ifconfig /renew.</li>
+                        <li data-op="b">ifconfig /release.</li>
+                        <li data-op="c">ipconfig /renew.</li>
+                        <li data-op="d">ipconfig /release.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="d">
+                    <p><strong>7.</strong> ¿Cuál de las siguientes secuencias es la correcta desde un punto de vista cronológico?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">DHCPINFORM, DHCPDISCOVER, DHCPRELEASE, DHCPACK.</li>
+                        <li data-op="b">DHCPDISCOVER, DHCPOFFER, DHCPRELEASE, DHCPDECLINE.</li>
+                        <li data-op="c">DHCPDISCOVER, DHCPDECLINE, DHCPRELEASE, DHCPOFFER.</li>
+                        <li data-op="d">DHCPDISCOVER, DHCPREQUEST, DHCPACK, DHCPRELEASE.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>8.</strong> ¿Cuál de los siguientes es un mecanismo que permite llevar a cabo configuraciones automáticas de direcciones IPv4 de enlace local?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">avahi-autoipd.</li>
+                        <li data-op="b">APIPA.</li>
+                        <li data-op="c">Las respuestas a) y b) son verdaderas.</li>
+                        <li data-op="d">Todas las anteriores son falsas.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="d">
+                    <p><strong>9.</strong> Para asociar de forma unívoca las direcciones IP repartidas por un servidor a los clientes se emplea:</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">El nombre del equipo.</li>
+                        <li data-op="b">APIPA o avahi-autoipd.</li>
+                        <li data-op="c">La máscara asociada.</li>
+                        <li data-op="d">La dirección MAC de la interfaz de red o el identificador de cliente.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>10.</strong> ¿Con qué sistema operativo apareció APIPA?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">Microsoft Windows 95.</li>
+                        <li data-op="b">Microsoft Windows 98.</li>
+                        <li data-op="c">Microsoft Windows XP.</li>
+                        <li data-op="d">Microsoft Windows Server 2003.</li>
                     </ul>
                 </div>
 
