@@ -3966,20 +3966,165 @@ COMMIT</code></pre>
 
 </section>
 
-    <!-- Bibliografía -->
+    <!-- Autoevaluación -->
 <section id="autoevaluacion">
-    
+
     <h2>Autoevaluación</h2>
 
-    <p>
-        https://corriol.github.io/sxe/UD01/index.html
-    </p>
+    <div class="quiz" id="quiz-tema01">
 
-    <p>
-        Servicios en Red. Editorial Síntesis
+        <div class="quiz-pregunta" data-correcta="c">
+            <p><strong>1.</strong> ¿Qué dos parámetros de configuración son imprescindibles para configurar una interfaz con IPv4?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Gateway y DNS.</li>
+                <li data-op="b">Gateway e IP.</li>
+                <li data-op="c">IP y máscara.</li>
+                <li data-op="d">IP y DNS.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="c">
+            <p><strong>2.</strong> ¿Qué técnica permite dividir una red en subredes aplicando una máscara y continuar dividiendo esas subredes de forma recursiva en redes más pequeñas modificando de nuevo la máscara?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">CIDR.</li>
+                <li data-op="b">Submasquering.</li>
+                <li data-op="c">VLSM.</li>
+                <li data-op="d">Ninguna de las anteriores es correcta.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="d">
+            <p><strong>3.</strong> ¿Qué tipos de direccionamiento se soportan en IPv4?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Broadcast, multicast y anycast.</li>
+                <li data-op="b">Unicast, multicast y anycast.</li>
+                <li data-op="c">Unicast, broadcast y anycast.</li>
+                <li data-op="d">Unicast, multicast y broadcast.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="d">
+            <p><strong>4.</strong> ¿A qué tipo de servicio se corresponde NFS?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Servicios multimedia y de streaming.</li>
+                <li data-op="b">Servicios de acceso remoto.</li>
+                <li data-op="c">Servicios de transferencia de ficheros.</li>
+                <li data-op="d">Servicios de impresión, compartición de archivos y sistemas de ficheros en red.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="d">
+            <p><strong>5.</strong> ¿Qué tipo de direccionamiento IPv6 utiliza el prefijo ff?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Broadcast.</li>
+                <li data-op="b">Unicast.</li>
+                <li data-op="c">Anycast.</li>
+                <li data-op="d">Multicast.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="b">
+            <p><strong>6.</strong> ¿Qué tipos de direccionamiento se soportan en IPv6?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Broadcast, multicast y anycast.</li>
+                <li data-op="b">Unicast, multicast y anycast.</li>
+                <li data-op="c">Unicast, broadcast y anycast.</li>
+                <li data-op="d">Unicast, multicast y broadcast.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="b">
+            <p><strong>7.</strong> ¿Cuál de las siguientes relaciones de protocolos se corresponde completamente con servicios de administración y configuración de sistemas?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">HTTP, DNS, NTP y SNMP.</li>
+                <li data-op="b">DHCP, DNS, NTP y SNMP.</li>
+                <li data-op="c">DHCP, DNS, FTP y TFTP.</li>
+                <li data-op="d">XMPP, DNS, NTP y SNMP.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="a">
+            <p><strong>8.</strong> Selecciona la afirmación falsa de entre las siguientes:</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Las direcciones IPv6 son Case-sensitive.</li>
+                <li data-op="b">EUI-64 es el identificador único de 64 bits obtenido a partir de la dirección MAC.</li>
+                <li data-op="c">En IPv6, los ceros del comienzo de cada campo se pueden omitir.</li>
+                <li data-op="d">En IPv6, el cuarto campo es el identificador de la subred.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="b">
+            <p><strong>9.</strong> Selecciona la afirmación falsa de entre las siguientes:</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">El modelo TCP/IP describe el conjunto de protocolos implicados en la comunicación, enmarcándolos en una estructura jerárquica de capas similar a la del modelo OSI.</li>
+                <li data-op="b">El modelo OSI es un modelo cuya pila de protocolos está disponible en todos los dispositivos.</li>
+                <li data-op="c">La capa de aplicación del modelo TCP/IP realiza funciones similares a las de las capas Aplicación, Presentación y Sesión del modelo OSI.</li>
+                <li data-op="d">El modelo OSI fue diseñado por la International Standards Organization con la intención de definir los procesos de comunicación.</li>
+            </ul>
+        </div>
+
+        <div class="quiz-pregunta" data-correcta="c">
+            <p><strong>10.</strong> ¿En qué categoría de servicios se emplea el protocolo IAX?</p>
+            <ul class="quiz-opciones">
+                <li data-op="a">Servicios de enrutamiento dinámico/adaptativo.</li>
+                <li data-op="b">Servicios de correo electrónico.</li>
+                <li data-op="c">Servicios de telefonía IP.</li>
+                <li data-op="d">Servicios multimedia y de streaming.</li>
+            </ul>
+        </div>
+
+        <button id="quiz-corregir" type="button">Corregir</button>
+        <p id="quiz-resultado"></p>
+
+    </div>
+
+    <p class="quiz-fuente">
+        Fuente: <a href="https://corriol.github.io/sxe/UD01/index.html">https://corriol.github.io/sxe/UD01/index.html</a>
+        — Servicios en Red. Editorial Síntesis
     </p>
 
 </section>
+
+<script>
+(function () {
+    var quiz = document.getElementById('quiz-tema01');
+    if (!quiz) return;
+
+    quiz.querySelectorAll('.quiz-opciones li').forEach(function (li) {
+        li.addEventListener('click', function () {
+            var opciones = li.parentElement.querySelectorAll('li');
+            opciones.forEach(function (o) { o.classList.remove('seleccionada'); });
+            li.classList.add('seleccionada');
+        });
+    });
+
+    var boton = document.getElementById('quiz-corregir');
+    boton.addEventListener('click', function () {
+        var preguntas = quiz.querySelectorAll('.quiz-pregunta');
+        var aciertos = 0;
+
+        preguntas.forEach(function (pregunta) {
+            var correcta = pregunta.dataset.correcta;
+            var opciones = pregunta.querySelectorAll('li');
+            var seleccionada = pregunta.querySelector('li.seleccionada');
+
+            opciones.forEach(function (o) {
+                o.classList.remove('correcta', 'incorrecta');
+                if (o.dataset.op === correcta) o.classList.add('correcta');
+            });
+
+            if (seleccionada && seleccionada.dataset.op === correcta) {
+                aciertos++;
+            } else if (seleccionada) {
+                seleccionada.classList.add('incorrecta');
+            }
+        });
+
+        document.getElementById('quiz-resultado').textContent =
+            'Resultado: ' + aciertos + ' / ' + preguntas.length + ' correctas.';
+    });
+})();
+</script>
 
     <!-- Bibliografía -->
 <section id="bibliografia">
