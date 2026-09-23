@@ -906,3 +906,84 @@ main section {
     }
 
 }
+
+/* Diagrama: DHCP en el modelo TCP/IP */
+
+.diagrama-dhcp-capas {
+    max-width: 700px;
+    margin: 35px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.diagrama-dhcp-capas .capa {
+    padding: 16px 20px;
+    border-radius: 8px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.diagrama-dhcp-capas .capa strong {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+.diagrama-dhcp-capas .capa small {
+    width: 100%;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.diagrama-dhcp-capas .protocolo-pill {
+    background: #ffffff;
+    color: #31586a;
+    font-weight: bold;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.capa-aplicacion {
+    background: #31586a;
+}
+
+.capa-transporte {
+    background: #4a7c9b;
+}
+
+.capa-internet {
+    background: #6fa8bf;
+    justify-content: space-between;
+}
+
+.capa-internet .protocolo-pill {
+    background: #ffffff;
+    color: #31586a;
+}
+
+.capa-acceso {
+    background: #b8d4dd;
+    color: #31586a;
+    justify-content: center;
+}
+
+@media (max-width: 700px) {
+
+    .diagrama-dhcp-capas .capa {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .capa-internet {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+}
