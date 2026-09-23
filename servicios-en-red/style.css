@@ -987,3 +987,371 @@ main section {
     }
 
 }
+
+/* =========================
+   FIGURAS DEL CAPÍTULO 2 (2.1 - 2.14)
+   ========================= */
+
+.figura {
+    margin: 40px auto;
+    max-width: 720px;
+}
+
+.figura figcaption {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+}
+
+.figura-numero {
+    display: block;
+    font-weight: bold;
+    color: #31586a;
+    margin-bottom: 2px;
+}
+
+/* Topología (2.2) y escenarios de Relay (2.13, 2.14) */
+
+.diagrama-topologia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 25px 15px;
+    background: #f2f2f2;
+    border-radius: 12px;
+}
+
+.diagrama-topologia .nodo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    padding: 16px 14px;
+    background: #ffffff;
+    border: 2px solid #6fa8bf;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.diagrama-topologia .nodo.servidor {
+    border-color: #31586a;
+    background: #e8f1f5;
+    font-weight: bold;
+}
+
+.diagrama-topologia .nodo-icono {
+    font-size: 30px;
+    margin-bottom: 6px;
+}
+
+.diagrama-topologia .grupo-clientes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.diagrama-topologia .enlace {
+    font-size: 26px;
+    font-weight: bold;
+    color: #4a7c9b;
+}
+
+.diagrama-topologia .red-broadcast {
+    border: 2px dashed #b8d4dd;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.diagrama-topologia .red-etiqueta {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4a7c9b;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+/* Diagrama de secuencia de mensajes (2.3) */
+
+.diagrama-secuencia {
+    padding: 20px 15px 6px;
+    background: #f2f2f2;
+    border-radius: 12px;
+}
+
+.diagrama-secuencia .actores {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.diagrama-secuencia .actor {
+    background: #31586a;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.diagrama-secuencia .fase-titulo {
+    text-align: center;
+    font-weight: bold;
+    color: #4a7c9b;
+    margin: 18px 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.diagrama-secuencia .mensaje-fila {
+    margin: 14px 0;
+}
+
+.diagrama-secuencia .msg-etiqueta {
+    text-align: center;
+    font-family: Consolas, "Courier New", monospace;
+    font-weight: bold;
+    font-size: 13px;
+    color: #31586a;
+    margin-bottom: 4px;
+}
+
+.diagrama-secuencia .msg-etiqueta small {
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    color: #666;
+}
+
+.diagrama-secuencia .msg-linea {
+    height: 0;
+    border-top: 2px solid #6fa8bf;
+    position: relative;
+}
+
+.diagrama-secuencia .mensaje-fila.difusion .msg-linea {
+    border-top-style: dashed;
+}
+
+.diagrama-secuencia .msg-linea.a-servidor::after {
+    content: "▶";
+    position: absolute;
+    right: 0;
+    top: -9px;
+    color: #4a7c9b;
+    font-size: 14px;
+}
+
+.diagrama-secuencia .msg-linea.a-cliente::after {
+    content: "◀";
+    position: absolute;
+    left: 0;
+    top: -9px;
+    color: #4a7c9b;
+    font-size: 14px;
+}
+
+/* Paneles de configuración (2.4, 2.6, 2.7, 2.8) */
+
+.diagrama-panel {
+    background: #ffffff;
+    border: 1px solid #b8d4dd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.diagrama-panel .panel-titulo {
+    background: #31586a;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 16px;
+}
+
+.diagrama-panel .panel-fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 1px solid #e8f1f5;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.diagrama-panel .panel-icono {
+    font-size: 18px;
+}
+
+.diagrama-panel code {
+    font-family: Consolas, "Courier New", monospace;
+    background: #e8f1f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.estado-pill {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 12px;
+    border-radius: 999px;
+}
+
+.estado-pill.on {
+    background: #dcefe0;
+    color: #2e7d4f;
+}
+
+.estado-pill.off {
+    background: #f2dede;
+    color: #a94442;
+}
+
+/* Rango de direcciones y concesión (2.5) */
+
+.diagrama-rango {
+    background: #ffffff;
+    border: 1px solid #b8d4dd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.diagrama-rango .rango-cabecera {
+    font-weight: bold;
+    color: #31586a;
+    margin-bottom: 16px;
+}
+
+.diagrama-rango .rango-barra {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.diagrama-rango .rango-ip {
+    font-family: Consolas, "Courier New", monospace;
+    background: #e8f1f5;
+    color: #31586a;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.diagrama-rango .rango-linea {
+    flex: 1;
+    max-width: 220px;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #6fa8bf, #b8d4dd);
+}
+
+.diagrama-rango .rango-concesion {
+    font-size: 13px;
+    color: #4a7c9b;
+    font-weight: bold;
+}
+
+/* Tabla de concesiones (2.9) */
+
+.tabla-mock {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tabla-mock th {
+    background: #31586a;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.tabla-mock td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e8f1f5;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.tabla-mock tr:nth-child(even) {
+    background: #f7fafb;
+}
+
+/* Estadísticas (2.10, 2.11) */
+
+.diagrama-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.diagrama-stats .stat-card {
+    background: #e8f1f5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 110px;
+    text-align: center;
+}
+
+.diagrama-stats .stat-card strong {
+    display: block;
+    font-size: 26px;
+    color: #31586a;
+}
+
+.diagrama-stats .stat-card span {
+    font-size: 12px;
+    color: #4a7c9b;
+}
+
+/* Salida de terminal (2.12) */
+
+.terminal-figura {
+    background: #1e1e1e;
+    color: #f5f5f5;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+/* Adaptación para móvil */
+
+@media (max-width: 700px) {
+
+    .diagrama-topologia {
+        flex-direction: column;
+    }
+
+    .diagrama-topologia .enlace {
+        transform: rotate(90deg);
+    }
+
+    .diagrama-secuencia .actores {
+        font-size: 12px;
+    }
+
+    .diagrama-panel .panel-fila {
+        font-size: 13px;
+    }
+
+    .estado-pill {
+        margin-left: 0;
+    }
+
+}
