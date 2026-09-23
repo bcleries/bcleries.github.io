@@ -320,57 +320,9 @@
 
             <h2>2.2. Asignación, renovación y liberación</h2>
 
-            <figure class="figura">
-                <div class="diagrama-secuencia">
-
-                    <div class="actores">
-                        <span class="actor">CLIENTE</span>
-                        <span class="actor">SERVIDOR</span>
-                    </div>
-
-                    <div class="fase-titulo">Asignación</div>
-
-                    <div class="mensaje-fila difusion">
-                        <div class="msg-etiqueta">DHCPDISCOVER <small>(broadcast)</small></div>
-                        <div class="msg-linea a-servidor"></div>
-                    </div>
-                    <div class="mensaje-fila">
-                        <div class="msg-etiqueta">DHCPOFFER <small>(unicast)</small></div>
-                        <div class="msg-linea a-cliente"></div>
-                    </div>
-                    <div class="mensaje-fila difusion">
-                        <div class="msg-etiqueta">DHCPREQUEST <small>(broadcast)</small></div>
-                        <div class="msg-linea a-servidor"></div>
-                    </div>
-                    <div class="mensaje-fila">
-                        <div class="msg-etiqueta">DHCPACK <small>(unicast)</small></div>
-                        <div class="msg-linea a-cliente"></div>
-                    </div>
-
-                    <div class="fase-titulo">Renovación (T1 / T2)</div>
-
-                    <div class="mensaje-fila">
-                        <div class="msg-etiqueta">DHCPREQUEST <small>(unicast)</small></div>
-                        <div class="msg-linea a-servidor"></div>
-                    </div>
-                    <div class="mensaje-fila">
-                        <div class="msg-etiqueta">DHCPACK <small>(unicast)</small></div>
-                        <div class="msg-linea a-cliente"></div>
-                    </div>
-
-                    <div class="fase-titulo">Liberación</div>
-
-                    <div class="mensaje-fila">
-                        <div class="msg-etiqueta">DHCPRELEASE <small>(unicast)</small></div>
-                        <div class="msg-linea a-servidor"></div>
-                    </div>
-
-                </div>
-                <figcaption>
-                    <span class="figura-numero">Figura 2.3</span>
-                    Intercambio de mensajes en asignación, renovación y liberación con DHCPv4.
-                </figcaption>
-            </figure>
+            <div class="imagen-capas">
+                <img src="Figura2.3.png" alt="Asignación, renovación y liberación">
+            </div>
 
             <h3>a) Asignación</h3>
 
