@@ -830,3 +830,79 @@ main section {
     }
 
 }
+
+/* =========================
+   TEMA 2 - DHCP
+   ========================= */
+
+#servidor-dhcp pre,
+#cliente-dhcp pre {
+    background: #1e1e1e;
+    color: #f5f5f5;
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+
+#servidor-dhcp pre code,
+#cliente-dhcp pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+#protocolo-dhcp code,
+#proceso-dhcp code,
+#reasignacion code,
+#ambitos code,
+#alternativas-dhcp code,
+#servidor-dhcp code,
+#dhcp-relay code,
+#cliente-dhcp code,
+#bootp code {
+    font-family: Consolas, "Courier New", monospace;
+    background: #f2f2f2;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+#servidor-dhcp table,
+#mensajes-dhcp table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+}
+
+#servidor-dhcp th,
+#servidor-dhcp td,
+#mensajes-dhcp th,
+#mensajes-dhcp td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+#servidor-dhcp th,
+#mensajes-dhcp th {
+    background: #eeeeee;
+}
+
+@media (max-width: 700px) {
+
+    #servidor-dhcp table,
+    #mensajes-dhcp table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #servidor-dhcp pre,
+    #cliente-dhcp pre {
+        font-size: 13px;
+        padding: 15px;
+    }
+
+}

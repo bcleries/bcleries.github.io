@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tema 2 - Servicios de configuración dinámica de sistemas (DHCP)</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Tema 2</h1>
+        <p>Servicios de configuración dinámica de sistemas (DHCP)</p>
+    </header>
+
+
+    <main>
+
+        <!-- ÍNDICE DEL TEMA -->
+
+        <section>
+            <h2>📚 Índice</h2>
+
+            <ul>
+                <li><a href="#introduccion">1. Introducción</a></li>
+                <li><a href="#protocolo-dhcp">2. Protocolo DHCP</a></li>
+                <li><a href="#mensajes-dhcp">2.1. Mensajes DHCP</a></li>
+                <li><a href="#proceso-dhcp">2.2. Asignación, renovación y liberación</a></li>
+                <li><a href="#reasignacion">2.3. Reasignación y servidores autorizados</a></li>
+                <li><a href="#ambitos">2.4. Ámbitos, rangos, exclusiones, reservas y concesiones</a></li>
+                <li><a href="#cuestionario">📝 Cuestionario</a></li>
+                <li><a href="#alternativas-dhcp">3. Alternativas a DHCP</a></li>
+                <li><a href="#servidor-dhcp">4. Servidor DHCP</a></li>
+                <li><a href="#dhcp-relay">5. Agente DHCP Relay</a></li>
+                <li><a href="#cliente-dhcp">6. Cliente DHCP</a></li>
+                <li><a href="#bootp">7. Protocolo BOOTP</a></li>
+                <li><a href="#actividad1">📝 Actividad</a></li>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#autoevaluacion">Autoevaluación</a></li>
+                <li><a href="#bibliografia">Bibliografía</a></li>
+            </ul>
+        </section>
+
+
+        <!-- 1. INTRODUCCIÓN -->
+
+        <section id="introduccion">
+
+            <h2>1. Introducción</h2>
+
+            <p>
+                Ya sea en el hogar, en el trabajo, en un aeropuerto o en una
+                cafetería, siempre existirá alguna red que estará disponible
+                para su uso. La gran mayoría de esas redes serán redes
+                inalámbricas, aunque también es posible que en otras
+                ocasiones sean accesibles a través de rosetas de conexión.
+            </p>
+
+            <p>
+                En cualquier caso, y sea cual sea el método de conexión, lo
+                más probable es que dentro de esa red exista algún servidor
+                encargado de suministrar los datos de configuración IP. A
+                este servicio se le conoce como <strong>DHCP</strong>.
+            </p>
+
+        </section>
+
+
+        <!-- 2. PROTOCOLO DHCP -->
+
+        <section id="protocolo-dhcp">
+
+            <h2>2. Protocolo DHCP</h2>
+
+            <p>
+                El protocolo <strong>DHCP</strong> (<em>Dynamic Host
+                Configuration Protocol</em> o Protocolo de configuración
+                dinámica de host) es un protocolo de la
+                <strong>capa de aplicación</strong> encargado de configurar
+                automática y dinámicamente los parámetros de conexión de los
+                equipos cliente de una red.
+            </p>
+
+            <p>
+                Es utilizado en arquitecturas cliente-servidor y da nombre a
+                los servidores que lo implementan.
+            </p>
+
+            <div class="actividad">
+                <h3>💡 ¿Sabías que...?</h3>
+                <p>
+                    Aunque su uso suele ser más conocido en redes LAN, el
+                    protocolo DHCP también se emplea en redes WAN.
+                    Normalmente, cada router doméstico obtiene los datos de
+                    configuración de forma dinámica desde un servidor DHCP
+                    que le ofrece una dirección IP pública dinámica.
+                </p>
+            </div>
+
+            <h3>Características y funcionamiento</h3>
+
+            <p>
+                El servidor DHCP posee un listado con direcciones IP que van
+                asignándose a los clientes que solicitan parámetros de
+                configuración, y conocerá en todo momento los dispositivos a
+                los que les ha concedido parámetros de conexión, así como el
+                momento en el que lo ha hecho.
+            </p>
+
+            <p>
+                Un servidor DHCP puede trabajar de tres formas diferentes,
+                combinando algunas de ellas incluso al mismo tiempo:
+            </p>
+
+            <ul class="lista-servicios">
+                <li>
+                    <strong>Asignación estática:</strong> el servidor asigna
+                    una dirección IP concreta a una máquina determinada,
+                    identificada por su dirección MAC o el identificador de
+                    cliente. Evita que se conecten clientes no identificados.
+                </li>
+                <li>
+                    <strong>Asignación automática:</strong> el servidor
+                    asigna una dirección IP a una máquina cliente la primera
+                    vez que hace la solicitud, y esta la puede utilizar hasta
+                    que decida liberarla. Se suele utilizar en escenarios con
+                    un número reducido de clientes que se conectan de forma
+                    frecuente.
+                </li>
+                <li>
+                    <strong>Asignación dinámica:</strong> el servidor dispone
+                    de un rango de direcciones IP que se ofrecen a los
+                    clientes que solicitan parámetros válidos de conexión.
+                    Es el único método que permite la reutilización dinámica
+                    de las direcciones IP. Suele utilizarse en redes con un
+                    elevado número de clientes.
+                </li>
+            </ul>
+
+            <div class="actividad">
+                <h3>💡 Recuerda</h3>
+                <p>
+                    Además de las alternativas descritas, un cliente también
+                    puede configurarse de forma manual estableciendo él
+                    mismo los parámetros de configuración de sus interfaces
+                    de red.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- 2.1. MENSAJES DHCP -->
+
+        <section id="mensajes-dhcp">
+
+            <h2>2.1. Mensajes DHCP</h2>
+
+            <p>
+                Toda comunicación conlleva un intercambio de mensajes que
+                están claramente tipificados por el protocolo.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mensaje</th>
+                        <th>Descripción</th>
+                        <th>Emisor / Puerto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DHCPDISCOVER</td>
+                        <td>
+                            Permite descubrir la existencia de posibles
+                            servidores DHCP en la red. Se envía mediante
+                            difusión (broadcast).
+                        </td>
+                        <td>Cliente · 68 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPOFFER</td>
+                        <td>
+                            Respuesta con la concesión ofrecida al cliente.
+                            Incluye una dirección de red disponible en el
+                            campo «yiaddr» y otros parámetros de
+                            configuración.
+                        </td>
+                        <td>Servidor · 67 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPREQUEST</td>
+                        <td>
+                            Indica qué servidor de los que han emitido un
+                            DHCPOFFER ha sido seleccionado (descartando al
+                            resto). También se utiliza para renovar la
+                            concesión.
+                        </td>
+                        <td>Cliente · 68 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPACK</td>
+                        <td>
+                            Contiene los parámetros de configuración de la
+                            solicitud del cliente y confirma la concesión.
+                        </td>
+                        <td>Servidor · 67 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPNACK</td>
+                        <td>
+                            Deniega la solicitud que hace el cliente (por
+                            ejemplo, la dirección solicitada ya no es
+                            válida o ya está asignada).
+                        </td>
+                        <td>Servidor · 67 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPDECLINE</td>
+                        <td>
+                            El cliente notifica que la dirección concedida
+                            ya está en uso, por lo que rechaza la concesión.
+                        </td>
+                        <td>Cliente · 68 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPRELEASE</td>
+                        <td>Libera la concesión actualmente en uso.</td>
+                        <td>Cliente · 68 UDP</td>
+                    </tr>
+                    <tr>
+                        <td>DHCPINFORM</td>
+                        <td>
+                            Permite solicitar parámetros extra de
+                            configuración local (dominio, servidores DNS...).
+                            La respuesta del servidor es un DHCPACK.
+                        </td>
+                        <td>Cliente · 68 UDP</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+        <!-- 2.2. PROCESO DE ASIGNACIÓN -->
+
+        <section id="proceso-dhcp">
+
+            <h2>2.2. Asignación, renovación y liberación</h2>
+
+            <h3>a) Asignación</h3>
+
+            <ol>
+                <li>
+                    El cliente inunda la red con un mensaje
+                    <strong>DHCPDISCOVER</strong> (broadcast) con el que
+                    pretende obtener una asignación de datos de
+                    configuración válidos.
+                </li>
+                <li>
+                    El servidor recibe el mensaje y prepara la respuesta
+                    <strong>DHCPOFFER</strong> (unicast), que incluye una
+                    dirección de red disponible (campo «yiaddr») y otros
+                    parámetros de configuración.
+                </li>
+                <li>
+                    El cliente selecciona una oferta entre todas las
+                    recibidas y difunde un mensaje
+                    <strong>DHCPREQUEST</strong> (broadcast) identificando
+                    al servidor elegido y descartando al resto.
+                </li>
+                <li>
+                    El servidor recibe el DHCPREQUEST. Si acepta la
+                    solicitud, responde con un <strong>DHCPACK</strong>; si
+                    no puede satisfacerla, responde con un
+                    <strong>DHCPNACK</strong>.
+                </li>
+                <li>
+                    Si el cliente recibe un DHCPACK, valida los datos
+                    (mediante ARP comprueba que la dirección no esté en uso)
+                    y queda configurado. Si detecta un conflicto, envía un
+                    <strong>DHCPDECLINE</strong> y reinicia el proceso.
+                </li>
+            </ol>
+
+            <h3>b) Renovación</h3>
+
+            <p>
+                Las concesiones tienen un tiempo máximo de caducidad
+                conocido como <strong>lease time</strong>, pero además
+                existen otros dos tiempos:
+            </p>
+
+            <ul class="lista-servicios">
+                <li>
+                    <strong>Renewal time o T1:</strong> tiempo tras el cual
+                    el cliente intenta renovar la concesión con el servidor
+                    que se la ofreció (unicast). Por defecto, el 50 % del
+                    tiempo total de la concesión.
+                </li>
+                <li>
+                    <strong>Rebinding time o T2:</strong> tiempo tras el
+                    cual el cliente difunde (broadcast) un DHCPREQUEST
+                    solicitando la renovación a cualquier servidor DHCP.
+                    Por defecto, el 87,5 % del tiempo total de la concesión.
+                </li>
+            </ul>
+
+            <p>
+                Si el servidor acepta la renovación envía un DHCPACK; en
+                caso contrario, un DHCPNACK, y el cliente reiniciará el
+                proceso con un DHCPDISCOVER.
+            </p>
+
+            <h3>c) Liberación</h3>
+
+            <p>
+                El cliente puede renunciar a su concesión enviando un
+                mensaje <strong>DHCPRELEASE</strong> al servidor. Es una
+                comunicación unidireccional que no necesita respuesta y
+                puede motivarla, por ejemplo, el apagado del equipo.
+            </p>
+
+            <div class="actividad">
+                <h3>💡 Para saber más</h3>
+                <p>
+                    El mensaje DHCPREQUEST emitido para la renovación es
+                    <strong>unicast</strong>, a diferencia del enviado para
+                    aceptar la oferta de los servidores durante la
+                    asignación inicial, que es de <strong>difusión</strong>.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- 2.3. REASIGNACIÓN Y SERVIDORES AUTORIZADOS -->
+
+        <section id="reasignacion">
+
+            <h2>2.3. Reasignación y servidores autorizados</h2>
+
+            <h3>Reasignación de concesión</h3>
+
+            <p>
+                Es posible que un equipo se apague y se encienda de nuevo
+                mientras su concesión sigue siendo válida. En ese caso, el
+                cliente puede solicitar el restablecimiento del
+                arrendamiento existente sin realizar todo el proceso
+                completo de asignación:
+            </p>
+
+            <ol>
+                <li>
+                    El cliente difunde un <strong>DHCPREQUEST</strong>
+                    (broadcast) con información sobre la concesión actual,
+                    sin incluir la opción que identifica al servidor.
+                </li>
+                <li>
+                    El servidor responde con <strong>DHCPACK</strong> si la
+                    concesión es válida, con <strong>DHCPNACK</strong> si no
+                    lo es, o no responde si no tiene información sobre ella.
+                </li>
+            </ol>
+
+            <h3>Servidores autorizados</h3>
+
+            <p>
+                Si un cliente intenta renovar su concesión tras haberse
+                conectado a una red diferente, el servidor DHCP de esa
+                nueva red escuchará mensajes para una dirección que no ha
+                proporcionado él. Si dicho servidor está configurado como
+                <strong>autorizado</strong>, enviará un DHCPNACK al cliente
+                mal configurado, forzándolo a liberar sus datos y comenzar
+                de nuevo el proceso mediante un DHCPDISCOVER.
+            </p>
+
+        </section>
+
+
+        <!-- 2.4. ÁMBITOS -->
+
+        <section id="ambitos">
+
+            <h2>2.4. Ámbitos, rangos, exclusiones, reservas y concesiones</h2>
+
+            <p>
+                Un <strong>ámbito</strong>, en DHCP, es la agrupación
+                administrativa de clientes de una subred a los que se les
+                suministran determinados parámetros de conexión. Dentro de
+                cada ámbito se definen rangos de direcciones, exclusiones y
+                reservas.
+            </p>
+
+            <ul class="lista-servicios">
+                <li>
+                    <strong>Rango:</strong> conjunto de direcciones
+                    consecutivas disponibles para ofrecerse a los clientes.
+                </li>
+                <li>
+                    <strong>Exclusión:</strong> dirección dentro de un rango
+                    que no debe ofrecerse a los clientes, por ser especial o
+                    estar en uso permanente.
+                </li>
+                <li>
+                    <strong>Reserva:</strong> dirección del rango que se
+                    desea adjudicar siempre a un equipo concreto,
+                    identificado por su dirección MAC o identificador de
+                    cliente.
+                </li>
+                <li>
+                    <strong>Concesión (lease):</strong> resultado de la
+                    asignación de una dirección a un cliente, almacenado en
+                    el servidor junto con su periodo máximo de validez.
+                </li>
+            </ul>
+
+        </section>
+
+
+        <!-- CUESTIONARIO -->
+
+        <section id="cuestionario">
+
+            <h2>📝 Cuestionario</h2>
+
+            <ol>
+                <li>¿Cuál es la diferencia entre un servidor DHCP autorizado y uno no autorizado?</li>
+                <li>¿Qué mensaje permite notificar a un servidor DHCP que su oferta es inválida?</li>
+                <li>¿Qué mensaje o mensajes intercambiados entre cliente y servidor DHCP se envían a la dirección de broadcast?</li>
+                <li>Define qué es un ámbito en DHCP.</li>
+                <li>¿Qué diferencia existe entre una exclusión y una reserva?</li>
+            </ol>
+
+        </section>
+
+
+        <!-- 3. ALTERNATIVAS A DHCP -->
+
+        <section id="alternativas-dhcp">
+
+            <h2>3. Alternativas a DHCP</h2>
+
+            <p>
+                Dado que no siempre es posible encontrar un servidor DHCP
+                desde el que realizar la configuración de la interfaz de
+                red, es importante conocer qué mecanismos alternativos
+                existen para evitar dejar aislado al dispositivo.
+            </p>
+
+            <h3>Configuración manual</h3>
+
+            <p>
+                Como datos mínimos de configuración, siempre será necesario
+                establecer la <strong>dirección IP y la máscara</strong>
+                (IPv4), o la <strong>dirección IP y la longitud del
+                prefijo de red</strong> (IPv6).
+            </p>
+
+            <h3>APIPA (IPv4)</h3>
+
+            <p>
+                En sistemas Microsoft, este mecanismo se conoce como
+                <strong>APIPA</strong> (<em>Automatic Private Internet
+                Protocol Addressing</em>), descrito en la RFC 3927. Su
+                equivalente en Linux es el demonio
+                <strong>avahi-autoipd</strong>.
+            </p>
+
+            <p>
+                Permite obtener una dirección IP y máscara con
+                funcionalidad básica cuando no hay servidor DHCP
+                disponible, comprobando previamente por broadcast que la
+                dirección elegida no esté en uso. La asignación es
+                temporal: cada cinco minutos el equipo intenta conectar de
+                nuevo con un servidor DHCP.
+            </p>
+
+            <p>
+                IANA reservó el rango
+                <strong>169.254.0.0/16</strong> para este direccionamiento
+                privado automático (bloque link-local, RFC 3330).
+            </p>
+
+            <h3>SLAAC (IPv6)</h3>
+
+            <p>
+                En IPv6, el mecanismo de asignación automática es
+                <strong>SLAAC</strong> (<em>Stateless Address
+                Autoconfiguration</em>, RFC 4862):
+            </p>
+
+            <ul class="lista-servicios">
+                <li>
+                    El nodo crea automáticamente una dirección de enlace
+                    local con el prefijo <strong>fe80::/10</strong>.
+                </li>
+                <li>
+                    Recibe un mensaje <strong>ICMPv6 134 (Router
+                    Advertisement)</strong> del router, que le indica cómo
+                    completar la configuración: solo con SLAAC, con SLAAC +
+                    DHCPv6, o completamente con DHCPv6.
+                </li>
+            </ul>
+
+        </section>
+
+
+        <!-- 4. SERVIDOR DHCP -->
+
+        <section id="servidor-dhcp">
+
+            <h2>4. Servidor DHCP</h2>
+
+            <p>
+                Sea cual sea el escenario, es conveniente que el equipo que
+                va a ofrecer el servicio DHCP disponga de una
+                <strong>dirección IP fija</strong>.
+            </p>
+
+            <h3>4.1. Implementación con Microsoft Windows Server</h3>
+
+            <p>Instalación del servicio desde PowerShell (con privilegios de administrador):</p>
+
+            <pre><code>Install-WindowsFeature DHCP -IncludeManagementTools</code></pre>
+
+            <p>
+                Una vez instalado, se configura desde la herramienta
+                <strong>dhcpmgmt.msc</strong>, indicando enlaces, creando
+                ámbitos (rango, máscara, exclusiones, tiempo de concesión,
+                puerta de enlace, DNS) y, si procede, reservas
+                identificadas por dirección MAC.
+            </p>
+
+            <p>Administración del servicio mediante cmdlets de PowerShell:</p>
+
+            <pre><code>[Start|Stop|Suspend|Resume|Restart|Get]-Service -name DHCPServer</code></pre>
+
+            <p>
+                La monitorización se realiza desde la propia consola de
+                administración («Concesiones de direcciones») y mediante
+                los ficheros de log en
+                <code>%windir%\system32\dhcp\DhcpSrvLog-XXX.log</code>.
+            </p>
+
+            <h3>4.2. Implementación con Ubuntu Server (ISC DHCP)</h3>
+
+            <p>Instalación:</p>
+
+            <pre><code>sudo apt-get update -y
+sudo apt-get install isc-dhcp-server -y</code></pre>
+
+            <p>
+                Las interfaces por las que el servicio atenderá peticiones
+                se indican en
+                <code>/etc/default/isc-dhcp-server</code>:
+            </p>
+
+            <pre><code>INTERFACESv4="enp0s3 enp0s8"
+INTERFACESv6="enp0s3 enp0s8"</code></pre>
+
+            <p>
+                La configuración del servicio se realiza en
+                <code>/etc/dhcp/dhcpd.conf</code>. Ejemplo con dos subredes
+                que comparten red física y dos reservas:
+            </p>
+
+            <pre><code>option domain-name "ejemplo.local";
+option domain-name-servers 172.16.0.4, 172.16.0.5;
+option subnet-mask 255.255.255.0;
+default-lease-time 600; # 10 minutos
+max-lease-time 7200;    # 2 horas
+ddns-update-style none;
+authoritative;
+server-name "dhcp.ejemplo.local";
+
+shared-network SUBRED_COMPARTIDA {
+  subnet 172.16.0.0 netmask 255.255.255.0 {
+    range 172.16.0.100 172.16.0.200;
+    option routers 172.16.0.1;
+  }
+  subnet 172.16.1.0 netmask 255.255.255.0 {
+    range 172.16.1.100 172.16.1.200;
+    option routers 172.16.1.1;
+  }
+}
+
+group {
+  host pc1 {
+    hardware ethernet 08:00:27:00:01:0C;
+    option host-name "pc1.ejemplo.local";
+    fixed-address 172.16.0.66;
+    option routers 172.16.0.1;
+  }
+  host pc2 {
+    hardware ethernet 08:00:27:D2:2E:33;
+    option host-name "pc2.ejemplo.local";
+    fixed-address 172.16.1.244;
+    option routers 172.16.1.1;
+  }
+}</code></pre>
+
+            <p>Arranque, parada y consulta de estado mediante systemctl:</p>
+
+            <pre><code>sudo systemctl [restart|start|status|stop] isc-dhcp-server.service</code></pre>
+
+            <div class="actividad">
+                <h3>💡 Recuerda</h3>
+                <p>
+                    En sistemas Linux/UNIX, los cambios en los ficheros de
+                    configuración no surten efecto hasta que el servicio se
+                    recarga o reinicia.
+                </p>
+            </div>
+
+            <p>
+                Las concesiones se registran en
+                <code>/var/lib/dhcp/dhcpd.leases</code>, y pueden
+                consultarse de forma legible con la herramienta
+                <code>dhcp-lease-list</code>. El PID del servicio se
+                encuentra en <code>/var/run/dhcpd.pid</code>.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro / declaración</th>
+                        <th>Función</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>option domain-name-servers</code></td>
+                        <td>Establece los servidores DNS.</td>
+                    </tr>
+                    <tr>
+                        <td><code>default-lease-time</code> / <code>max-lease-time</code></td>
+                        <td>Tiempo de concesión por defecto y máximo (segundos).</td>
+                    </tr>
+                    <tr>
+                        <td><code>[not] authoritative</code></td>
+                        <td>Establece si el servidor es autorizado o no.</td>
+                    </tr>
+                    <tr>
+                        <td><code>subnet ... netmask ... { }</code></td>
+                        <td>Declaración obligatoria por cada subred servida.</td>
+                    </tr>
+                    <tr>
+                        <td><code>range IP_INICIO IP_FIN</code></td>
+                        <td>Intervalo de direcciones ofertadas.</td>
+                    </tr>
+                    <tr>
+                        <td><code>host NOMBRE { }</code></td>
+                        <td>Configuración estática para un cliente concreto.</td>
+                    </tr>
+                    <tr>
+                        <td><code>fixed-address IP</code></td>
+                        <td>Dirección IP fija asociada a una declaración host.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+
+        <!-- 5. DHCP RELAY -->
+
+        <section id="dhcp-relay">
+
+            <h2>5. Agente DHCP Relay</h2>
+
+            <p>
+                Los mensajes broadcast (como un DHCPDISCOVER) no son
+                enrutados por defecto entre redes distintas, por lo que un
+                servidor DHCP de una red no puede atender directamente
+                peticiones de clientes ubicados en otra red.
+            </p>
+
+            <p>
+                La solución más viable es emplear
+                <strong>agentes DHCP Relay</strong>: elementos
+                retransmisores que capturan las peticiones de los clientes
+                y las reenvían a los servidores DHCP de otras redes,
+                transformando el tráfico broadcast en unicast.
+            </p>
+
+            <p>
+                El agente puede ejecutarse en un servidor independiente o
+                estar embebido en un router (por ejemplo, en equipos Cisco).
+            </p>
+
+        </section>
+
+
+        <!-- 6. CLIENTE DHCP -->
+
+        <section id="cliente-dhcp">
+
+            <h2>6. Cliente DHCP</h2>
+
+            <h3>6.1. Cliente Microsoft Windows</h3>
+
+            <p>
+                El servicio «Cliente DHCP» debe estar habilitado y la
+                interfaz configurada con «Obtener una dirección IP
+                automáticamente». Se administra con el comando
+                <code>ipconfig</code>:
+            </p>
+
+            <pre><code>ipconfig /release[6] [adaptador]   # Libera la concesión
+ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
+
+            <p>
+                Si se añade el sufijo <code>6</code>, la operación se
+                realiza para IPv6; de lo contrario, únicamente para IPv4.
+            </p>
+
+            <h3>6.2. Cliente Ubuntu Linux</h3>
+
+            <p>
+                La obtención automática de parámetros se indica en el
+                fichero de netplan:
+            </p>
+
+            <pre><code>network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    enp0s3:
+      dhcp4: true</code></pre>
+
+            <p>El cliente DHCP en Linux es <code>dhclient</code>:</p>
+
+            <pre><code>sudo dhclient [-4|-6] [-r] [interfaz]</code></pre>
+
+            <p>
+                Las opciones <code>-4</code> / <code>-6</code> indican el
+                protocolo (por defecto, IPv4). La opción <code>-r</code>
+                libera la dirección; su omisión indica renovación. La
+                concesión queda registrada en
+                <code>/var/lib/dhcp/dhclient.leases</code>.
+            </p>
+
+        </section>
+
+
+        <!-- 7. PROTOCOLO BOOTP -->
+
+        <section id="bootp">
+
+            <h2>7. Protocolo BOOTP</h2>
+
+            <p>
+                Los orígenes de DHCP residen en el protocolo
+                <strong>BOOTP</strong> (<em>Bootstrap Protocol</em>, RFC
+                951), que también trabaja sobre UDP. Los clientes lo
+                utilizan para obtener una dirección IP automáticamente y,
+                una vez asignada, cargar la imagen de un sistema operativo
+                con el que arrancar mediante el protocolo <strong>TFTP</strong>.
+            </p>
+
+            <p>
+                Inicialmente era necesario un dispositivo de arranque
+                específico (disquete), pero hoy en día esta funcionalidad
+                se incluye de base en la práctica totalidad de las BIOS y
+                UEFI del mercado.
+            </p>
+
+        </section>
+
+
+        <!-- ACTIVIDAD -->
+
+        <section id="actividad1">
+
+            <div class="actividad">
+
+                <h3>📝 Actividad: Instalación de un servidor DHCP</h3>
+
+                <ol>
+                    <li>
+                        <p>
+                            Realiza la instalación de un servidor DHCP
+                            sobre Linux Ubuntu Server con dirección IP fija
+                            <strong>192.168.100.100/24</strong>.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            Configura el reparto del resto de direcciones
+                            de la red entre los clientes, excluyendo la
+                            dirección del router (192.168.100.1), la
+                            propia dirección del servidor y las
+                            direcciones de red y broadcast.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            Da de alta una reserva para que un cliente
+                            concreto reciba siempre la dirección
+                            <strong>192.168.100.200</strong>. Arranca el
+                            cliente y comprueba que recibe dicha
+                            configuración.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            Monitoriza el estado del servidor y las
+                            concesiones realizadas, y libera desde algún
+                            cliente la configuración recibida.
+                        </p>
+                    </li>
+                </ol>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESUMEN -->
+
+        <section id="resumen">
+
+            <h2>Resumen</h2>
+
+            <ul class="lista-servicios">
+                <li>Los equipos pueden conectarse a una red sin configurar manualmente sus interfaces gracias al servicio DHCP.</li>
+                <li>Un agente DHCP Relay permite que un servidor DHCP dé servicio a equipos de otras redes.</li>
+                <li>Un servidor DHCP puede ser autorizado o no autorizado.</li>
+                <li>El protocolo puede encontrarse tanto en redes LAN como en redes WAN.</li>
+                <li>En IPv4, el cliente utiliza el puerto 68 UDP y el servidor el puerto 67 UDP.</li>
+                <li>En IPv6, los clientes emplean el puerto 546 UDP y los servidores el 547 UDP.</li>
+                <li>Los mensajes del protocolo son: DHCPDISCOVER, DHCPOFFER, DHCPREQUEST, DHCPACK, DHCPNACK, DHCPDECLINE, DHCPRELEASE y DHCPINFORM.</li>
+                <li>Como alternativas a DHCP existen la configuración manual, APIPA/avahi-autoipd (IPv4) y SLAAC (IPv6).</li>
+                <li>El protocolo BOOTP es el precursor de DHCP.</li>
+            </ul>
+
+        </section>
+
+
+        <!-- AUTOEVALUACIÓN -->
+
+        <section id="autoevaluacion">
+
+            <h2>Autoevaluación</h2>
+
+            <div class="quiz" id="quiz-tema02">
+
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>1.</strong> ¿Qué método de asignación es más adecuado en un escenario similar al de un instituto con red Wi-Fi pública?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">Manual.</li>
+                        <li data-op="b">Dinámica.</li>
+                        <li data-op="c">Automática.</li>
+                        <li data-op="d">Estática.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>2.</strong> ¿Qué mensaje contiene los parámetros de configuración de la solicitud del cliente y se utiliza para confirmar la concesión al cliente?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">DHCPOFFER.</li>
+                        <li data-op="b">DHCPACK.</li>
+                        <li data-op="c">DHCPNACK.</li>
+                        <li data-op="d">Ninguno de los anteriores.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="a">
+                    <p><strong>3.</strong> ¿Qué puerto utiliza un servidor DHCP IPv4 para atender peticiones de configuración?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">67 UDP.</li>
+                        <li data-op="b">68 UDP.</li>
+                        <li data-op="c">67 TCP.</li>
+                        <li data-op="d">68 TCP.</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>4.</strong> El servicio DHCP puede encontrarse en:</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">Redes LAN.</li>
+                        <li data-op="b">Redes WAN.</li>
+                        <li data-op="c">Las respuestas a) y b) son verdaderas.</li>
+                        <li data-op="d">Todas las anteriores son falsas.</li>
+                    </ul>
+                </div>
+
+                <button id="quiz-corregir" type="button">Corregir</button>
+                <p id="quiz-resultado"></p>
+
+            </div>
+
+            <p class="quiz-fuente">
+                Fuente: Dorrego Martín, M. <em>Servicios en Red</em>. Editorial Síntesis.
+            </p>
+
+        </section>
+
+        <script>
+        (function () {
+            var quiz = document.getElementById('quiz-tema02');
+            if (!quiz) return;
+
+            quiz.querySelectorAll('.quiz-opciones li').forEach(function (li) {
+                li.addEventListener('click', function () {
+                    var opciones = li.parentElement.querySelectorAll('li');
+                    opciones.forEach(function (o) { o.classList.remove('seleccionada'); });
+                    li.classList.add('seleccionada');
+                });
+            });
+
+            document.getElementById('quiz-corregir').addEventListener('click', function () {
+                var preguntas = quiz.querySelectorAll('.quiz-pregunta');
+                var aciertos = 0;
+
+                preguntas.forEach(function (pregunta) {
+                    var correcta = pregunta.dataset.correcta;
+                    var opciones = pregunta.querySelectorAll('li');
+                    var seleccionada = pregunta.querySelector('li.seleccionada');
+
+                    opciones.forEach(function (o) {
+                        o.classList.remove('correcta', 'incorrecta');
+                        if (o.dataset.op === correcta) o.classList.add('correcta');
+                    });
+
+                    if (seleccionada && seleccionada.dataset.op === correcta) {
+                        aciertos++;
+                    } else if (seleccionada) {
+                        seleccionada.classList.add('incorrecta');
+                    }
+                });
+
+                document.getElementById('quiz-resultado').textContent =
+                    'Resultado: ' + aciertos + ' / ' + preguntas.length + ' correctas.';
+            });
+        })();
+        </script>
+
+
+        <!-- BIBLIOGRAFÍA -->
+
+        <section id="bibliografia">
+
+            <h2>Bibliografía</h2>
+
+            <p>
+                Dorrego Martín, M. <em>Servicios en Red</em>. Editorial
+                Síntesis. Capítulo 2: Servicios de configuración dinámica de
+                sistemas (págs. 33-62).
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            <a href="../">
+                ← Volver a Servicios en red
+            </a>
+        </p>
+
+        <p>
+            <a href="../../">
+                ← Volver a la página principal
+            </a>
+        </p>
+
+    </footer>
+
+</body>
+
+</html>
