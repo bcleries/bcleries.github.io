@@ -533,7 +533,7 @@
                 prefijo de red</strong> (IPv6).
             </p>
 
-            <h3>Microsoft Windows</h3>
+            <h3>A. Microsoft Windows</h3>
 
             <p>
                 Para llevar a cabo la configuración manual sobre sistemas operativos Windows, será necesario 
@@ -546,11 +546,60 @@
                 valor en “Puerta de enlace predeterminada”.
             </p>
             
-            <h3>Linux</h3>
+            <h3>B. Linux</h3>
 
-            
+            <p>
 
-            <h3>APIPA (IPv4)</h3>
+                Hasta la llegada de Ubuntu 17.10 (y “sabores” derivados) se empleaba el fichero de configuración
+                de interfaces de red /etc/network/interfaces. Sin embargo, a partir de dicha versión se
+                introdujo la utilidad netplan, la cual lee la configuración de red de los ficheros con extensión
+                .yaml contenidos en el directorio /etc/netplan/ al iniciarse el sistema y genera los ficheros de
+                configuración específicos para el demonio encargado de gestionar las conexiones.
+            </p>
+            <p>    
+                La aplicación netplan puede trabajar con dos tipos de renderer:
+                ● NetworkManager: Empleado, generalmente, en equipos de escritorio. Busca ofrecer conectividad
+                ininterrumpida, de manera que, si un equipo dispone de conexiones de red
+                cableada e inalámbrica, usará la conexión de red cableada cuando esté disponible, pero
+                cambiará automáticamente a una conexión inalámbrica cuando el usuario la desconecte
+                y, del mismo modo, volverá a utilizar la conexión cableada cuando esta vuelva estar
+                disponible.
+                ● Systemd-networkd: Empleado principalmente en equipos servidor.
+            </p>
+            <p>
+                A continuación, se muestra el fichero /etc/netplan/01-network-manager-all.yaml en el que se lleva
+                a cabo la configuración ejemplo de un servidor con las interfaces de red “enp0s3” y “enp0s8”.
+                En él se indica que las IP/Máscara serán 172.16.0.220/24 y 172.16.1.220/24, la puerta de enlace
+                172.16.0.1, el dominio de búsqueda ejemplo.local y los servidores DNS 172.16.0.4 y 172.16.0.5.
+                En caso de que el renderer fuera NetworkManager (equipo cliente), el fichero de configuración
+                sería similar, salvo en el parámetro renderer, cuyo valor sería NetworkManager.
+            </p>
+
+            <p>
+            <pre><code>
+                network:
+                    version: 2
+                    renderer: networkd
+                    ethernets:
+                        enp0s3:
+                            addresses: [172.16.0.220/24]
+                            gateway4: 172.16.0.1
+                            nameservers:
+                                search: [ejemplo.local]
+                                addresses: [172.16.0.4, 172.16.0.5]
+                        enp0s8:
+                            addresses: [172.16.1.220/24]
+            </code></pre>    
+            </p>
+
+            <p>
+                Para aplicar los cambios que se hayan podido producir en los ficheros de configuración, será
+                necesario ejecutar el comando siguiente:
+            <pre><code>$ sudo netplan apply</code></pre>
+            </p>
+
+
+            <h3>C. APIPA (IPv4)</h3>
 
             <p>
                 En sistemas Microsoft, este mecanismo se conoce como
@@ -575,7 +624,7 @@
                 privado automático (bloque link-local, RFC 3330).
             </p>
 
-            <h3>SLAAC (IPv6)</h3>
+            <h3>D. SLAAC (IPv6)</h3>
 
             <p>
                 En IPv6, el mecanismo de asignación automática es
