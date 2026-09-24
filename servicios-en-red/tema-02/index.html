@@ -862,36 +862,13 @@ MAC                IP             hostname   valid until
                 transformando el tráfico broadcast en unicast.
             </p>
 
-            <figure class="figura">
-                <div class="diagrama-topologia">
-                    <div class="red-broadcast">
-                        <div>
-                            <div class="red-etiqueta">Red A</div>
-                            <div class="nodo">
-                                <span class="nodo-icono">💻</span>
-                                Cliente
-                            </div>
-                        </div>
-                        <span class="enlace">→</span>
-                        <div class="nodo">
-                            <span class="nodo-icono">📡</span>
-                            Agente Relay
-                        </div>
-                    </div>
-                    <span class="enlace">⇢</span>
-                    <div>
-                        <div class="red-etiqueta">Red B</div>
-                        <div class="nodo servidor">
-                            <span class="nodo-icono">🖥️</span>
-                            Servidor DHCP
-                        </div>
-                    </div>
-                </div>
+            <figure class="figura-imagen">
+            <div class="imagen-capas">
+                <img src="Figura2.13.png" alt="Escenario con servidor DHCP Relay dedicado. El agente recibe el tráfico broadcast del cliente y lo reenvía como unicast al servidor de la otra red.">
+            </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.13</span>
-                    Escenario con servidor DHCP Relay dedicado. El agente recibe el
-                    tráfico broadcast del cliente y lo reenvía como unicast al
-                    servidor de la otra red.
+                    Estadísticas de ámbito.
                 </figcaption>
             </figure>
 
@@ -900,35 +877,13 @@ MAC                IP             hostname   valid until
                 estar embebido en un router (por ejemplo, en equipos Cisco).
             </p>
 
-            <figure class="figura">
-                <div class="diagrama-topologia">
-                    <div class="red-broadcast">
-                        <div>
-                            <div class="red-etiqueta">Red A</div>
-                            <div class="nodo">
-                                <span class="nodo-icono">💻</span>
-                                Cliente
-                            </div>
-                        </div>
-                        <span class="enlace">→</span>
-                        <div class="nodo">
-                            <span class="nodo-icono">🌐</span>
-                            Router
-                            <br><small>(Agente Relay embebido)</small>
-                        </div>
-                    </div>
-                    <span class="enlace">⇢</span>
-                    <div>
-                        <div class="red-etiqueta">Red B</div>
-                        <div class="nodo servidor">
-                            <span class="nodo-icono">🖥️</span>
-                            Servidor DHCP
-                        </div>
-                    </div>
-                </div>
+            <figure class="figura-imagen">
+            <div class="imagen-capas">
+                <img src="Figura2.14.png" alt="Escenario con servidor DHCP Relay embebido en el router.">
+            </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.14</span>
-                    Escenario con servidor DHCP Relay embebido en el router.
+                    Estadísticas de ámbito.
                 </figcaption>
             </figure>
 
