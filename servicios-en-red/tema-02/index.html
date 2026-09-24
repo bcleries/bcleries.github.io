@@ -450,13 +450,24 @@
             <h3>Servidores autorizados</h3>
 
             <p>
-                Si un cliente intenta renovar su concesión tras haberse
-                conectado a una red diferente, el servidor DHCP de esa
-                nueva red escuchará mensajes para una dirección que no ha
-                proporcionado él. Si dicho servidor está configurado como
-                <strong>autorizado</strong>, enviará un DHCPNACK al cliente
-                mal configurado, forzándolo a liberar sus datos y comenzar
-                de nuevo el proceso mediante un DHCPDISCOVER.
+                Se puede dar el caso de que un cliente intente renovar la concesión y emita sus mensajes de
+                renovación DHCPREQUEST justo después de haber accedido a una red diferente de aquella
+                en la que estaba cuando obtuvo la concesión. En este caso, el servidor DHCP de la nueva red
+                escuchará los mensajes, pero para una dirección que no ha proporcionado él. 
+            </p>
+            <p>
+                Si este servidor se ha configurado como <strong>NO AUTORIZADO</strong>, obviará esas solicitudes de renovación con la finalidad de
+                que sea el servidor DHCP original de esas concesiones el que se encargue de renovarlas. Sin
+                embargo, dicho servidor no será accesible al cliente, por lo que será imposible que la concesión
+                se renueve y el cliente quedará mal configurado y sin conexión hasta que la concesión expire,
+                lo cual podría suponer una considerable demora.
+            </p>
+            <p>
+                Para mitigar este problema, un servidor DHCP puede configurarse como <strong>AUTORIZADO</strong>. Así,
+                tan pronto como detecte un cliente mal configurado que pretende renovar su concesión, le
+                enviará un mensaje DHCPNAK, forzando de esta manera a liberar sus datos actuales de configuración
+                y a comenzar de nuevo el proceso de solicitud de concesión con un mensaje DHCPDISCOVER
+                que será atendido esta vez por el servidor correcto para dicha red.
             </p>
 
         </section>
