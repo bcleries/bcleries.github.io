@@ -1382,3 +1382,82 @@ main section {
     border: 1px solid #e0e0e0;
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
+
+/* =========================
+   CUADRO 2.2 - CONFIGURACIÓN DHCP
+   ========================= */
+
+.tabla-configuracion-dhcp {
+    width: 100%;
+    margin: 35px 0 45px;
+    overflow-x: auto;
+}
+
+.tabla-configuracion-dhcp table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    margin: 0;
+    background: #ffffff;
+    font-size: 14px;
+}
+
+.tabla-configuracion-dhcp th,
+.tabla-configuracion-dhcp td {
+    border: 1px solid #8eb4c1;
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.tabla-configuracion-dhcp .bloque-configuracion {
+    width: 145px;
+    background: #31586a;
+    color: #ffffff;
+    text-align: center;
+    font-size: 15px;
+}
+
+.tabla-configuracion-dhcp .reservas-configuracion {
+    background: #31586a;
+    color: #ffffff;
+    text-align: center;
+    font-size: 15px;
+}
+
+.tabla-configuracion-dhcp .subtitulo {
+    font-weight: bold;
+}
+
+.tabla-configuracion-dhcp tr:nth-child(even) td {
+    background: #f7fafb;
+}
+
+.tabla-configuracion-dhcp .separador-configuracion td,
+.tabla-configuracion-dhcp .separador-configuracion th {
+    border-top-width: 3px;
+}
+
+.tabla-configuracion-dhcp code {
+    background: none;
+    padding: 0;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.95em;
+}
+
+.tabla-configuracion-dhcp .pie-tabla {
+    margin: 12px 0 0;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+}
+
+@media (max-width: 700px) {
+    .tabla-configuracion-dhcp {
+        overflow-x: auto;
+    }
+
+    .tabla-configuracion-dhcp table {
+        min-width: 760px;
+    }
+}
