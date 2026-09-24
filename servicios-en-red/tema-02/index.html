@@ -320,9 +320,57 @@
 
             <h2>2.2. Asignación, renovación y liberación</h2>
 
-            <div class="imagen-capas">
-                <img src="Figura2.3.png" alt="Asignación, renovación y liberación">
-            </div>
+            <figure class="figura">
+                <div class="diagrama-secuencia">
+
+                    <div class="actores">
+                        <span class="actor">CLIENTE</span>
+                        <span class="actor">SERVIDOR</span>
+                    </div>
+
+                    <div class="fase-titulo">Asignación</div>
+
+                    <div class="mensaje-fila difusion">
+                        <div class="msg-etiqueta">DHCPDISCOVER <small>(broadcast)</small></div>
+                        <div class="msg-linea a-servidor"></div>
+                    </div>
+                    <div class="mensaje-fila">
+                        <div class="msg-etiqueta">DHCPOFFER <small>(unicast)</small></div>
+                        <div class="msg-linea a-cliente"></div>
+                    </div>
+                    <div class="mensaje-fila difusion">
+                        <div class="msg-etiqueta">DHCPREQUEST <small>(broadcast)</small></div>
+                        <div class="msg-linea a-servidor"></div>
+                    </div>
+                    <div class="mensaje-fila">
+                        <div class="msg-etiqueta">DHCPACK <small>(unicast)</small></div>
+                        <div class="msg-linea a-cliente"></div>
+                    </div>
+
+                    <div class="fase-titulo">Renovación (T1 / T2)</div>
+
+                    <div class="mensaje-fila">
+                        <div class="msg-etiqueta">DHCPREQUEST <small>(unicast)</small></div>
+                        <div class="msg-linea a-servidor"></div>
+                    </div>
+                    <div class="mensaje-fila">
+                        <div class="msg-etiqueta">DHCPACK <small>(unicast)</small></div>
+                        <div class="msg-linea a-cliente"></div>
+                    </div>
+
+                    <div class="fase-titulo">Liberación</div>
+
+                    <div class="mensaje-fila">
+                        <div class="msg-etiqueta">DHCPRELEASE <small>(unicast)</small></div>
+                        <div class="msg-linea a-servidor"></div>
+                    </div>
+
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 2.3</span>
+                    Intercambio de mensajes en asignación, renovación y liberación con DHCPv4.
+                </figcaption>
+            </figure>
 
             <h3>a) Asignación</h3>
 
@@ -533,73 +581,7 @@
                 prefijo de red</strong> (IPv6).
             </p>
 
-            <h3>A. Microsoft Windows</h3>
-
-            <p>
-                Para llevar a cabo la configuración manual sobre sistemas operativos Windows, será necesario 
-                establecer en las propiedades del protocolo IP de la interfaz de red la opción “Usar la
-                siguiente dirección IP” indicando, como mínimo, dirección IP y máscara asociada o prefijo de
-                subred (dependiendo de si configura IPv4 o IPv6).
-            </p>
-            <p>
-                Si el equipo dispone de más de una interfaz de red, no es conveniente establecer más de un
-                valor en “Puerta de enlace predeterminada”.
-            </p>
-            
-            <h3>B. Linux</h3>
-
-            <p>
-
-                Hasta la llegada de Ubuntu 17.10 (y “sabores” derivados) se empleaba el fichero de configuración
-                de interfaces de red /etc/network/interfaces. Sin embargo, a partir de dicha versión se
-                introdujo la utilidad netplan, la cual lee la configuración de red de los ficheros con extensión
-                .yaml contenidos en el directorio /etc/netplan/ al iniciarse el sistema y genera los ficheros de
-                configuración específicos para el demonio encargado de gestionar las conexiones.
-            </p>
-            <p>    
-                La aplicación netplan puede trabajar con dos tipos de renderer:
-                ● NetworkManager: Empleado, generalmente, en equipos de escritorio. Busca ofrecer conectividad
-                ininterrumpida, de manera que, si un equipo dispone de conexiones de red
-                cableada e inalámbrica, usará la conexión de red cableada cuando esté disponible, pero
-                cambiará automáticamente a una conexión inalámbrica cuando el usuario la desconecte
-                y, del mismo modo, volverá a utilizar la conexión cableada cuando esta vuelva estar
-                disponible.
-                ● Systemd-networkd: Empleado principalmente en equipos servidor.
-            </p>
-            <p>
-                A continuación, se muestra el fichero /etc/netplan/01-network-manager-all.yaml en el que se lleva
-                a cabo la configuración ejemplo de un servidor con las interfaces de red “enp0s3” y “enp0s8”.
-                En él se indica que las IP/Máscara serán 172.16.0.220/24 y 172.16.1.220/24, la puerta de enlace
-                172.16.0.1, el dominio de búsqueda ejemplo.local y los servidores DNS 172.16.0.4 y 172.16.0.5.
-                En caso de que el renderer fuera NetworkManager (equipo cliente), el fichero de configuración
-                sería similar, salvo en el parámetro renderer, cuyo valor sería NetworkManager.
-            </p>
-
-            <p>
-            <pre><code>
-                network:
-                    version: 2
-                    renderer: networkd
-                    ethernets:
-                        enp0s3:
-                            addresses: [172.16.0.220/24]
-                            gateway4: 172.16.0.1
-                            nameservers:
-                                search: [ejemplo.local]
-                                addresses: [172.16.0.4, 172.16.0.5]
-                        enp0s8:
-                            addresses: [172.16.1.220/24]
-            </code></pre>    
-            </p>
-
-            <p>
-                Para aplicar los cambios que se hayan podido producir en los ficheros de configuración, será
-                necesario ejecutar el comando siguiente:
-            <pre><code>$ sudo netplan apply</code></pre>
-            </p>
-
-
-            <h3>C. APIPA (IPv4)</h3>
+            <h3>APIPA (IPv4)</h3>
 
             <p>
                 En sistemas Microsoft, este mecanismo se conoce como
@@ -624,7 +606,7 @@
                 privado automático (bloque link-local, RFC 3330).
             </p>
 
-            <h3>D. SLAAC (IPv6)</h3>
+            <h3>SLAAC (IPv6)</h3>
 
             <p>
                 En IPv6, el mecanismo de asignación automática es
@@ -675,8 +657,18 @@
             </p>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.4.png" alt="Enlaces de servidor.">
+                <div class="diagrama-panel">
+                    <div class="panel-titulo">Servidor DHCP — Enlaces de red</div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🌐</span>
+                        Interfaz IPv4
+                        <span class="estado-pill on">Habilitado</span>
+                    </div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🌐</span>
+                        Interfaz IPv6
+                        <span class="estado-pill on">Habilitado</span>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.4</span>
@@ -685,8 +677,14 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.5.png" alt="Configuración del intervalo de direcciones y duración de la concesión.">
+                <div class="diagrama-rango">
+                    <div class="rango-cabecera">Ámbito nuevo · 172.16.0.0/24</div>
+                    <div class="rango-barra">
+                        <span class="rango-ip">172.16.0.100</span>
+                        <span class="rango-linea"></span>
+                        <span class="rango-ip">172.16.0.200</span>
+                    </div>
+                    <div class="rango-concesion">⏱ Concesión por defecto: 10 min · Máxima: 2 h</div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.5</span>
@@ -695,8 +693,20 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.6.png" alt="Configuraciones de la puerta de enlace, nombre de dominio y servidores DNS.">
+                <div class="diagrama-panel">
+                    <div class="panel-titulo">Opciones del ámbito</div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🚪</span>
+                        Puerta de enlace <code>172.16.0.1</code>
+                    </div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🏷️</span>
+                        Nombre de dominio <code>ejemplo.local</code>
+                    </div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🔎</span>
+                        Servidores DNS <code>172.16.0.4, 172.16.0.5</code>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.6</span>
@@ -705,8 +715,13 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.7.png" alt="Configuración de actualizaciones DNS.">
+                <div class="diagrama-panel">
+                    <div class="panel-titulo">Actualizaciones DNS dinámicas</div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">🔄</span>
+                        Habilitar actualizaciones DNS dinámicas
+                        <span class="estado-pill off">Deshabilitado</span>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.7</span>
@@ -715,8 +730,16 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.8.png" alt="Reserva para un cliente.">
+                <div class="diagrama-panel">
+                    <div class="panel-titulo">Reserva nueva</div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">💻</span>
+                        Dirección MAC <code>08:00:27:00:01:0C</code>
+                    </div>
+                    <div class="panel-fila">
+                        <span class="panel-icono">📍</span>
+                        Dirección IP reservada <code>172.16.0.66</code>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.8</span>
@@ -725,9 +748,36 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.9.png" alt="Consulta de las concesiones realizadas.">
-                </div>
+                <table class="tabla-mock">
+                    <thead>
+                        <tr>
+                            <th>Dirección IP</th>
+                            <th>Nombre</th>
+                            <th>MAC</th>
+                            <th>Concesión expira en</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>172.16.0.101</td>
+                            <td>PC-01</td>
+                            <td>08:00:27:AA:11:01</td>
+                            <td>9 min</td>
+                        </tr>
+                        <tr>
+                            <td>172.16.0.102</td>
+                            <td>PC-02</td>
+                            <td>08:00:27:AA:11:02</td>
+                            <td>6 min</td>
+                        </tr>
+                        <tr>
+                            <td>172.16.0.66</td>
+                            <td>PC1 (reserva)</td>
+                            <td>08:00:27:00:01:0C</td>
+                            <td>— (fija)</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <figcaption>
                     <span class="figura-numero">Figura 2.9</span>
                     Consulta de las concesiones realizadas.
@@ -735,8 +785,23 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.10.png" alt="Estadísticas del servidor.">
+                <div class="diagrama-stats">
+                    <div class="stat-card">
+                        <strong>2</strong>
+                        <span>Ámbitos activos</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>512</strong>
+                        <span>Direcciones totales</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>87</strong>
+                        <span>Direcciones en uso</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>0</strong>
+                        <span>Conflictos</span>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.10</span>
@@ -745,15 +810,25 @@
             </figure>
 
             <figure class="figura">
-                <div class="imagen-capas">
-                <img src="Figura2.11.png" alt="Estadísticas de ámbito.">
+                <div class="diagrama-stats">
+                    <div class="stat-card">
+                        <strong>256</strong>
+                        <span>Direcciones del ámbito</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>43</strong>
+                        <span>En uso</span>
+                    </div>
+                    <div class="stat-card">
+                        <strong>213</strong>
+                        <span>Disponibles</span>
+                    </div>
                 </div>
                 <figcaption>
                     <span class="figura-numero">Figura 2.11</span>
                     Estadísticas de ámbito.
                 </figcaption>
             </figure>
-
 
             <p>Administración del servicio mediante cmdlets de PowerShell:</p>
 

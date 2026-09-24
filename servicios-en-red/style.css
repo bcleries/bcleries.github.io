@@ -903,6 +903,16 @@ main section {
     #cliente-dhcp pre {
         font-size: 13px;
         padding: 15px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .terminal-figura {
+        font-size: 12px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
 }
