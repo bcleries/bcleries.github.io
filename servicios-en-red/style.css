@@ -1493,16 +1493,15 @@ main section {
 
 .tabla-parametros-dhcp th {
     width: 36%;
-    background: #31586a;
-    color: #ffffff;
-    border-bottom-color: #ffffff;
+    background: #dce9ef;
+    color: #000000;
     font-weight: normal;
 }
 
 .tabla-parametros-dhcp th code {
     background: none;
     padding: 0;
-    color: #ffffff;
+    color: #000000;
     font-family: Consolas, "Courier New", monospace;
     font-size: 0.95em;
     overflow-wrap: anywhere;
