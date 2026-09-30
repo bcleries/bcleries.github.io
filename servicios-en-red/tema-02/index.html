@@ -1328,6 +1328,13 @@ group {
                 </p>
             </div>
 
+            <p>Monitorización:</p>
+
+            <p>A diferencia de otros servicios que disponen de su propio fichero de log, el servidor ISC
+                DHCP utiliza el fichero general de log del sistema /var/log/syslog. Para que el servicio pueda
+                utilizar su propio fichero de log, debe incluirse la siguiente línea en el fichero de configuración
+                de rsyslog:</p>
+
             <p>
                 Las concesiones se registran en
                 <code>/var/lib/dhcp/dhcpd.leases</code>, y pueden
@@ -1346,6 +1353,8 @@ MAC                IP             hostname   valid until
                     Salida del comando dhcp-lease-list.
                 </figcaption>
             </figure>
+
+            <p>Otro fichero que puede ser de utilidad es /var/run/dhcpd.pid, que contiene el PID del servidor DHCP.</p>
 
             <table>
                 <thead>
