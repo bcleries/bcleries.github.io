@@ -894,6 +894,12 @@
 
             <pre><code>Install-WindowsFeature DHCP -IncludeManagementTools</code></pre>
 
+            <p>Otra alternativa es realizar la instalación a través de “Administrador del servidor”, “Agregar
+                roles y características”. Una vez finalice la instalación, será necesario reiniciar la máquina:
+            </p>
+
+            <pre><code>Restart-Computer -Force</code></pre>
+
             <p>
                 Una vez instalado, se configura desde la herramienta
                 <strong>dhcpmgmt.msc</strong>, indicando enlaces, creando
