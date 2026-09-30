@@ -37,10 +37,11 @@
                 <li><a href="#practica-2-1">📝 Práctica 2.1</a></li>
                 <li><a href="#servidor-dhcp">4. Servidor DHCP</a></li>
                 <li><a href="#practica-2-2">📝 Práctica 2.2</a></li>
+                <li><a href="#practica-2-3">📝 Práctica 2.3</a></li>
                 <li><a href="#dhcp-relay">5. Agente DHCP Relay</a></li>
                 <li><a href="#cliente-dhcp">6. Cliente DHCP</a></li>
                 <li><a href="#bootp">7. Protocolo BOOTP</a></li>
-                <li><a href="#actividad1">📝 Actividad</a></li>
+                <li><a href="#actividad1">📝 Práctica 2.4</a></li>
                 <li><a href="#resumen">Resumen</a></li>
                 <li><a href="#ejercicios-propuestos">📝 Ejercicios propuestos</a></li>
                 <li><a href="#supuestos-practicos">📝 Supuestos prácticos</a></li>
@@ -1119,6 +1120,11 @@
 sudo apt-get install isc-dhcp-server -y</code></pre>
 
             <p>
+                De la misma manera que con Windows Server, el primer paso es configurar el servidor para
+                que disponga de una dirección IP fija en las interfaces de red en las que proveerá el servicio
+DHCP.
+            </p>
+            <p>
                 Las interfaces por las que el servicio atenderá peticiones
                 se indican en
                 <code>/etc/default/isc-dhcp-server</code>:
@@ -1126,6 +1132,147 @@ sudo apt-get install isc-dhcp-server -y</code></pre>
 
             <pre><code>INTERFACESv4="enp0s3 enp0s8"
 INTERFACESv6="enp0s3 enp0s8"</code></pre>
+
+            <p>
+                El siguiente paso es configurar el servicio para que asigne
+                las configuraciones de red a los clientes. Para ello, se debe
+                editar el fichero de configuración de texto plano
+                <code>/etc/dhcp/dhcpd.conf</code>, que será analizado en orden
+                descendente por el demonio <code>dhcpd</code>. Sus
+                características son las siguientes:
+            </p>
+
+            <ul class="lista-servicios">
+                <li>
+                    Permite la inserción de tabulaciones y líneas adicionales
+                    para su formateo.
+                </li>
+                <li>
+                    Permite la inclusión de comentarios, que se obviarán, en
+                    cualquier lugar del fichero, excepto en las zonas
+                    entrecomilladas. Estos deben ir precedidos por el carácter
+                    almohadilla (<code>#</code>) y terminan al final de la
+                    línea.
+                </li>
+                <li>
+                    Todas las palabras clave incluidas en él son
+                    <em>case-insensitive</em>.
+                </li>
+                <li>
+                    Incluirá parámetros y declaraciones:
+                    <ul class="lista-servicios">
+                        <li>
+                            <em>Parámetros:</em> indican cómo hacer una tarea,
+                            si debe realizarse o no, o los parámetros de
+                            configuración que se enviarán al cliente. Si
+                            comienzan con <code>option</code>, se denominan
+                            «opciones» y controlan las opciones DHCP. Si se
+                            especifican fuera de cualquier declaración, son de
+                            ámbito global y afectan a todas las declaraciones.
+                            Si se especifican dentro de una sección, son de
+                            ámbito específico. Finalizarán con el carácter
+                            punto y coma (<code>;</code>).
+                        </li>
+                        <li>
+                            <em>Declaraciones:</em> describen la topología de
+                            la red y los clientes, proporcionan direcciones
+                            que pueden asignarse a clientes o aplican un grupo
+                            de parámetros a un grupo de declaraciones. Su
+                            contenido se detalla en una sección encerrada
+                            entre llaves (<code>{…}</code>).
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p>
+                El cuadro 2.3 muestra un resumen de los principales
+                parámetros y declaraciones.
+            </p>
+
+            <div class="tabla-parametros-dhcp">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th scope="row"><code>option domain-name "DOMINIO";</code></th>
+                            <td>Opción nombre de dominio.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option domain-name-servers HOST[, HOST]+;</code></th>
+                            <td>Opción que establece los servidores DNS (enumerados por orden de preferencia). Si se emplean nombres FQDN para definirlos, debe existir un servidor DNS que los traduzca y sea accesible.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option netbios-name-servers HOST[, HOST]+;</code></th>
+                            <td>Similar a la opción domain-name-servers, pero para servidores NetBIOS (WINS).</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>default-lease-time TIEMPO;</code></th>
+                            <td>Tiempo de concesión (medido en segundos) que se asignará por defecto si no es solicitado.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>max-lease-time TIEMPO;</code></th>
+                            <td>Tiempo máximo de concesión (medido en segundos).</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>ddns-update-style none|interim;</code></th>
+                            <td>Configuración sobre actualizaciones dinámicas en DNS.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>[not] authoritative;</code></th>
+                            <td>Configuración del servidor como autorizado o no autorizado.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>subnet IP netmask MASC {…}</code></th>
+                            <td>Por cada subred a la que el servidor esté conectado o subred a la que sirva, debe existir una declaración subnet (incluso si no se van a asignar direcciones de forma dinámica por dicha subred).</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>range IP_INICIO IP_FIN;</code></th>
+                            <td>Establece las direcciones de inicio y fin del intervalo que serán ofertadas. Se pueden incluir tantas como sea necesario para establecer varios rangos en la subred.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option routers HOST[, HOST]+;</code></th>
+                            <td>Establece los equipos (nombre o IP) que actuarán como puerta de acceso (enumerados por orden de preferencia).</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option broadcast-address IP;</code></th>
+                            <td>Establece la dirección de difusión a una dirección IP. Esta opción sobrescribe el valor que correspondería por defecto y que se calcula automáticamente.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>shared-network NOMBRE {…}</code></th>
+                            <td>La declaración shared-network se usa únicamente si más de una subred IP comparte la misma red física (generalmente hay diferentes subredes en diferentes redes físicas). Se supone que cada declaración de red compartida contiene al menos dos declaraciones de subred, pues de lo contrario no hay necesidad de usar la declaración de subred compartida. dhcpd no puede determinar en qué subred de una red compartida debe iniciarse un cliente y, por tanto, las direcciones asignadas dinámicamente se toman del rango disponible de todas las subredes en la red compartida.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>host NOMBRE_HOST {…}</code></th>
+                            <td>Para cada cliente al que se le debe asignar una configuración estática, independientemente de la red en la que se encuentre, debe existir una declaración host independiente.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>hardware TIPO MAC;</code></th>
+                            <td>Indica la dirección MAC y el TIPO de dirección, que puede ser ethernet, token-ring o fddi (generalmente, ethernet), con la que se asocia una declaración host.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>server-name "NOMBRE";</code></th>
+                            <td>Establece el nombre de servidor que se transmitirá al cliente.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option host-name "NOMBRE";</code></th>
+                            <td>Establece el nombre de equipo para una declaración host.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>fixed-address IP;</code></th>
+                            <td>Establece la dirección IP para una declaración host.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>group {…}</code></th>
+                            <td>Las declaraciones de redes compartidas (shared-network), clientes con asignación estática (host) y subredes (subnet) se pueden agrupar mediante la declaración group con la finalidad de declarar parámetros de aplicación comunes. Además, cada grupo puede a su vez pertenecer a otros grupos.</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><code>option subnet-mask MASC;</code></th>
+                            <td>Establece la máscara de red al valor indicado. Esta opción sobrescribe el valor de máscara definido en la declaración netmask de la subred.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="pie-tabla"><strong>Cuadro 2.3.</strong> Listado de parámetros y declaraciones principales.</p>
+            </div>
 
             <p>
                 La configuración del servicio se realiza en
@@ -1376,7 +1523,7 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
 
             <div class="actividad">
 
-                <h3>📝 Actividad: Instalación de un servidor DHCP</h3>
+                <h3>📝 Práctica 2.4: Instalación de un servidor DHCP</h3>
 
                 <ol>
                     <li>

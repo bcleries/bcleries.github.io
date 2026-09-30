@@ -1461,3 +1461,56 @@ main section {
         min-width: 760px;
     }
 }
+
+/* =========================
+   CUADRO 2.3 - PARÁMETROS Y DECLARACIONES DE dhcpd.conf
+   ========================= */
+
+.tabla-parametros-dhcp {
+    width: 100%;
+    margin: 35px 0 45px;
+    overflow-x: auto;
+}
+
+.tabla-parametros-dhcp table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    margin: 0;
+    background: #ffffff;
+    font-size: 14px;
+    border-top: 3px solid #31586a;
+    border-bottom: 3px solid #31586a;
+}
+
+.tabla-parametros-dhcp th,
+.tabla-parametros-dhcp td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #8eb4c1;
+}
+
+.tabla-parametros-dhcp th {
+    width: 36%;
+    background: #31586a;
+    color: #ffffff;
+    border-bottom-color: #ffffff;
+    font-weight: normal;
+}
+
+.tabla-parametros-dhcp th code {
+    background: none;
+    padding: 0;
+    color: #ffffff;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.95em;
+    overflow-wrap: anywhere;
+}
+
+.tabla-parametros-dhcp .pie-tabla {
+    margin: 12px 0 0;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+}
