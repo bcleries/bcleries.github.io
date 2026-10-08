@@ -1406,6 +1406,253 @@ MAC                IP             hostname   valid until
                 <p> Configura el servidor ISC DHCP para un escenario similar al de la práctica 2.2.
                 </p>
 
+                <details class="solucion-practica">
+                    <summary>✅ Ver solución de la Práctica 2.3 (Ubuntu Server)</summary>
+
+                    <div class="solucion-contenido">
+
+                        <p>
+                            Siguiendo la estructura del apartado 4.2: interfaces
+                            <code>enp0s3</code> y <code>enp0s8</code>, parámetros
+                            globales, <code>shared-network</code> y reservas
+                            dentro de un <code>group</code>. Comprueba el nombre
+                            de tus interfaces con <code>ip -br a</code>.
+                        </p>
+
+                        <h4>Paso 1. IP fija en las dos interfaces</h4>
+
+                        <p>
+                            Edita el fichero <code>.yaml</code> de
+                            <code>/etc/netplan/</code>:
+                        </p>
+
+                        <pre><code>network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      addresses: [192.168.1.2/25]
+      routes:
+        - to: default
+          via: 192.168.1.1
+      nameservers:
+        search: [smr2.local]
+        addresses: [192.168.1.2, 192.168.1.3]
+    enp0s8:
+      addresses: [192.168.1.130/25]</code></pre>
+
+                        <p>
+                            La puerta de enlace solo se indica en la primera
+                            interfaz (no conviene configurar más de una). Se usa
+                            <code>routes</code> en lugar de <code>gateway4</code>,
+                            que está obsoleto en las versiones recientes.
+                        </p>
+
+                        <pre><code>sudo netplan apply
+ip -br a</code></pre>
+
+                        <h4>Paso 2. Nombre del servidor</h4>
+
+                        <pre><code>sudo hostnamectl set-hostname dhcp.smr2.local</code></pre>
+
+                        <h4>Paso 3. Instalación</h4>
+
+                        <pre><code>sudo apt-get update -y
+sudo apt-get install isc-dhcp-server -y</code></pre>
+
+                        <p>
+                            Al terminar, el servicio no arrancará todavía porque
+                            falta configurarlo.
+                        </p>
+
+                        <h4>Paso 4. Interfaces de escucha</h4>
+
+                        <p>Fichero <code>/etc/default/isc-dhcp-server</code>:</p>
+
+                        <pre><code>INTERFACESv4="enp0s3 enp0s8"
+INTERFACESv6=""</code></pre>
+
+                        <h4>Paso 5. Fichero /etc/dhcp/dhcpd.conf</h4>
+
+                        <pre><code>sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.orig
+sudo nano /etc/dhcp/dhcpd.conf</code></pre>
+
+                        <pre><code>option domain-name "smr2.local";
+option domain-name-servers 192.168.1.2, 192.168.1.3;   # ns1 y ns2
+option netbios-name-servers 192.168.1.2;               # NetBIOS reside en ns1
+option subnet-mask 255.255.255.128;
+default-lease-time 600;     # 10 minutos
+max-lease-time 3600;        # máximo 1 hora
+ddns-update-style none;     # no permite actualizaciones DNS
+authoritative;              # servidor autorizado
+server-name "dhcp.smr2.local";
+
+shared-network SUBRED_COMPARTIDA {
+  subnet 192.168.1.0 netmask 255.255.255.128 {
+    range 192.168.1.10 192.168.1.12;
+    range 192.168.1.20 192.168.1.22;
+    range 192.168.1.30 192.168.1.32;
+    option routers 192.168.1.1;
+    option broadcast-address 192.168.1.127;
+  }
+  subnet 192.168.1.128 netmask 255.255.255.128 {
+    range 192.168.1.170 192.168.1.172;
+    range 192.168.1.180 192.168.1.182;
+    option routers 192.168.1.129;
+    option broadcast-address 192.168.1.255;
+  }
+}
+
+group {
+  option domain-name-servers 8.8.8.8, 8.8.4.4;   # común a las dos reservas
+
+  host portatil1 {
+    hardware ethernet 08:00:27:AA:BB:CC;
+    option host-name "portatil1.smr2.local";
+    fixed-address 192.168.1.111;
+    option routers 192.168.1.1;
+  }
+  host portatil2 {
+    hardware ethernet 08:00:27:DD:EE:FF;
+    option host-name "portatil2.smr2.local";
+    fixed-address 192.168.1.222;
+    option routers 192.168.1.129;
+  }
+}</code></pre>
+
+                        <ul class="lista-servicios">
+                            <li>
+                                <strong>Autorizado y sin DNS dinámico:</strong>
+                                <code>authoritative;</code> y
+                                <code>ddns-update-style none;</code>.
+                            </li>
+                            <li>
+                                <strong>Concesión máxima de una hora:</strong>
+                                <code>max-lease-time 3600;</code>. Si quieres una
+                                hora también por defecto, pon
+                                <code>default-lease-time 3600;</code>.
+                            </li>
+                            <li>
+                                <strong>Dos subredes en la misma red física:</strong>
+                                van dentro de una <code>shared-network</code>, cada
+                                una con su puerta de enlace (.1 y .129).
+                            </li>
+                            <li>
+                                <strong>Reservas:</strong> el <code>group</code>
+                                aplica los DNS de Google (8.8.8.8 y 8.8.4.4) a los
+                                dos portátiles. Cada <code>host</code> lleva el
+                                router de su subred.
+                            </li>
+                            <li>
+                                <strong>Direcciones excluidas:</strong> red,
+                                broadcast, routers (.1 y .129) y servidor (.2 y
+                                .130) quedan fuera de los rangos.
+                            </li>
+                        </ul>
+
+                        <h4>Paso 6. Comprobar y arrancar</h4>
+
+                        <pre><code>sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf
+sudo systemctl restart isc-dhcp-server.service
+sudo systemctl enable isc-dhcp-server.service
+sudo systemctl status isc-dhcp-server.service</code></pre>
+
+                        <p>
+                            Si <code>dhcpd -t</code> no muestra errores, la
+                            sintaxis es correcta. Si usas UFW:
+                            <code>sudo ufw allow 67/udp</code>.
+                        </p>
+
+                        <h4>Paso 7. Probar los clientes</h4>
+
+                        <ul class="lista-servicios">
+                            <li>
+                                <strong>portatil1:</strong> en VirtualBox, pon la
+                                MAC <code>080027AABBCC</code> (Red → Avanzado) en
+                                la misma red que el servidor y configura el
+                                cliente en automático. Debe recibir
+                                <strong>192.168.1.111/25</strong>, gateway
+                                192.168.1.1 y DNS 8.8.8.8 y 8.8.4.4.
+                            </li>
+                            <li>
+                                <strong>portatil2:</strong> MAC
+                                <code>080027DDEEFF</code>. Debe recibir
+                                <strong>192.168.1.222/25</strong>, gateway
+                                192.168.1.129 y los mismos DNS.
+                            </li>
+                            <li>
+                                <strong>Resto de clientes:</strong> deben recibir
+                                una IP de los rangos, su gateway, DNS 192.168.1.2 y
+                                192.168.1.3, dominio <code>smr2.local</code> y
+                                concesión de hasta una hora. Si las dos interfaces
+                                del servidor están en la misma red virtual, el
+                                cliente puede recibir una IP de cualquiera de las
+                                dos subredes; es normal en una
+                                <code>shared-network</code>.
+                            </li>
+                        </ul>
+
+                        <h4>Paso 8. Monitorización</h4>
+
+                        <pre><code>sudo tail -f /var/log/syslog | grep dhcpd
+sudo journalctl -u isc-dhcp-server -f
+dhcp-lease-list
+sudo cat /var/lib/dhcp/dhcpd.leases
+cat /var/run/dhcpd.pid</code></pre>
+
+                        <p>
+                            Para tener un log propio, añade
+                            <code>log-facility local7;</code> al principio de
+                            <code>dhcpd.conf</code> y crea
+                            <code>/etc/rsyslog.d/30-dhcp.conf</code> con la línea
+                            <code>local7.*    /var/log/dhcpd.log</code>. Después
+                            reinicia con
+                            <code>sudo systemctl restart rsyslog isc-dhcp-server</code>.
+                        </p>
+
+                        <h4>Paso 9. Liberar y renovar desde un cliente</h4>
+
+                        <pre><code>sudo dhclient -r enp0s3    # libera la concesión
+sudo dhclient -v enp0s3    # vuelve a pedir</code></pre>
+
+                        <p>
+                            En Windows: <code>ipconfig /release</code> y
+                            <code>ipconfig /renew</code>. En el log del servidor
+                            aparecerá <code>DHCPRELEASE</code>.
+                        </p>
+
+                        <h4>Si algo falla</h4>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Síntoma</th>
+                                    <th>Causa probable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>El servicio no arranca</td>
+                                    <td>Error de sintaxis. Revisa <code>dhcpd -t</code> (suelen faltar <code>;</code> o <code>}</code>).</td>
+                                </tr>
+                                <tr>
+                                    <td><code>No subnet declaration for enp0s8</code></td>
+                                    <td>Esa interfaz no tiene IP fija. Revisa el paso 1.</td>
+                                </tr>
+                                <tr>
+                                    <td>El cliente no recibe IP</td>
+                                    <td>No está en la misma red virtual, o hay otro DHCP activo (por ejemplo, el de VirtualBox).</td>
+                                </tr>
+                                <tr>
+                                    <td>La reserva no se aplica</td>
+                                    <td>La MAC no coincide. Compárala con la que aparece en el log.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </details>
+
                 </div>
         </section>
 
