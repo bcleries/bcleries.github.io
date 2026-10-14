@@ -1866,20 +1866,11 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                         ser los siguientes:
                     </p>
                     <ul class="lista-servicios">
-                        <li>Direcciones: 192.168.1.2/25, 192.168.1.130/25.</li>
-                        <li>Puerta de enlace: 192.168.1.1.</li>
-                        <li>Dominio de búsqueda: smr2.local».</li>
-                        <li>Direcciones de los servidores DNS: 192.168.1.2, 192.168.1.3.</li>
+                        <li>Direcciones: 172.16.10.2/25, 172.16.10.130/25.</li>
+                        <li>Puerta de enlace: 172.16.10.1.</li>
+                        <li>Dominio de búsqueda: rms2.local».</li>
+                        <li>Direcciones de los servidores DNS: 172.16.10.2, 172.16.10.3.</li>
                     </ul>
-                </li>
-                <li>
-                    <p>
-                        Establece la configuración manual de un equipo
-                        servidor Ubuntu Server, para que quede preparado
-                        antes de realizar la instalación del servidor DHCP.
-                        Los parámetros de conexión deben ser los mismos que
-                        los del supuesto práctico anterior.
-                    </p>
                 </li>
                 <li>
                     <p>
@@ -1890,14 +1881,14 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                     </p>
                     <ul class="lista-servicios">
                         <li>Realiza la instalación de un servidor DHCP sobre Linux Ubuntu Server.</li>
-                        <li>Establece la dirección IP fija <strong>192.168.100.100/24</strong>.</li>
+                        <li>Establece la dirección IP fija <strong>10.20.30.100/24</strong>.</li>
                         <li>
                             Configura el servidor para que realice el
                             reparto del resto de direcciones IP de la red
                             entre los clientes. Deberán excluirse del
                             reparto:
                             <ul class="lista-servicios">
-                                <li>La dirección 192.168.100.1 por ser la dirección del router.</li>
+                                <li>La dirección 10.20.30.1 por ser la dirección del router.</li>
                                 <li>La propia dirección del servidor DHCP.</li>
                                 <li>
                                     Las direcciones de red y broadcast que
@@ -1908,7 +1899,7 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                             Entre los parámetros para conceder estará la
                             dirección de la puerta de enlace (gateway), que
                             deberá coincidir con la que tiene configurada el
-                            router (192.168.100.1).
+                            router (10.20.30.1).
                         </li>
                         <li>
                             Configura un cliente desde un entorno de
@@ -1918,7 +1909,7 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                             Acto seguido, da de alta una reserva en el
                             servidor DHCP para que a dicho cliente siempre
                             se le asigne la dirección
-                            <strong>192.168.100.200</strong>. Arranca el
+                            <strong>10.20.30.200</strong>. Arranca el
                             cliente y comprueba si recibe la configuración
                             establecida en la reserva.
                         </li>
@@ -1931,16 +1922,6 @@ ipconfig /renew[6] [adaptador]     # Renueva la concesión</code></pre>
                         <li>Monitoriza el estado del servidor y las concesiones realizadas a los clientes.</li>
                         <li>Libera desde algún cliente la configuración recibida.</li>
                     </ul>
-                </li>
-                <li>
-                    Utiliza una herramienta de monitorización de redes para
-                    analizar el tráfico DHCP intercambiado entre servidor y
-                    clientes. Presta atención a los campos de cada mensaje.
-                </li>
-                <li>
-                    Repite el escenario creado en el ejercicio propuesto
-                    anterior utilizando ahora el servidor que ofrece el
-                    sistema operativo Microsoft Windows Server.
                 </li>
             </ol>
 
