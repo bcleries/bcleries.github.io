@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tema 3 - Servicios de resolución de nombres</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Tema 3</h1>
+        <p>Servicios de resolución de nombres</p>
+    </header>
+
+    <main>
+
+        <!-- ÍNDICE DEL TEMA -->
+
+        <section>
+            <h2>📚 Índice</h2>
+
+            <ul>
+                <li><a href="#introduccion">1. Introducción</a></li>
+                <li><a href="#nombres-planos">2. Sistemas de nombres planos</a></li>
+                <li><a href="#nombres-jerarquicos">3. Sistemas de nombres jerárquicos</a></li>
+                <li><a href="#protocolo-dns">3.1. Protocolo DNS</a></li>
+                <li><a href="#espacio-nombres">3.2. Espacio de nombres y administración</a></li>
+                <li><a href="#consultas-respuestas">3.3. Consultas y respuestas</a></li>
+                <li><a href="#tipos-servidor">3.4. Tipos de servidor DNS</a></li>
+                <li><a href="#transferencia-zona">3.5. Transferencia de zona</a></li>
+                <li><a href="#zonas-resolucion">3.6. Zonas de resolución directa e inversa</a></li>
+                <li><a href="#delegaciones">3.7. Delegaciones, reenvíos y sugerencias de raíz</a></li>
+                <li><a href="#tipos-registros">3.8. Tipos de registros DNS</a></li>
+                <li><a href="#ddns-dnssec">3.9. Actualizaciones dinámicas (DDNS) y DNS Seguro (DNSSEC)</a></li>
+                <li><a href="#servidor-dns">4. Servidor DNS</a></li>
+                <li><a href="#implementacion-windows">4.1. Implementación con Microsoft Windows Server</a></li>
+                <li><a href="#implementacion-ubuntu">4.2. Implementación con Ubuntu Server (BIND 9)</a></li>
+                <li><a href="#cliente-dns">5. Cliente DNS (resolver)</a></li>
+                <li><a href="#integracion-wins">6. Integración de servidores de nombres planos y jerárquicos</a></li>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#ejercicios-propuestos">📝 Ejercicios propuestos</a></li>
+                <li><a href="#supuestos-practicos">📝 Supuestos prácticos</a></li>
+                <li><a href="#autoevaluacion">Autoevaluación</a></li>
+                <li><a href="#bibliografia">Bibliografía</a></li>
+            </ul>
+        </section>
+
+        <!-- 1. INTRODUCCIÓN -->
+        <section id="introduccion">
+            <h2>1. Introducción</h2>
+            <p>
+                Cada vez son más los equipos conectados a la red que ofrecen algún tipo de servicio o recurso y,
+                por tanto, también es mayor la necesidad de conocer cómo acceder a ellos. Aunque conocer la
+                dirección lógica del equipo que ofrece el servicio o recurso permite prescindir de conocer el nombre
+                asociado a la misma, cierto es que para los humanos es mucho más sencillo recordar nombres que
+                combinaciones de números.
+            </p>
+            <p>
+                Ya sea en Internet o en una red privada local, los servicios de resolución de nombres juegan un
+                papel crucial a la hora de acceder a los recursos. A lo largo de este capítulo se describirán los
+                diferentes servicios encargados de llevar a cabo las traducciones de nombres a direcciones IP y
+                viceversa.
+            </p>
+        </section>
+
+        <!-- 2. SISTEMAS DE NOMBRES PLANOS -->
+        <section id="nombres-planos">
+            <h2>2. Sistemas de nombres planos</h2>
+            <p>
+                Mediante el empleo de nombres planos es posible identificar y acceder a equipos que están dentro
+                de una red, pero en ningún caso se conoce la estructura lógica de la misma. Este tipo de sistemas
+                pueden implementarse sobre arquitecturas cliente-servidor o estar distribuidos.
+            </p>
+            <p>
+                Uno de los sistemas que emplea nombres planos es <strong>NetBIOS</strong> (<em>Network Basic
+                Input-Output System</em>). Se trata de un sistema que hace de enlace entre la capa de red y las
+                aplicaciones que desean hacer uso de ellas. Permite conocer la dirección lógica (IP) asignada a un
+                dispositivo dentro de una red a partir de un nombre plano y sin necesidad de un servidor que
+                centralice el servicio (se trata de un servicio distribuido).
+            </p>
+            <p>
+                Una alternativa centralizada es el servidor <strong>WINS</strong> (<em>Windows Internet Naming
+                Service</em>). Este servicio de resolución y registro de nombres de equipos NetBIOS a direcciones IP
+                está implementado por Microsoft y controla las solicitudes de registro, renovación y liberación que
+                recibe por parte de los clientes, además de responder a las consultas con la dirección IP (siempre y
+                cuando el nombre se encuentre registrado en su base de datos).
+            </p>
+            <div class="actividad">
+                <h3>💡 Recursos digitales</h3>
+                <p>
+                    En los recursos digitales disponibles en la plataforma de Editorial Síntesis, obtendrás
+                    información detallada sobre los sistemas de nombres planos NetBIOS y el servicio WINS.
+                </p>
+            </div>
+            <div class="actividad">
+                <h3>🔍 Investiga</h3>
+                <p>
+                    Busca información en Internet sobre cómo realizar la instalación de un servidor WINS sobre un
+                    sistema operativo Windows Server y realiza la instalación del servicio. Indaga también sobre
+                    cómo configurar los clientes de la red para que se registren en el servicio.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. SISTEMAS DE NOMBRES JERÁRQUICOS -->
+        <section id="nombres-jerarquicos">
+            <h2>3. Sistemas de nombres jerárquicos</h2>
+            <p>
+                Tal como se ha descrito anteriormente, los sistemas de nombres planos no ofrecen información
+                relativa a la estructura jerárquica de la red en la que se encuentran los dispositivos y, salvo
+                escenarios particulares, están cayendo en desuso. Para conocer este tipo de información es necesario
+                utilizar nombres articulados o jerárquicos cuya sintaxis se describirá en este capítulo.
+            </p>
+            <p>
+                El uso de esos sistemas no se limita a la simple traducción de nombres a direcciones lógicas y
+                viceversa; también permite conocer la ubicación y forma de acceso a determinados servicios dentro
+                de un dominio, entendiéndose el término «dominio» como el conjunto de recursos que comparten parte
+                de su identificador y que son controlados por la misma entidad.
+            </p>
+        </section>
+
+        <!-- 3.1. PROTOCOLO DNS -->
+        <section id="protocolo-dns">
+            <h2>3.1. Protocolo DNS</h2>
+            <p>
+                El protocolo <strong>DNS</strong> (<em>Domain Name System</em> o sistema de nombres de dominio)
+                apareció en 1984 para dar respuesta a las necesidades que empezaban a hacerse palpables ante el
+                emergente Internet. El servicio encargado de implementar el protocolo hereda su nombre de este.
+            </p>
+            <p>
+                DNS generalmente trabaja sobre UDP, aunque también soporta conexiones TCP cuando el tamaño de los
+                datos de la respuesta sobrepasa los 512 bytes, tal como sucede cuando se realizan transferencias de
+                zona.
+            </p>
+            <div class="actividad">
+                <h3>💡 Recuerda</h3>
+                <p>El servicio DNS es un requisito indispensable para los servicios de dominio de Active Directory.</p>
+            </div>
+
+            <figure class="figura">
+                <div class="diagrama-dns-capas">
+                    <div class="capa capa-aplicacion">
+                        <span class="protocolo-pill">DNS</span>
+                        <strong>APLICACIÓN</strong>
+                        <small>RFC 1034 y 1035</small>
+                    </div>
+                    <div class="capa capa-transporte">
+                        <span class="protocolo-pill">UDP</span>
+                        <strong>TRANSPORTE</strong>
+                        <span class="protocolo-pill">TCP</span>
+                        <small>Puerto 53</small>
+                    </div>
+                    <div class="capa capa-internet">
+                        <span class="protocolo-pill">IPv4</span>
+                        <strong>INTERNET</strong>
+                        <span class="protocolo-pill">IPv6</span>
+                    </div>
+                    <div class="capa capa-acceso">
+                        <strong>ACCESO A LA RED</strong>
+                    </div>
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.1</span>
+                    DNS y su enclave en el Modelo TCP/IP.
+                </figcaption>
+            </figure>
+
+            <h3>A) Características y funcionamiento</h3>
+            <p>
+                Un servidor DNS permanece en continua escucha ante posibles peticiones de los clientes que deba
+                atender. Los clientes, por su parte, implementarán en sus sistemas operativos el <strong>DNS
+                resolver</strong>, que es el servicio encargado de realizar las consultas a los servidores DNS
+                correspondientes, interpretar las respuestas recibidas y devolver el resultado al programa que
+                desencadenó la consulta.
+            </p>
+            <p>
+                Además del servicio DNS, existen otras alternativas que residen en cada cliente y permiten conocer
+                esta información sin la necesidad de realizar una consulta contra un servidor DNS. Se trata de:
+            </p>
+            <ul class="lista-servicios">
+                <li><strong>Caché DNS:</strong> Puede consultarse mediante el comando <code>ipconfig -displaydns</code> en sistemas Microsoft Windows y para vaciar su contenido puede hacerse uso del comando <code>ipconfig -flushdns</code>. Sin embargo, no todos los sistemas Linux hacen uso de caché DNS de forma predeterminada. En caso de haberse instalado el demonio <code>ncsd</code> sobre un sistema operativo Linux (Debian, Ubuntu o derivados), el contenido de dicha caché residirá en el fichero binario <code>/var/cache/nscd/hosts</code>.</li>
+                <li><strong>Fichero Hosts:</strong> Fichero de texto plano que reside en todos los equipos de la red y que permite hacer traducciones de nombres a direcciones IP. Puede encontrarse en los path <code>C:\Windows\System32\drivers\etc\hosts</code> para sistemas Microsoft Windows y <code>/etc/hosts</code> para sistemas Linux. Cada entrada debe mantenerse en una línea individual, introduciéndose en primer lugar la dirección IP y a continuación, separado por al menos un espacio, el nombre de host correspondiente. Es necesario disponer de privilegios de administrador para poder modificar su contenido.</li>
+            </ul>
+            <p>
+                Debido al elevado número de nombres para traducir y a la constante aparición de nuevos dominios, no
+                es posible realizar la gestión de todos los nombres de dominio de una forma centralizada desde un
+                único servidor DNS. Es por ello por lo que DNS se diseñó para trabajar de forma jerárquica y
+                distribuida, y cada servidor es responsable únicamente de pequeñas parcelas de nombres conocidas como
+                <strong>zonas</strong>. Es posible, por tanto, definir el concepto «zona» como una base de datos
+                completa para un subárbol podado del espacio de dominios.
+            </p>
+            <p>
+                El protocolo DNS emplea nombres articulados jerárquicos que permiten realizar la traducción de los
+                mismos a direcciones IP y viceversa, conocer servicios de red asociados a cada nombre y conocer la
+                estructura jerárquica del dominio en el cual se encuentra ubicado el dispositivo.
+            </p>
+            <p>
+                El servicio DNS se implanta comúnmente en redes locales de ámbito corporativo con la finalidad de
+                servir de elemento traductor a los clientes que necesitan acceder a un determinado dispositivo, y es
+                menos relevante para la mayoría de los entornos domésticos.
+            </p>
+        </section>
+
+        <!-- 3.2. ESPACIO DE NOMBRES Y ADMINISTRACIÓN -->
+        <section id="espacio-nombres">
+            <h2>3.2. Espacio de nombres y administración</h2>
+            <p>
+                DNS se organiza conforme a un sistema jerárquico en forma de árbol invertido, en el que el elemento
+                raíz del árbol se corresponde con el dominio raíz; por este motivo, todo nombre de dominio debería
+                finalizar con el carácter punto «.» que representa dicho dominio raíz.
+            </p>
+            <p>
+                El dominio raíz es gestionado por el ICANN y está disponible en trece servidores, aunque en realidad
+                existen centenares de réplicas de los mismos ubicadas en todo el mundo. Esta redundancia ofrece una
+                alta disponibilidad. Los servidores raíz se identifican por letras de la A a la M y sus nombres son
+                <code>a.root-servers.net.</code>, <code>b.root-servers.net.</code>,… <code>m.root-servers.net.</code>.
+            </p>
+            <p>
+                Dado que todos los nombres de dominio no podrían alojarse bajo el dominio raíz directamente, estos
+                se distribuyen en dominios de nivel inferior. Así pues, por debajo de los dominios raíz se encuentran
+                los dominios <strong>TLD</strong> (<em>Top Level Domain</em>), que se conocen como «dominios de primer
+                nivel». La responsabilidad de gestión de la mayoría de los dominios TLD ha sido delegada por el
+                ICANN sobre organizaciones específicas. Los registros de TLD determinan la selección de caracteres
+                que estará disponible bajo esos dominios. Hay varios tipos de TLD:
+            </p>
+            <ul class="lista-servicios">
+                <li><strong>De infraestructura:</strong> Son dominios empleados para obtener el nombre completo (FQDN) de una dirección IP (dominio <code>.arpa</code>).</li>
+                <li><strong>Genéricos (gTLD):</strong> Son dominios utilizados por un tipo concreto de organización que no pertenece a ningún país y están compuestos, como mínimo, de tres caracteres. Dentro de estos dominios existe una nueva clasificación:
+                    <ul>
+                        <li><strong>Restringidos:</strong> Para poder utilizarlos se debe cumplir una serie de requisitos. Un ejemplo es el dominio <code>.pro</code>, que únicamente pueden utilizar profesionales acreditados, o <code>.name</code>, utilizado para dominios personales.</li>
+                        <li><strong>No restringidos:</strong> Utilizados para cualquier finalidad. Ejemplos: <code>.com</code> (uso comercial), <code>.info</code> (uso informativo), <code>.net</code> (previsto inicialmente para organizaciones relacionadas con tecnologías de redes; hoy en día es de propósito general), <code>.org</code> (uso para organizaciones)…</li>
+                        <li><strong>Patrocinados:</strong> Empleados para un fin concreto. Ejemplos: <code>.edu</code> (educación), <code>.gov</code> (Gobierno de Estados Unidos), <code>.mil</code> (ejército de Estados Unidos)…</li>
+                        <li><strong>Comerciales:</strong> Son de uso libre y no existen restricciones para su uso. Ejemplos: <code>.eus</code> (Euskadi), <code>.gal</code> (Galicia), <code>.madrid</code> (Comunidad de Madrid)…</li>
+                    </ul>
+                </li>
+                <li><strong>Geográficos (cTLD):</strong> Son dominios utilizados por países o territorios. Se componen de dos caracteres. Ejemplos: <code>.es</code> (España), <code>.pt</code> (Portugal), <code>.ad</code> (Andorra)…</li>
+            </ul>
+            <p>
+                Dado que el arrendamiento de nombres de dominio se realiza durante un periodo determinado de tiempo,
+                algunos agentes especuladores se dedicaron a rastrear dominios de cierto prestigio para, en caso de
+                no haberse renovado, solicitar su arrendamiento y privar de su uso temporalmente a la organización
+                que originariamente lo registró. Posteriormente pedían un rescate por su cesión.
+            </p>
+            <p>
+                Un servidor DNS maneja nombres articulados conocidos como <strong>Full Qualified Domain Name
+                (FQDN)</strong>. Cada FQDN consta de nombre del host y nombre del dominio internacionalizado en el
+                que se encuentra dicho host. Ejemplos de FQDN son <code>www.google.es</code>, <code>www.google.com</code>,
+                <code>www.sintesis.com</code> o <code>www.gnu.org</code>, entre otros.
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.2.png" alt="Jerarquía en DNS.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.2</span>
+                    Jerarquía en DNS.
+                </figcaption>
+            </figure>
+
+            <p>Referente a cada nombre de dominio internacionalizado se cumple que:</p>
+            <ul class="lista-servicios">
+                <li>Lo forman un conjunto de hasta 127 etiquetas separadas por el carácter punto «.», donde cada etiqueta representa un nodo (dominio) y tiene una longitud máxima de 63 caracteres.</li>
+                <li>Su longitud total es de 255 caracteres.</li>
+                <li>Originalmente se utilizaba el subconjunto <strong>LDH</strong> (letra, dígito, guion), que es un subconjunto de caracteres ASCII formado por las letras a-z, los dígitos 0-9 y el guion «-», aunque hoy en día se utilizan nombres de dominio internacionalizado (IDN, por sus siglas en inglés).</li>
+                <li>No se hace distinción entre mayúsculas y minúsculas.</li>
+            </ul>
+            <p>
+                El proceso mediante el que un cliente (particular o empresa) alquila un dominio para su uso a la
+                empresa u organismo autorizado para tal efecto se denomina <strong>registro de dominio</strong>. El
+                registro de dominio no puede realizarse sobre los servidores raíz, sino que debe hacerse contra un
+                servidor TLD o de niveles inferiores.
+            </p>
+
+            <div class="actividad">
+                <h3>📝 Actividad propuesta 3.1</h3>
+                <p>Consulta el listado completo de dominios ccTLD en la norma ISO-3166 e indica los países a los que pertenecen los dominios <code>.cu</code>, <code>.de</code>, <code>.fr</code>, <code>.pe</code> y <code>.ru</code>.</p>
+            </div>
+            <div class="actividad">
+                <h3>🔍 Investiga</h3>
+                <p>Uno de los dominios de nivel superior geográfico (ccTLD) es el dominio <code>.tk</code>. Busca información acerca de este dominio y su relación con el cibercrimen. ¿Qué empresa se ocupa de gestionar el dominio de nivel superior geográfico <code>.es</code>?</p>
+            </div>
+        </section>
+
+        <!-- 3.3. CONSULTAS Y RESPUESTAS -->
+        <section id="consultas-respuestas">
+            <h2>3.3. Consultas y respuestas</h2>
+            <p>
+                Las consultas formuladas por los DNS resolver (cliente) y las respuestas emitidas por los servicios
+                DNS se realizan sobre el protocolo de transporte UDP. Las consultas pueden preguntar por una
+                dirección correspondiente a un equipo con un nombre determinado, por un nombre asociado a una
+                dirección concreta, por servicios para un determinado nombre del dominio…
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.3.png" alt="Consulta-Respuesta recursiva.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.3</span>
+                    Consulta-Respuesta recursiva.
+                </figcaption>
+            </figure>
+
+            <p>Estas consultas pueden ser de tipo:</p>
+            <ol>
+                <li><strong>Recursiva:</strong> En ellas se solicita al servidor DNS que conteste directamente con el resultado o con un error (en caso de no existir respuesta).
+                    <ul>
+                        <li>Si la respuesta del servidor se construye con base en la información contenida dentro de las zonas que él mismo gestiona y que, por tanto, conoce de primera mano, se tratará de una <strong>respuesta autoritativa</em>.</li>
+                        <li>En caso contrario, y suponiendo que el servidor no se haya configurado para rechazar consultas recursivas, el servidor actuará como un intermediario y la respuesta se construirá según la información contenida en su caché tras haberse consultado al servidor que tiene la autoridad para responder sobre la misma. En este caso será una <strong>respuesta no autoritativa</strong>.</li>
+                    </ul>
+                </li>
+                <li><strong>Iterativa:</strong> En ellas se solicita al servidor que conteste con el resultado si lo conoce, con un error en caso de que el recurso solicitado no exista en las zonas que gestiona directamente o con un <em>referral</em>. Este modo deben soportarlo todos los servidores DNS.</li>
+            </ol>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.4.png" alt="Consulta-Respuesta iterativa.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.4</span>
+                    Consulta-Respuesta iterativa.
+                </figcaption>
+            </figure>
+        </section>
+
+        <!-- 3.4. TIPOS DE SERVIDOR -->
+        <section id="tipos-servidor">
+            <h2>3.4. Tipos de servidor</h2>
+            <p>
+                Dada la posibilidad de que un servidor DNS pueda estar inoperativo durante un periodo determinado,
+                es conveniente que exista más de un servidor DNS que contenga una réplica de la información de las
+                zonas. De esta manera es posible ofrecer tolerancia ante posibles caídas de alguno de los servidores,
+                así como balanceo de carga entre ellos en condiciones de funcionamiento normales.
+            </p>
+            <p>
+                Sea cual sea la razón que justifique la existencia de más de un servidor DNS, es importante
+                distinguir entre los diferentes roles que estos pueden jugar, los cuales dependerán del origen de la
+                información manejada.
+            </p>
+            <ul class="lista-servicios">
+                <li><strong>Servidor primario o maestro:</strong> Los registros contenidos en la zona que maneja se gestionan directamente en él.</li>
+                <li><strong>Servidor secundario o esclavo:</strong> Los registros contenidos en la zona que maneja se obtienen a través de una sincronización con el servidor primario para dicha zona (el cual los gestiona directamente).</li>
+                <li><strong>Servidor caché:</strong> Si la información que este conoce lo es por haber tenido que preguntar previamente a otro servidor para resolver una consulta que desconocía y tras ese paso la almacenó en su caché durante un tiempo determinado.</li>
+            </ul>
+            <div class="actividad">
+                <h3>💡 Para saber más</h3>
+                <ul>
+                    <li>Un servidor primario/maestro no tiene que ser obligatoriamente el servidor DNS principal que se configura en un cliente y, de igual manera, un servidor secundario/esclavo no tiene que ser obligatoriamente configurado como el servidor alternativo de un cliente.</li>
+                    <li>Todo servidor DNS tiene su propia configuración DNS y su propio resolver para que las aplicaciones que sobre él se ejecutan en modo cliente sean capaces de conocer las traducciones correspondientes, bien porque la configuración DNS lo establece a él mismo como servidor principal (claro ejemplo de un controlador de dominio), bien por establecer a otro diferente.</li>
+                </ul>
+            </div>
+            <div class="actividad">
+                <h3>📝 Actividades propuestas 3.2 y 3.3</h3>
+                <p>3.2. ¿Puede un servidor ser primario y secundario al mismo tiempo? Justifica tu respuesta.</p>
+                <p>3.3. ¿Puede un servidor ser primario y caché al mismo tiempo? Justifica tu respuesta.</p>
+            </div>
+        </section>
+
+        <!-- 3.5. TRANSFERENCIA DE ZONA -->
+        <section id="transferencia-zona">
+            <h2>3.5. Transferencia de zona</h2>
+            <p>
+                Como ya se ha mencionado anteriormente, DNS es un servicio que trabaja de forma distribuida y que
+                permite que sean varios los servidores que ofrecen la misma información con la intención de
+                proporcionar balanceo de carga y tolerancia ante posibles fallos. Pero, para que esto pueda
+                realizarse satisfactoriamente, es necesario que los servidores encargados de ofrecer la información
+                de una zona estén correctamente sincronizados entre sí. El proceso mediante el cual los servidores
+                de una zona sincronizan la información de esta se denomina <strong>transferencia de zona</strong>.
+                Este proceso se lleva a cabo mediante el establecimiento de una conexión TCP desde el servidor
+                secundario/esclavo, que actúa como un cliente, y el servidor primario/maestro. Las transferencias de
+                zona se realizarán con la periodicidad declarada en el campo Intervalo de actualización del registro
+                SOA, aunque se puede configurar el servicio para que el servidor primario notifique cada cambio
+                producido en la zona haciendo uso de los mensajes NOTIFY.
+            </p>
+            <p>
+                Las transferencias de zona pueden ser completas (consultas AXFR) o incrementales (consultas IXFR),
+                siendo estas más seguras y ligeras al transferirse únicamente los cambios producidos desde la última
+                versión de la zona cargada.
+            </p>
+        </section>
+
+        <!-- 3.6. ZONAS DE RESOLUCIÓN DIRECTA E INVERSA -->
+        <section id="zonas-resolucion">
+            <h2>3.6. Zonas de resolución directa e inversa</h2>
+            <p>
+                Una zona de resolución directa permite la traducción de nombres DNS en direcciones IP, así como
+                obtener información sobre los servicios de red disponibles.
+            </p>
+            <p>
+                De la misma manera que los servidores DNS ofrecen la posibilidad de realizar resoluciones en las que
+                se realiza la traducción de nombre a dirección IP, también se ofrece la posibilidad de realizar
+                resoluciones inversas en las que se traduce de dirección IP a nombre. Para que este tipo de
+                resoluciones pueda llevarse a cabo, es necesario que se creen zonas de resolución inversa adicionales
+                a las ya creadas. Para IPv4 se utiliza el dominio <code>in-addr.arpa</code> y para IPv6 se utiliza el
+                dominio <code>ip6.arpa</code>.
+            </p>
+            <p>
+                En una búsqueda inversa IPv4, cada dirección se representa como la secuencia de números decimales
+                correspondiente a la dirección IP en orden inverso y separados por caracteres punto (.), más el
+                sufijo <code>.in-addr.arpa</code>. Por ejemplo, la dirección IPv4 <code>13.95.0.245</code> se
+                corresponderá con el registro PTR <code>245.0.95.13.in-addr.arpa</code>.
+            </p>
+            <p>
+                En una búsqueda inversa IPv6, cada dirección se representa como la secuencia de números que
+                representa la dirección IP en orden inverso y separados por caracteres punto (.), más el sufijo
+                <code>.ip6.arpa</code>. Por ejemplo, la dirección IPv6 <code>2001:0db8:3c4d:0015:0000:0000:1a2f:1a2b</code>
+                se corresponderá con el registro PTR <code>b.2.a.1.f.2.a.1.0.0.0.0.0.0.0.5.1.0.0.d.4.c.3.8.b.d.0.1.0.0.2.ip6.arpa</code>.
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.5.png" alt="Jerarquía para zonas de resolución inversa.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.5</span>
+                    Jerarquía para zonas de resolución inversa.
+                </figcaption>
+            </figure>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.6.png" alt="Intercambio de mensajes en resolución directa e inversa.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.6</span>
+                    Intercambio de mensajes en resolución directa e inversa.
+                </figcaption>
+            </figure>
+
+            <div class="actividad">
+                <h3>💡 Toma nota</h3>
+                <p>Los correos electrónicos que llegan a un servidor de correo entrante desde un servidor con un nombre de dominio que no tiene asociado un registro PTR (para resolución inversa) se asocian con SPAM y, por tanto, se rechazan.</p>
+            </div>
+        </section>
+
+        <!-- 3.7. DELEGACIONES, REENVÍOS Y SUGERENCIAS DE RAÍZ -->
+        <section id="delegaciones">
+            <h2>3.7. Delegaciones, reenvíos y sugerencias de raíz DNS</h2>
+            <p>
+                A tenor de lo descrito en el apartado «B. Espacio de nombres y administración», todo el espacio de
+                nombres se distribuye en diferentes niveles y diferentes zonas dentro de cada nivel. Así, cuando un
+                servidor DNS recibe una consulta, intenta resolverla utilizando la información existente en sus zonas
+                primarias, sus zonas secundarias y su caché (siempre en este orden). Si la respuesta puede darse
+                basándose en la información contenida en sus zonas (primarias o secundarias), esta será una respuesta
+                autoritativa; si la información reside en su caché, será no autoritativa.
+            </p>
+            <p>
+                Sin embargo, es posible que la consulta sea sobre un recurso desconocido que no se encuentra en sus
+                zonas ni en su caché:
+            </p>
+            <ul class="lista-servicios">
+                <li>En el caso de que el recurso esté contenido en alguna zona de nivel inferior a la zona gestionada directamente por el servidor, se deberá <strong>delegar</strong> la responsabilidad de responder sobre el servidor DNS autorizado para dicha zona (estas delegaciones se irán produciendo en orden descendente y siempre son configuraciones que se llevan a cabo sobre la zona padre, no sobre el servidor).</li>
+                <li>En el caso de que el recurso esté totalmente fuera de la zona gestionada de forma directa, y por ende también de cualquier zona de nivel inferior, deberá ser otro servidor el encargado de hacer la resolución. Es en estos casos en los que entran en juego <strong>reenvíos y las sugerencias de raíz DNS</strong>:
+                    <ul>
+                        <li>Si se han declarado reenviadores, será a estos a quienes se les envíe una consulta recursiva quedando a la espera de respuesta. Estos pueden ser:
+                            <ul>
+                                <li><strong>Absolutos:</strong> Si las consultas se reenvían directamente sin tener en cuenta el sufijo DNS del nombre de dominio buscado.</li>
+                                <li><strong>Condicionales:</strong> Si las consultas se reenvían a un servidor concreto basándose en el sufijo DNS del nombre de dominio buscado.</li>
+                            </ul>
+                        </li>
+                        <li>Si no se han declarado reenviadores o si no se ha podido contactar con ellos en un periodo de tiempo determinado, se enviará una consulta iterativa a uno de los servidores DNS especificados en las <strong>sugerencias de raíz DNS</strong>. Generalmente, los servidores DNS vienen preinstalados con el método automático de consulta sugerencias de raíz DNS, aunque si se declaran reenviadores, estos tendrán prioridad sobre las sugerencias de raíz.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.7.png" alt="Escenario con reenviadores absolutos y condicionales.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.7</span>
+                    Escenario con reenviadores absolutos y condicionales.
+                </figcaption>
+            </figure>
+
+            <div class="actividad">
+                <h3>📝 Actividades propuestas 3.4 y 3.5</h3>
+                <p>3.4. ¿En qué escenario puede ser interesante el establecimiento de un reenviador absoluto?</p>
+                <p>3.5. ¿En qué momento se hace uso de las sugerencias de raíz al realizarse una consulta DNS?</p>
+            </div>
+        </section>
+
+        <!-- 3.8. TIPOS DE REGISTROS -->
+        <section id="tipos-registros">
+            <h2>3.8. Tipos de registros DNS</h2>
+            <p>
+                Dentro de las zonas de resolución directa o inversa se pueden encontrar diferentes registros
+                destinados a contener la información que el servidor deberá resolver. Cada registro tiene una serie
+                de campos en los que se almacena su información y que son los siguientes:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Nombre de dominio</strong></td>
+                        <td>Contiene el nombre del dispositivo en el cual se encuentra el recurso que se está describiendo.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TTL</strong> (<em>Time To Live</em>)</td>
+                        <td>Indica el tiempo que puede permanecer dicho registro almacenado en la caché de un servidor DNS. Puede indicarse en segundos, minutos, horas, días o semanas, o incluso no indicarse, en cuyo caso se tomará del valor general de la zona.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Clase</strong></td>
+                        <td>Hace referencia a la familia de protocolos que se empleará (generalmente, clase IN).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tipo</strong></td>
+                        <td>Es el tipo de registro (ver cuadro 3.2).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Datos</strong></td>
+                        <td>Contiene la información que registrar y depende totalmente del tipo de registro. Puede ser una dirección IP, un nombre...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="actividad">
+                <h3>💡 Sabías que…</h3>
+                <p>El campo clase también puede tomar los valores HS y CH:</p>
+                <ul>
+                    <li><strong>HS</strong> se corresponde a Hesiod, protocolo histórico del MIT empleado para compartir información sobre diversas bases de datos de sistemas, como usuarios, grupos, impresoras, etc.</li>
+                    <li><strong>CH</strong> se corresponde con Chaosnet, otro protocolo LAN creado en el MIT a mediados de la década de 1970, que raramente fue utilizado para su propósito histórico, pero que ha sido utilizado para zonas de información del servidor integradas de BIND.</li>
+                </ul>
+            </div>
+
+            <p>Los diferentes tipos de registro que pueden darse de alta en una zona son los mostrados en el siguiente cuadro:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipo de registro</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>SOA</strong> (<em>Start of Authority</em>)</td>
+                        <td>Se trata del registro de inicio de autoridad y, por tanto, el más importante. Especifica quién es el servidor DNS maestro (o primario), por lo que implica la existencia de un registro NS asociado (pero no a la inversa). Además de los campos anteriormente descritos, añade:
+                            <ul>
+                                <li><strong>Dirección de correo electrónico del administrador:</strong> La arroba «@» se sustituye con un punto «.». En caso de que en la cuenta de usuario existiera un punto, este deberá escaparse mediante una barra invertida para diferenciarlo del carácter punto que representa a la arroba.</li>
+                                <li><strong>Número de serie:</strong> Se utiliza para contrastar las versiones de la zona. Se trata de un número entero con signo de 32 bit comprendido entre 1 y 4294967295. Por comodidad, y para aportar aún más información, se recomienda establecer su valor conforme al formato YYYYmmdds, en donde YYYY representa el año, mm representa el mes, dd representa el día del mes y ss representa la versión dentro de ese día.</li>
+                                <li><strong>Intervalo de actualización (Refresh):</strong> Número de 32 bit que representa el tiempo transcurrido tras el cual debe realizarse la transferencia de zona.</li>
+                                <li><strong>Intervalo de reintento (Retry):</strong> Número de 32 bit que representa el intervalo de tiempo que esperar antes de reintentar hacer una actualización que no se pudo realizar.</li>
+                                <li><strong>Tiempo de expiración (Expire time):</strong> Número de 32 bit que representa el tiempo máximo transcurrido tras el cual los datos de la zona ya no son autoritativos. Únicamente lo emplean los servidores secundarios.</li>
+                                <li><strong>TTL mínimo o Tiempo máximo caché negativa:</strong> Originalmente establecía un valor TTL mínimo para los registros de recursos en la zona. La RFC 2308 redefinió este valor y actualmente se emplea para especificar el tiempo durante el cual deben almacenarse en caché las respuestas negativas.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>NS</strong> (<em>Name Server</em>)</td>
+                        <td>Este registro se utiliza para indicar que uno de los registros declarados existentes (A, AAAA o CNAME) se corresponde con el de un servidor de nombres con autoridad para resolver consultas de un dominio.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A</strong> (<em>Address</em>)</td>
+                        <td>Se trata de un registro que contiene la correspondencia entre un nombre y su dirección IPv4 de 32 bits.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AAAA</strong></td>
+                        <td>Similar al registro A, pero la dirección correspondiente al nombre es una dirección IPv6 de 128 bits.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CNAME</strong> (<em>Canonical Name</em>)</td>
+                        <td>Coloquialmente conocido como «alias», es un registro que contiene la correspondencia de un nombre alternativo a un registro ya existente (A o AAAA). Los subdominios y registros DNS se obtienen del dominio original.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MX</strong> (<em>Mail Exchange</em>)</td>
+                        <td>Registro empleado para indicar los servidores de correo electrónico de la zona. Dado que es posible que existan varios servidores de correo, también será necesario indicar la prioridad de uso de los mismos. Para ello se hace uso del campo <em>Preference</em> (a menor valor en este campo, mayor prioridad).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SRV</strong> (<em>Service</em>)</td>
+                        <td>Ofrece información acerca de otros servicios diferentes al de correo electrónico o de resolución de nombres disponibles en la zona. Al igual que los registros MX y NS, implica la existencia del registro A o AAAA. Los registros SRV disponen del campo <em>Priority</em>, que indica la preferencia de uso de los servidores (se usa de forma similar al campo <em>Preference</em> de los registros MX). Además, dispone de otros dos campos más que son:
+                            <ul>
+                                <li><strong>Weight:</strong> Es el peso asociado al registro y se utiliza para proporcionar balanceos de carga ante registros de mismo nombre con mismo valor de Priority. La suma de los pesos de los registros SRV asociados a un nombre representa el 100%.</li>
+                                <li><strong>Port:</strong> Para indicar el puerto por el cual el servicio estará a la escucha.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>PTR</strong> (<em>Pointer</em>)</td>
+                        <td>Se trata del registro empleado, exclusivamente, en zonas de resolución inversa y que, por tanto, hace justo lo contrario al registro A o AAAA, traduciendo direcciones IP a nombres de dominio.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TXT</strong> (<em>Text</em>)</td>
+                        <td>Registro de texto que permite al administrador insertar texto arbitrariamente en un registro DNS. Este tipo de registro es muy utilizado por los servidores de listas negras DNSBL (DNS-based Blackhole List) para la filtración de SPAM o para las VPN en donde se puede definir una llave que utilizarán los clientes.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Nota:</strong> Los navegadores web, así como otros tipos de aplicación, no están diseñados para hacer uso de los registros SRV.</p>
+
+            <div class="actividad">
+                <h3>📝 Actividades propuestas 3.6 a 3.10</h3>
+                <p>3.6. ¿Qué diferencia el campo «intervalo de actualización» del campo «intervalo de reintento»?</p>
+                <p>3.7. ¿Qué tipo de registro se encuentra únicamente en las zonas de resolución inversa?</p>
+                <p>3.8. Si un registro MX dispone de un valor en Preference de 10 y otro registro similar dispone de un valor en Preference de 20, ¿cuál de los dos registros MX tendrá menor prioridad?</p>
+                <p>3.9. ¿Qué campo se utiliza para diferenciar la versión de la zona?</p>
+                <p>3.10. Indica el nombre de tres tipos de registros que requieran de la existencia de registros A o AAAA.</p>
+            </div>
+        </section>
+
+        <!-- 3.9. DDNS Y DNSSEC -->
+        <section id="ddns-dnssec">
+            <h2>3.9. Actualizaciones dinámicas (DDNS) y DNS Seguro (DNSSEC)</h2>
+            <h3>Actualizaciones dinámicas (DDNS)</h3>
+            <p>
+                Hasta llegar a este punto, se ha considerado que cada servicio siempre se aloja sobre un equipo que
+                tiene una dirección IP inalterable a lo largo del tiempo y que esta se encuentra vinculada
+                directamente con un nombre de dominio. Aunque esto puede ser así por norma general, existen
+                situaciones en las que los servidores tienen direcciones dinámicas o en las que es deseable mantener
+                actualizada la correspondencia entre un nombre de dominio y una IP. Gracias a una variable de DNS
+                denominada <strong>DDNS</strong>, es posible actualizar automáticamente la información relativa a un
+                nombre de dominio en un DNS, de manera que siempre será posible obtener la dirección IP asociada a
+                dicho nombre independientemente de que esta varíe.
+            </p>
+            <p>
+                Un escenario ejemplo puede ser el de un dominio en el que los clientes, que tienen un nombre de
+                dominio, obtienen sus direcciones IP desde un servidor DHCP de la organización. La actualización de
+                la información en el DNS podrá realizarse de forma manual desde cada cliente (por ejemplo, con el
+                comando <code>ipconfig /registerdns</code> en Windows o con la herramienta <code>nsupdate</code> en
+                LINUX), pero es mucho más práctico automatizarla desde el propio servidor DHCP. El protocolo de
+                actualización de DNS desde el servidor DHCP se recoge en la RFC 2136.
+            </p>
+            <p>
+                Otro escenario en el que se puede hacer uso de DDNS es aquel en el que se pretende instalar un
+                servidor en un entorno doméstico para ofrecer servicio a Internet. En estos entornos, los servidores
+                se encuentran tras un router cuya dirección IP pública es dinámica, salvo que se contrate lo
+                contrario con el ISP. Esta situación dificulta enormemente el acceso al servicio, el cual debe
+                realizarse a través de la IP que irá variando o a través de un nombre que deberá estar actualizado en
+                todo momento.
+            </p>
+            <div class="actividad">
+                <h3>🔍 Investiga</h3>
+                <p>Busca en Internet tres lugares que ofrezcan DDNS gratuito.</p>
+            </div>
+
+            <h3>DNS Seguro (DNSSEC)</h3>
+            <p>
+                El servicio <strong>DNSSEC</strong> añade una capa extra de seguridad a los servidores DNS de un
+                dominio con la finalidad de evitar que un atacante pueda falsificar datos DNS mediante un
+                envenenamiento de caché DNS. Los datos que obtendrá un cliente mediante este servicio serán
+                auténticos e íntegros. Para ello se utiliza un mecanismo de cifrado asimétrico de clave pública.
+            </p>
+            <p>
+                Para poder hacer uso de este servicio, es preciso que los servidores DNS autoritativos dispongan de
+                la versión firmada del dominio. Es importante destacar que no todos los servidores DNS soportan
+                DNSSEC.
+            </p>
+        </section>
+
+        <!-- 4. SERVIDOR DNS -->
+        <section id="servidor-dns">
+            <h2>4. Servidor DNS</h2>
+            <p>
+                Tal como se ha descrito en apartados previos, el servidor DNS podrá desempeñar varios roles
+                dependiendo del origen de la información manejada, así como de su tipo. El escenario de ejemplo que
+                se va a emplear a lo largo de este apartado es el siguiente:
+            </p>
+            <div class="tabla-configuracion-dhcp">
+                <table>
+                    <tr>
+                        <th class="bloque-configuracion" rowspan="2">Configuración<br>del servidor</th>
+                        <td class="subtitulo">Interfaces del red del servidor</td>
+                        <td>Primera interfaz</td>
+                        <td><code>172.16.0.4/24</code></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Segunda interfaz</td>
+                        <td><code>172.16.0.5/24</code></td>
+                    </tr>
+                    <tr class="separador-configuracion">
+                        <th class="bloque-configuracion" rowspan="10">Configuración<br>del servicio<br>DNS</th>
+                        <td>Dominio</td>
+                        <td colspan="2"><code>ejemplo.local</code></td>
+                    </tr>
+                    <tr>
+                        <td>Servidor primario</td>
+                        <td colspan="2"><code>ns1.ejemplo.local</code> (172.16.0.4)</td>
+                    </tr>
+                    <tr>
+                        <td>Servidor secundario</td>
+                        <td colspan="2"><code>ns2.ejemplo.local</code> (172.16.0.5)</td>
+                    </tr>
+                    <tr>
+                        <td>Zona de resolución directa</td>
+                        <td colspan="2"><code>ejemplo.local</code></td>
+                    </tr>
+                    <tr>
+                        <td>Zona de resolución inversa</td>
+                        <td colspan="2"><code>16.172.in-addr.arpa</code></td>
+                    </tr>
+                    <tr>
+                        <td>Registros A</td>
+                        <td colspan="2"><code>ns1</code> → 172.16.0.4, <code>ns2</code> → 172.16.0.5, <code>mailserver1</code> → 172.16.0.6, <code>mailserver2</code> → 172.16.0.7, <code>www</code> → 172.16.0.8, <code>ftp</code> → 172.16.0.9, <code>pc1</code> → 172.16.0.66</td>
+                    </tr>
+                    <tr>
+                        <td>Registros CNAME</td>
+                        <td colspan="2"><code>recepción</code> → <code>pc1.ejemplo.local</code></td>
+                    </tr>
+                    <tr>
+                        <td>Registros MX</td>
+                        <td colspan="2"><code>mailserver1</code> (prioridad 10), <code>mailserver2</code> (prioridad 10)</td>
+                    </tr>
+                    <tr>
+                        <td>Registro SRV</td>
+                        <td colspan="2"><code>_telnet._tcp</code> → <code>pc1.ejemplo.local</code> (puerto 23)</td>
+                    </tr>
+                    <tr>
+                        <td>Reenviador</td>
+                        <td colspan="2"><code>8.8.8.8</code></td>
+                    </tr>
+                </table>
+                <p class="pie-tabla"><strong>Cuadro 3.1.</strong> Configuración del servidor y del servicio DNS.</p>
+            </div>
+
+            <h3>4.1. Implementación con Microsoft Windows Server</h3>
+            <p>Instalación del servicio desde PowerShell (con privilegios de administrador):</p>
+            <pre><code>Install-WindowsFeature DNS -IncludeManagementTools</code></pre>
+            <p>
+                También se puede realizar la instalación desde «Administrador del servidor», «Agregar roles y
+                características».
+            </p>
+
+            <h4>a) Configuraciones generales en servidor maestro/esclavo</h4>
+            <p>
+                Como requisito previo se debe configurar la interfaz de red del servidor, indicando que su «Servidor
+                DNS preferido» será él mismo. En caso de que se vaya a instalar un servidor secundario, se establecerá
+                en el campo «Servidor DNS alternativo» la dirección del otro servidor.
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.8.png" alt="Configuración de interfaces de red en maestro y esclavo respectivamente.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.8</span>
+                    Configuración de interfaces de red en maestro y esclavo respectivamente.
+                </figcaption>
+            </figure>
+
+            <p>
+                Para configurar el servicio, se debe acceder a la herramienta de administración de DNS
+                (<code>dnsmgmt.msc</code>) dentro de la categoría «Herramientas administrativas de Windows» del menú
+                «Inicio».
+            </p>
+            <p>
+                En primer lugar, se deben realizar las configuraciones a nivel de servidor para indicar las interfaces
+                a través de las cuales se ofrecerá el servicio o habilitar/deshabilitar el modo de trabajo recursivo,
+                entre otras. Para ello, se debe hacer clic derecho en el servidor y seleccionar la opción
+                «Propiedades» del menú contextual e ir accediendo a las pestañas «Interfaces» y «Opciones avanzadas».
+            </p>
+
+            <h4>b) Configuración específica para servidor maestro</h4>
+            <p>
+                Desde el menú emergente que aparece al hacer clic derecho en el servidor, se debe seleccionar la
+                opción «Zona nueva». El asistente irá guiando el proceso de creación de la zona y preguntando por el
+                tipo (seleccionar «Zona principal» y «Zona de búsqueda directa»), nombre de zona
+                (<code>ejemplo.local</code>), nombre del archivo (<code>ejemplo.local.dns</code>) y cómo se realizarán
+                las actualizaciones de zona (marcar «No admitir actualizaciones dinámicas»).
+            </p>
+            <p>
+                Repitiendo el mismo paso, pero seleccionando «Zona de búsqueda inversa», se procederá a crear la zona
+                que traducirá de IP a nombres (<code>172.16</code>) sobre el fichero <code>16.172.in-addr.arpa.dns</code>.
+                Es muy conveniente crearla antes de configurar la zona de resolución directa, pues el asistente
+                permite automatizar la inserción de los registros PTR asociados a los registros A/AAAA que se van
+                introduciendo.
+            </p>
+            <p>
+                Una vez creadas las zonas, es el momento de introducir los registros correspondientes. Haciendo clic
+                derecho sobre la zona creada, aparecerá el menú contextual de acciones que realizar sobre la zona. Se
+                seleccionará:
+            </p>
+            <ol>
+                <li>«Host nuevo (A o AAAA)…» para registros de resolución directa. Para cada registro NS, CNAME, MX o SRV, debe existir un registro A o AAAA asociado.</li>
+                <li>«Alias nuevo (CNAME)…» para registros alias.</li>
+                <li>«Nuevo intercambio de correo (MX)…» para servicios de correo.</li>
+                <li>«Registros nuevos…» para acceder al submenú que permite seleccionar «Registro de servicio (SRV)».</li>
+            </ol>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.9.png" alt="Host nuevo (A o AAAA) y Alias nuevo (CNAME).">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.9</span>
+                    «Host nuevo (A o AAAA)…» y «Alias nuevo (CNAME)…».
+                </figcaption>
+            </figure>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.10.png" alt="Host nuevo (A o AAAA) y Nuevo intercambio de correo (MX).">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.10</span>
+                    «Host nuevo (A o AAAA)…» y «Nuevo intercambio de correo (MX)…».
+                </figcaption>
+            </figure>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.11.png" alt="Registros nuevos.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.11</span>
+                    «Registros nuevos…».
+                </figcaption>
+            </figure>
+
+            <p>
+                Para llevar a cabo las configuraciones de la zona, ya sea de resolución directa o inversa, es preciso
+                acceder a la pestaña «Inicio de autoridad (SOA)» en las propiedades de la zona a las que se podrá
+                acceder haciendo clic derecho sobre la zona.
+            </p>
+            <div class="actividad">
+                <h3>💡 Toma nota</h3>
+                <p>
+                    Si se tiene en cuenta que las delegaciones solo se pueden hacer una vez, ante escenarios en los
+                    que los equipos están en subredes, la zona de resolución inversa puede estar cubriendo más que el
+                    rango asignado a los equipos de dicha zona e impedir de esta manera la resolución para otras
+                    subredes. La solución más fácil es forzar a que sea una única zona la que se ocupe de las
+                    resoluciones inversas de toda la red, la cual incluye todas las subredes.
+                </p>
+            </div>
+
+            <h4>c) Configuración específica para servidor esclavo</h4>
+            <p>
+                Antes de proceder con las configuraciones sobre el servidor esclavo, será preciso hacer ciertas
+                configuraciones extra en el servidor maestro:
+            </p>
+            <ol>
+                <li>En primer lugar se deben dar de alta los dos registros A o AAAA correspondientes a maestro («ns1.ejemplo.local») y esclavo («ns2.ejemplo.local»).</li>
+                <li>Después se podrán dar de alta los registros NS asociados a ambos servidores. Esto se hace de forma indirecta desde las propiedades de la zona en la pestaña «Servidores de nombres».</li>
+                <li>A continuación, será preciso configurar cómo se llevará a cabo la transferencia de zona agregando los registros de servidor de nombres desde la pestaña «Transferencias de zona». Sobre el asistente se debe indicar el FQDN del servidor y su dirección IP.</li>
+            </ol>
+            <p>
+                Una vez se ha configurado la zona en el servidor maestro para que permita transferencias de zona al
+                servidor esclavo, se procede a la creación de la zona en el servidor esclavo. Será necesario iniciar
+                el mismo asistente que se empleó con anterioridad, pero ahora en el servidor esclavo. Se indicará
+                como tipo de zona «Zona secundaria», como zona para transferir «ejemplo.local» y el equipo que actúa
+                como servidor maestro para dicha zona (en este caso es «172.16.0.4»).
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.12.png" alt="Transferencias de zona.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.12</span>
+                    Transferencias de zona.
+                </figcaption>
+            </figure>
+
+            <h4>d) Configuración de delegación, reenvío y sugerencias raíz</h4>
+            <p>
+                Para independizar la gestión de un subdominio, se requiere la existencia de un servidor delegado.
+                Para su configuración se deben seguir los mismos pasos descritos con anterioridad, pero con la
+                información de dicho subdominio (tipo de zona «Zona principal», «Zona de búsqueda directa» y nombre
+                «subdominio.ejemplo.local»). En la configuración TCP/IP deberá indicarse que los DNS serán él mismo y
+                los DNS de la zona de nivel superior.
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.13.png" alt="Configuración avanzada en servidor delegado.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.13</span>
+                    Configuración avanzada en servidor delegado.
+                </figcaption>
+            </figure>
+
+            <p>
+                Una vez se ha configurado el servidor autoritativo para la zona delegada, se debe dejar constancia de
+                ella en la zona gestionada por el servidor del dominio padre maestro de «ejemplo.local». Para ello se
+                efectuarán estos pasos:
+            </p>
+            <ol>
+                <li>Crear un registro A o AAAA que identifique al DNS autoritativo maestro de la zona de nivel inferior en la jerarquía. Se le dará como nombre «delegadosubdominio».</li>
+                <li>Crear la delegación en el DNS padre maestro, haciendo clic derecho sobre la zona y seleccionando «Delegación nueva…». En el asistente se debe indicar que el dominio delegado es «subdominio» y que el equipo encargado de gestionarlo es el equipo que hará de servidor maestro de la delegación («delegadosubdominio.ejemplo.local» con la dirección IP «172.16.0.50»).</li>
+            </ol>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.14.png" alt="Configuración de reenviadores.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.14</span>
+                    Configuración de reenviadores.
+                </figcaption>
+            </figure>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.15.png" alt="Sugerencias de raíz.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.15</span>
+                    Sugerencias de raíz.
+                </figcaption>
+            </figure>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.16.png" alt="Consultas cruzadas.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.16</span>
+                    Consultas cruzadas.
+                </figcaption>
+            </figure>
+
+            <h4>e) Arranque, parada y consulta de estado</h4>
+            <p>La administración del servicio se puede hacer mediante los siguientes cmdlets:</p>
+            <pre><code>[Start|Stop|Suspend|Resume|Restart|Get]-Service -name DNS</code></pre>
+            <p>
+                Todas estas tareas también pueden llevarse a cabo desde el submenú «Todas las tareas» que aparece al
+                hacer clic derecho sobre el servidor.
+            </p>
+            <p>
+                Asimismo, se podrán iniciar o pausar las zonas de forma independiente desde la pestaña «General» de
+                las propiedades de cada zona.
+            </p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.17.png" alt="Detención e inicio del servicio de una zona.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.17</span>
+                    Detención e inicio del servicio de una zona.
+                </figcaption>
+            </figure>
+
+            <h4>f) Monitorización</h4>
+            <p>
+                Una vez configurado el registro de eventos, estos se podrán visualizar accediendo a las siguientes
+                categorías del visor de eventos (<code>eventvwr.msc</code>):
+            </p>
+            <ul class="lista-servicios">
+                <li>Registros de aplicaciones y servicios > Microsoft > Windows > DNS-Server > Auditoría.</li>
+                <li>Vistas personalizadas > Roles de servidor > Servidor DNS.</li>
+            </ul>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.18.png" alt="Configuración del registro de eventos y depuración.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.18</span>
+                    Configuración del registro de eventos y depuración.
+                </figcaption>
+            </figure>
+
+            <h3>4.2. Implementación con Ubuntu Server (BIND 9)</h3>
+            <h4>a) Instalación</h4>
+            <p>El servicio elegido para realizar la instalación sobre un sistema operativo Linux Ubuntu Server será BIND 9. Para llevar a cabo su instalación y la de las utilidades empleadas para su posterior diagnóstico, deberá ejecutarse:</p>
+            <pre><code>sudo apt-get update -y
+sudo apt-get install bind9 bind9utils -y</code></pre>
+
+            <h4>b) Configuración</h4>
+            <p>
+                Como requisito previo, se debe configurar la interfaz de red del servidor, indicando que su «Servidor
+                DNS preferido» será él mismo. En caso de que se vaya a instalar un servidor secundario, se
+                establecerá como segundo DNS la dirección del otro servidor. A continuación, se muestra el fichero de
+                configuración netplan <code>/etc/netplan/01-network-manager-all.yaml</code> para los servidores maestro
+                y esclavo:
+            </p>
+            <pre><code># Maestro
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      addresses: [172.16.0.4/24]
+      gateway4: 172.16.0.1
+      nameservers:
+        search: [ejemplo.local]
+        addresses: [172.16.0.4, 172.16.0.5]</code></pre>
+            <pre><code># Esclavo
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      addresses: [172.16.0.5/24]
+      gateway4: 172.16.0.1
+      nameservers:
+        search: [ejemplo.local]
+        addresses: [172.16.0.5, 172.16.0.4]</code></pre>
+
+            <p>Los ficheros de configuración del servicio se encuentran en el directorio <code>/etc/bind</code>:</p>
+            <ul class="lista-servicios">
+                <li><code>db.empty</code> es un archivo plantilla para comenzar a crear una zona.</li>
+                <li><code>named.conf</code> es el archivo principal de configuración, desde el que se incluye:
+                    <ul>
+                        <li><code>named.conf.options</code> el cual contiene opciones genéricas.</li>
+                        <li><code>named.conf.local</code> que contendrá las especificaciones de las zonas que crear. Puede incluir el fichero <code>zones.rfc1918</code> para especificar las zonas de resolución inversa de todas las direcciones IP no enrutables y especificadas por RFC 1918.</li>
+                        <li><code>named.conf.default-zones</code> que incluye los ficheros con información sobre la zona raíz (<code>db.root</code>), local (<code>db.local</code>) y de resolución inversa (<code>db.0</code>, <code>db.255</code> y <code>db.127</code>).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Antes de proceder con la configuración, se describen las características del contenido de los
+                ficheros de declaración de zonas para BIND9:
+            </p>
+            <ol>
+                <li>En la primera línea se suele declarar el TTL mediante la directiva <code>$TTL</code>. Este se aplicará a todos los registros salvo que este se establezca de forma específica.</li>
+                <li>El nombre de la zona puede indicarse mediante un FQDN o con el carácter arroba «@», el cual referencia a <code>$ORIGIN</code>.</li>
+                <li>Los registros especifican sus campos conforme a la sintaxis siguiente:
+                    <pre><code>nombre_dominio TTL Clase SOA servidor email (sn ref ret ex nc)
+nombre_dominio TTL Clase NS servidor
+nombre_dominio TTL Clase MX Preference nombre
+servicio_protocolo.nombre_dominio TTL Clase SRV Priority Weight Port nombre
+nombre TTL Clase A ipv4
+nombre TTL Clase AAAA ipv6
+alias TTL Clase CNAME canonical
+nombre_dirección TTL Clase PTR nombre</code></pre>
+                </li>
+                <li>La separación de los campos se realiza mediante espacios en blanco o tabulaciones.</li>
+                <li>La ausencia de determinados campos a la hora de especificar los registros implica el mismo valor que el del registro precedente.</li>
+                <li>Se pueden incluir comentarios:
+                    <ul>
+                        <li>En ficheros named:
+                            <ul>
+                                <li>Delimitados entre “/*” y “*/” (permiten comentarios multilínea).</li>
+                                <li>Precedidos por “//” o “#” (comentarios de una línea).</li>
+                            </ul>
+                        </li>
+                        <li>En ficheros de declaración de zona precedidos por punto y coma “;”.</li>
+                    </ul>
+                </li>
+                <li>Los identificadores que no terminen con el carácter punto “.” se autocompletan con el nombre de la zona.</li>
+                <li>Los tiempos pueden especificarse en segundos o seguidos de: <code>m</code> (minutos), <code>h</code> (horas), <code>d</code> (días), <code>w</code> (semanas). Pueden combinarse (por ejemplo, <code>1d12h</code> es 1,5 días).</li>
+            </ol>
+            <p>
+                Por defecto, el servidor trabaja en modo recursivo escuchando a través de todas sus interfaces de red
+                en el puerto 53. Para modificar el modo de trabajo, será preciso establecer la directiva
+                <code>recursion</code> en la sección <code>options</code> del fichero de configuración global
+                <code>named.conf.options</code>. Asimismo, si se desea que el servicio únicamente se preste en
+                determinadas interfaces o puertos, deberá especificarse mediante las directivas <code>listen-on</code>
+                y <code>listen-on-v6</code> en la misma sección.
+            </p>
+            <p>Dado que realizar la configuración de zonas en ficheros de texto plano puede llevar a cometer errores, existen algunas herramientas destinadas a comprobar la sintaxis de los mismos:</p>
+            <ul class="lista-servicios">
+                <li><code>named-checkconf</code> comprueba la sintaxis, que no la semántica, del fichero <code>named.conf</code>. Para hacer uso de ella, basta con ejecutar el comando sin parámetros.</li>
+                <li><code>named-checkzone</code> permite comprobar si una zona se ha declarado correctamente en un fichero. Para hacer uso de ella se utiliza el comando siguiente:
+                    <pre><code>sudo named-checkzone ejemplo.local db.ejemplo.local</code></pre>
+                </li>
+            </ul>
+
+            <div class="actividad">
+                <h3>💡 Recurso web</h3>
+                <p>En el servidor de ISC encontrarás una guía muy completa sobre la configuración de BIND9.</p>
+            </div>
+
+            <h4>c) Configuración específica para servidor maestro</h4>
+            <p>A continuación, se enumeran y describen los pasos necesarios para realizar una configuración equivalente a la realizada con Windows Server:</p>
+            <ol>
+                <li>Especificar las zonas de resolución directa e inversa editando el fichero de configuración <code>/etc/bind/named.conf.local</code> en el servidor maestro:
+                    <pre><code>zone "ejemplo.local" {
+    type master;
+    file "/etc/bind/db.ejemplo.local";
+};
+zone "16.172.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.16.172";
+};</code></pre>
+                </li>
+                <li>Declarar las zonas de resolución directa editando el fichero de configuración <code>/etc/bind/db.ejemplo.local</code> en el servidor maestro:
+                    <pre><code>$TTL 3600
+@ IN SOA ns1.ejemplo.local. tic.ejemplo.local. (
+    2019070401 ; serial number
+    900        ; refresh
+    600        ; retry
+    86400      ; expire
+    3600       ; negative cache TTL
+)
+IN NS ns1.ejemplo.local.
+IN MX 10 mailserver1.ejemplo.local.
+IN MX 10 mailserver2.ejemplo.local.
+_telnet._tcp IN SRV 0 0 23 pc1.ejemplo.local.
+ns1 IN A 172.16.0.4
+mailserver1 IN A 172.16.0.6
+mailserver2 IN A 172.16.0.7
+www IN A 172.16.0.8
+ftp IN A 172.16.0.9
+pc1 IN A 172.16.0.66
+recepción IN CNAME pc1.ejemplo.local.</code></pre>
+                </li>
+                <li>Declarar la zona de resolución inversa editando el fichero de configuración <code>/etc/bind/db.16.172</code> en el servidor maestro:
+                    <pre><code>$TTL 3600
+@ IN SOA ns1.ejemplo.local. tic.ejemplo.local. (
+    2019070401 ; serial number
+    900        ; refresh
+    600        ; retry
+    86400      ; expire
+    3600       ; negative cache TTL
+)
+@ IN NS ns1.ejemplo.local.
+4.0 IN PTR ns1.ejemplo.local.
+5.0 IN PTR ns2.ejemplo.local.
+6.0 IN PTR mailserver1.ejemplo.local.
+7.0 IN PTR mailserver2.ejemplo.local.
+8.0 IN PTR www.ejemplo.local.
+9.0 IN PTR ftp.ejemplo.local.
+50.0 IN PTR delegadosubdominio.ejemplo.local.
+66.0 IN PTR pc1.ejemplo.local.</code></pre>
+                </li>
+            </ol>
+
+            <div class="actividad">
+                <h3>💡 Recurso web</h3>
+                <p>En el caso de que estés empleando direcciones IPv6, en <a href="http://rdns6.com/hostRecord" target="_blank">http://rdns6.com/hostRecord</a> puedes encontrar un generador online de recursos PTR de direcciones IPv6 para BIND.</p>
+            </div>
+
+            <h4>d) Configuración específica para servidor esclavo</h4>
+            <p>Antes de proceder con las configuraciones sobre el servidor esclavo, se deben declarar en el maestro los dos registros A o AAAA correspondientes a los servidores maestro («ns1.ejemplo.local») y esclavo («ns2.ejemplo.local»), así como los registros NS asociados. Para ello, se editará el fichero de configuración <code>/etc/bind/db.ejemplo.local</code> en el servidor maestro:</p>
+            <pre><code>...
+@ IN NS ns2.ejemplo.local.
+ns2 IN A 172.16.0.5</code></pre>
+            <p>A continuación, será preciso indicar que se permitirán transferencias de zona al servidor secundario, añadiendo la directiva <code>allow-transfer</code> a la especificación de la zona. También se puede incluir la directiva <code>also-notify</code> para forzar que los cambios se propaguen tan pronto como se produzcan. Estos cambios se realizarán sobre el fichero <code>/etc/bind/named.conf.local</code> del servidor maestro:</p>
+            <pre><code>zone "ejemplo.local" {
+    ...
+    allow-transfer {
+        172.16.0.5;
+    };
+    also-notify {
+        172.16.0.5;
+    };
+};
+...</code></pre>
+            <p>Una vez se ha configurado la zona en el servidor maestro para que permita transferencias de zona al servidor esclavo, se procede a la creación de la zona en este último indicando los servidores maestros y permitiendo notificaciones desde ellos. Todo ello, editando <code>/etc/bind/named.conf.local</code> en el servidor esclavo:</p>
+            <pre><code>zone "ejemplo.local" {
+    type slave;
+    masters { 172.16.0.4; };
+    allow-notify { 172.16.0.4; };
+};</code></pre>
+
+            <h4>e) Configuración de delegación, reenvío y sugerencias raíz</h4>
+            <p>Para independizar la gestión de un subdominio se requiere la existencia de un servidor delegado que declare la información de la zona de nivel inferior. De igual manera a como se indicó para Windows Server, en la configuración TCP/IP deberá establecerse que los DNS serán él mismo y los DNS de la zona de nivel superior. Para ello se debe editar el fichero de configuración netplan <code>/etc/netplan/01-network-manager-all.yaml</code> en el servidor delegado:</p>
+            <pre><code>network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      addresses: [172.16.0.50/24]
+      gateway4: 172.16.0.1
+      nameservers:
+        search: [subdominio.ejemplo.local]
+        addresses: [172.16.0.50, 172.16.0.4, 172.16.0.5]</code></pre>
+            <p>La subzona se declarará de igual manera a como se hizo en el servidor de la zona padre (fichero de configuración <code>/etc/bind/named.conf/local</code> del servidor delegado):</p>
+            <pre><code>zone "subdominio.ejemplo.local" {
+    type master;
+    file "/etc/bind/db.subdominio.ejemplo.local";
+};</code></pre>
+            <p>Y fichero de configuración <code>/etc/bind/db.subdominio.ejemplo.local</code> del servidor delegado:</p>
+            <pre><code>$TTL 3600
+@ IN SOA ns1.subdominio.ejemplo.local. tic.ejemplo.local. (
+    2019070401 ; serial number
+    900        ; refresh
+    600        ; retry
+    86400      ; expire
+    3600       ; negative cache TTL
+)
+IN NS ns1.subdominio.ejemplo.local.
+ns1 IN A 172.16.0.50
+pc1 IN A 172.16.0.51</code></pre>
+            <p>Una vez configurado el servidor autoritativo para la subzona, esta se debe delegar sobre el servidor autorizado correspondiente. Para ello, en la zona gestionada por el servidor del dominio padre («ejemplo.local») se debe añadir un registro A o AAAA que identifique al DNS autorizado maestro de la zona de nivel inferior («delegadosubdominio.subdominio») y un registro NS para la subzona apuntando al anterior. Este cambio se llevará a cabo sobre el fichero <code>/etc/bind/db.ejemplo.local</code> del servidor maestro:</p>
+            <pre><code>...
+subdominio IN NS delegadosubdominio.subdominio.ejemplo.local.
+delegadosubdominio.subdominio IN A 172.16.0.50
+...</code></pre>
+            <p>No debe olvidarse configurar los reenviadores generales. En los DNS de «ejemplo.local» apuntarán a otro servidor de mayor nivel, como puede ser el de Google en la 8.8.8.8, y en los de «subdominio.ejemplo.local» apuntarán a los DNS de la zona padre. Dado que no se entrará en detalle en temas de seguridad y validación de zonas, procederemos a deshabilitar la validación de las mismas mediante el establecimiento al valor <code>no</code> de la sentencia <code>dnssec-validation</code> en los ficheros de configuración de opciones (<code>/etc/bind/named.conf.options</code>) de todos los DNS (maestro, esclavo y delegado):</p>
+            <pre><code>// maestro y esclavo "ejemplo.local"
+...
+forwarders { 8.8.8.8; };
+dnssec-validation no;
+...
+
+// delegado "subdominio.ejemplo.local"
+...
+forwarders { 172.16.0.4; 172.16.0.5; };
+dnssec-validation no;
+...</code></pre>
+            <p>El reenviador condicional a «externo.com» se crea especificando una zona de tipo forward que incluye una sección forwarders con las direcciones IP en las que se encuentra el dominio en los ficheros <code>/etc/bind/named.conf.local</code> de todos los servidores:</p>
+            <pre><code>zone "externo.com" {
+    type forward;
+    forwarders { 83.44.227.152; };
+};</code></pre>
+            <p>En el caso de que el reenvío falle, siempre existirá el recurso de las «Sugerencias de raíz». Su información reside físicamente sobre el fichero <code>/etc/bind/db.root</code>, el cual se referencia desde la zona «.» especificada en el fichero <code>named.conf.default-zones</code>.</p>
+
+            <h4>f) Arranque, parada y consulta de estado</h4>
+            <p>Para administrar el servidor, se puede hacer uso de <code>systemctl</code>, el cual permite enviar comandos de control al administrador del sistema. La sintaxis de uso para manejar este servicio es:</p>
+            <pre><code>sudo systemctl [reload|restart|start|status|stop] bind9</code></pre>
+
+            <h4>g) Monitorización</h4>
+            <p>Por defecto, los registros de BIND9 se escriben en el registro general del sistema <code>/var/log/syslog</code>. Para que el servicio pueda utilizar su propio fichero de log, hay que seguir los siguientes pasos:</p>
+            <ol>
+                <li>Añadir la línea siguiente al fichero principal de configuración <code>/etc/bind/named.conf</code>:
+                    <pre><code>include "/etc/bind/named.conf.log";</code></pre>
+                </li>
+                <li>Crear el fichero <code>/etc/bind/named.conf.log</code>, que será el que describa cómo llevar a cabo el registro de log:
+                    <pre><code>logging {
+    channel bind_log {
+        file "/var/log/bind/bind.log" versions 3 size 5m;
+        severity info;
+        print-time yes;
+        print-severity yes;
+        print-category yes;
+    };
+    category default { bind_log; };
+    category update { bind_log; };
+};</code></pre>
+                </li>
+                <li>Crear el directorio en el que el servidor, con cuenta de usuario bind, registrará los eventos y convertirlo en propietario del directorio para que pueda escribir en él:
+                    <pre><code>sudo mkdir /var/log/bind
+sudo chown bind:bind /var/log/bind</code></pre>
+                    <p>También será necesario reemplazar las líneas siguientes en el fichero de configuración <code>/etc/apparmor.d/usr.sbin.named</code>:</p>
+                    <pre><code>/var/log/named/** rw,
+/var/log/named/ rw,</code></pre>
+                    <p>por:</p>
+                    <pre><code>/var/log/bind/** rw,
+/var/log/bind/ rw,</code></pre>
+                </li>
+                <li>Para evitar que el log crezca sin control, se usará <code>logrotate</code>, una utilidad del sistema que gestiona la rotación automática y la compresión de los archivos de registro. Para ello se debe crear el fichero <code>/etc/logrotate.d/bind</code>:
+                    <pre><code>/var/log/bind/bind.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 644 bind bind
+    postrotate
+        /usr/sbin/invoke-rc.d bind9 reload > /dev/null
+    endscript
+}</code></pre>
+                </li>
+                <li>Por último, será necesario reiniciar los servicios afectados:
+                    <pre><code>sudo systemctl restart apparmor.service
+sudo systemctl restart bind9.service</code></pre>
+                </li>
+            </ol>
+            <div class="actividad">
+                <h3>🔍 Investiga</h3>
+                <p>Aunque el servicio BIND es el servidor DNS por excelencia en sistemas operativos UNIX/Linux, existen alternativas que permiten implementar escenarios similares con resultados muy satisfactorios. Busca información en Internet sobre DNSMASQ e implementa un escenario ejemplo con el que comprobar su funcionamiento.</p>
+            </div>
+        </section>
+
+        <!-- 5. CLIENTE DNS -->
+        <section id="cliente-dns">
+            <h2>5. Cliente DNS (resolver)</h2>
+            <p>
+                Los sistemas operativos con soporte para realizar conexiones por Internet disponen de un resolver
+                que se encarga de realizar las consultas a los servidores DNS configurados cuando cualquier
+                aplicación o servicio se lo requiere. Las llamadas desde estos servicios o aplicaciones (navegador,
+                herramienta línea comandos, gestor de correo de escritorio…) se realizan de forma transparente para
+                el usuario. Sin embargo, existen herramientas que se han diseñado específicamente para interrogar a un
+                servidor DNS de forma explícita. Algunas de ellas están disponibles en modo consola, otras en modo
+                gráfico, otras solo para sistemas UNIX/LINUX…
+            </p>
+            <div class="actividad">
+                <h3>💡 Para saber más</h3>
+                <ul>
+                    <li>Mozilla y Google han implementado el protocolo <strong>DNS over HTTPS (DoH)</strong> definido en la IETF RFC 8484.</li>
+                    <li>Según esta versión de DNS, las solicitudes y respuestas se envían a través de una conexión HTTPS cifrada a nivel de aplicación, no de sistema operativo, en lugar de utilizar UDP como la versión tradicional de DNS. Así, aunque se configuren las DNS en el sistema operativo, al navegar utilizando Firefox realmente se estarán usando los de Mozilla o Google.</li>
+                    <li>Esto redunda en seguridad e integridad al no poderse interceptar el tráfico (DoH utiliza el puerto 443 al igual que otras conexiones HTTPS, por lo que es complejo distinguir el tráfico de ambos). Otro beneficio derivado del uso de este protocolo es la disminución del tiempo empleado en el proceso de consulta.</li>
+                    <li>Pero, a pesar de estas ventajas, el hecho de que ni siquiera el ISP pueda conocer las solicitudes realizadas a través del navegador ha suscitado grandes críticas por parte del Gobierno británico, operadores y otros organismos como la Internet Watch Foundation (IWF).</li>
+                    <li>Existe otra versión de DNS seguro que realiza el cifrado directamente sobre TLS conectando contra el puerto 853, lo cual aligera aún más la comunicación. Se la conoce como <strong>DNS over TLS (DoT)</strong> y está definida en la IETF RFC 7858. Aunque añade menos sobrecarga sobre las comunicaciones, desafortunadamente los principales proveedores de navegadores eligen implementar DoH.</li>
+                </ul>
+            </div>
+            <div class="actividad">
+                <h3>🔍 Investiga</h3>
+                <p>Busca información sobre cómo configurar el navegador Firefox para que use DoH y realiza su configuración en un equipo cliente.</p>
+            </div>
+
+            <h3>5.1. nslookup</h3>
+            <p>
+                Se trata de una herramienta de consola que permite trabajar en modo interactivo (entrando en su
+                propia consola) o en modo comando (obteniendo el resultado tras su ejecución). Esta herramienta está
+                disponible tanto en sistemas Microsoft como en sistemas UNIX/LINUX, por lo que es altamente
+                recomendable familiarizarse con ella. La sintaxis de uso para el modo no interactivo es la siguiente:
+            </p>
+            <pre><code>nslookup [-opción] [nombre de host] [servidor]</code></pre>
+            <p>Ejemplo de nslookup en Windows y Linux para una misma consulta:</p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.19.png" alt="Comando nslookup en modo no interactivo.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.19</span>
+                    Comando nslookup en modo no interactivo.
+                </figcaption>
+            </figure>
+
+            <p>Para utilizar esta herramienta en modo interactivo, bastará con ejecutar el comando sin parámetros y, una vez dentro de su consola, se podrá interactuar con él directamente. En la siguiente imagen se puede ver un ejemplo de uso interactivo sobre sistemas Microsoft y Linux:</p>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.20.png" alt="Comando nslookup en modo interactivo.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.20</span>
+                    Comando nslookup en modo interactivo.
+                </figcaption>
+            </figure>
+
+            <h3>5.2. dig</h3>
+            <p>
+                Comando disponible en sistemas UNIX y LINUX que se emplea para hacer consultas desde el terminal o
+                un fichero externo. Su sintaxis de utilización es la siguiente:
+            </p>
+            <pre><code>dig &lt;@servidor&gt; [opciones] [nombre] [tipo]</code></pre>
+            <p>
+                donde <code>@servidor</code> es el nombre o dirección IP del servidor al que se realizarán las
+                consultas, <code>nombre</code> es el nombre de dominio por el que se realiza la consulta y
+                <code>tipo</code> es el tipo del registro por el cual se consulta (ANY, NS, SOA, MX, A…). Estas son
+                las opciones más comunes:
+            </p>
+            <ul class="lista-servicios">
+                <li><code>-h</code> muestra la ayuda del comando.</li>
+                <li><code>-x</code> se emplea para hacer consultas inversas.</li>
+                <li><code>-f &lt;fichero&gt;</code> permite recibir las consultas desde un fichero de texto externo. El fichero debe tener una consulta por línea y con la misma sintaxis que en la línea de órdenes.</li>
+                <li><code>-b &lt;dirección&gt;</code> indica la dirección IP desde la cual se realizará la consulta (útil en caso de tener más de una interfaz de red configurada).</li>
+            </ul>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.21.png" alt="Comando dig.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.21</span>
+                    Comando dig.
+                </figcaption>
+            </figure>
+
+            <h3>5.3. host</h3>
+            <p>Otro comando disponible en sistemas UNIX/LINUX es host. Su sintaxis es:</p>
+            <pre><code>host [-opciones] nombre_de_dominio/dirección_ip servidor</code></pre>
+            <p>Las principales opciones que se pueden emplear son:</p>
+            <ul class="lista-servicios">
+                <li><code>-a</code> muestra todos los registros DNS para el hostname dado.</li>
+                <li><code>-C</code> muestra los registros SOA y los servidores de nombres autorizados.</li>
+                <li><code>-d</code> es equivalente a <code>-v</code>.</li>
+                <li><code>-l</code> lista todos los hosts en un dominio usando AXFR.</li>
+                <li><code>-t</code> se utiliza para seleccionar el tipo de query (CNAME, PTR, MX…).</li>
+                <li><code>-w</code> especifica cuánto esperar para una respuesta.</li>
+                <li><code>-v</code> genera una salida mucho más detallada (similar a la del comando dig o nslookup).</li>
+                <li><code>-T</code> utiliza TCP en vez de UDP para las consultas al servidor de nombres. Esta opción es implícita a querys que requieran TCP (las peticiones AXFR, por ejemplo).</li>
+            </ul>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.22.png" alt="Comando host.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.22</span>
+                    Comando host.
+                </figcaption>
+            </figure>
+
+            <div class="actividad">
+                <h3>💡 Para saber más</h3>
+                <p>Existen portales web que permiten interrogar a los diferentes servidores DNS y mostrar el resultado formateado para el análisis de los campos de la petición y la respuesta. Algunos ejemplos son <a href="https://centralops.net/co/" target="_blank">https://centralops.net/co/</a>, <a href="https://dnclient.net/" target="_blank">https://dnclient.net/</a>, <a href="https://dnslookup.online/" target="_blank">https://dnslookup.online/</a>, <a href="https://www.dnsqueries.com/en/dns_lookup.php" target="_blank">https://www.dnsqueries.com/en/dns_lookup.php</a>. Asimismo, el servidor DNS Simple DNS Plus incluye la herramienta DNS Look Up, que ha sido especialmente diseñada para interrogar a los servidores DNS de una forma fácil e intuitiva.</p>
+            </div>
+
+            <div class="actividad">
+                <h3>📝 Actividad propuesta 3.11</h3>
+                <p>Utilizando las herramientas descritas en este apartado, interroga al servidor DNS de Google con IP 8.8.8.8 sobre los servidores de correo electrónico disponibles para el dominio hotmail.com.</p>
+            </div>
+        </section>
+
+        <!-- 6. INTEGRACIÓN DE SERVIDORES -->
+        <section id="integracion-wins">
+            <h2>6. Integración de servidores de nombres planos y jerárquicos</h2>
+            <p>
+                El servidor DNS de Microsoft puede apoyarse en servidores WINS para realizar búsquedas de nombres
+                que no se encuentren en su espacio de nombres y así dar un servicio más completo. Para combinar ambos
+                servicios deberá habilitar:
+            </p>
+            <ul class="lista-servicios">
+                <li>La búsqueda directa desde la pestaña «WINS» de las propiedades de la zona de resolución directa, indicando la dirección IPv4 del servidor WINS.</li>
+                <li>La búsqueda inversa desde la pestaña «WINS-R» de las propiedades de la zona de resolución inversa, indicando el dominio que anexar al nombre retornado.</li>
+            </ul>
+
+            <figure class="figura-imagen">
+                <div class="imagen-capas">
+                    <img src="Figura3.23.png" alt="Integración de servicios WINS-DNS.">
+                </div>
+                <figcaption>
+                    <span class="figura-numero">Figura 3.23</span>
+                    Integración de servicios WINS-DNS.
+                </figcaption>
+            </figure>
+
+            <p>
+                Las configuraciones previas crearán los registros WINS y WINS-R para las zonas de resolución directa
+                e inversa respectivamente, que únicamente son reconocidos por servidores Microsoft. Por este motivo,
+                si se desea poder transferir estas zonas a servidores esclavos implementados con otra tecnología
+                (BIND9), deberá habilitarse el checkbox «No replicar este registro».
+            </p>
+        </section>
+
+        <!-- RESUMEN -->
+        <section id="resumen">
+            <h2>Resumen</h2>
+            <ul class="lista-servicios">
+                <li>Los sistemas de nombres planos (NetBIOS, WINS) permiten identificar equipos sin conocer su estructura jerárquica, pero están cayendo en desuso frente a los sistemas jerárquicos.</li>
+                <li>El sistema de nombres jerárquico por excelencia es DNS, que organiza el espacio de nombres en forma de árbol invertido y distribuido en zonas.</li>
+                <li>Un servidor DNS puede actuar como maestro (gestiona directamente la zona), esclavo (obtiene la información del maestro por transferencia de zona) o caché (almacena respuestas de otras consultas).</li>
+                <li>Las consultas DNS pueden ser recursivas (el servidor devuelve la respuesta final) o iterativas (el servidor devuelve la mejor referencia que conoce).</li>
+                <li>Existen zonas de resolución directa (nombre → IP) e inversa (IP → nombre), y registros de diferentes tipos (SOA, NS, A, AAAA, CNAME, MX, SRV, PTR, TXT).</li>
+                <li>Los mecanismos de delegación, reenvío y sugerencias de raíz permiten resolver consultas fuera de las zonas gestionadas directamente.</li>
+                <li>DDNS permite actualizar automáticamente la información de un nombre de dominio en DNS, y DNSSEC añade seguridad mediante cifrado asimétrico.</li>
+                <li>La implementación práctica se ha mostrado sobre Microsoft Windows Server (herramienta DNS) y Ubuntu Server (BIND 9).</li>
+                <li>Existen herramientas cliente como nslookup, dig y host para interrogar a los servidores DNS.</li>
+                <li>Los servidores DNS de Microsoft pueden integrarse con WINS para resolver nombres NetBIOS de forma transparente.</li>
+            </ul>
+        </section>
+
+        <!-- EJERCICIOS PROPUESTOS -->
+        <section id="ejercicios-propuestos">
+            <h2>📝 Ejercicios propuestos</h2>
+            <ol>
+                <li>¿Es posible configurar en un cliente Windows más de dos servidores DNS?</li>
+                <li>¿Es lo mismo «servidor primario» que «servidor DNS preferido» o que «servidor maestro»? Justifica tu respuesta.</li>
+                <li>¿Es lo mismo «servidor secundario» que «servidor DNS alternativo» o que «servidor esclavo»? Justifica tu respuesta.</li>
+                <li>Si se dispone de los tres registros SRV siguientes:
+                    <pre><code>_telnet_tcp SRV 10 40 23 equipo1.dominio.local.
+_telnet_tcp SRV 10 60 23 equipo2.dominio.local.
+_telnet_tcp SRV 20 0 23 equipo3.dominio.local.</code></pre>
+                    ¿Qué servidores y en qué proporción serán elegidos por los clientes?
+                </li>
+                <li>¿Es posible integrar servidores WINS con servidores DNS de tecnología diferente a la de Microsoft? Justifica tu respuesta.</li>
+                <li>¿Qué comandos emplearías para comprobar que el servidor DNS BIND9 está sintácticamente bien configurado si dispone de la zona de resolución directa «midominio.local» descrita en el fichero «/etc/bind/db.midominio.local»?</li>
+                <li>Describe la diferencia existente entre transferencia de zona completa e incremental.</li>
+            </ol>
+        </section>
+
+        <!-- SUPUESTOS PRÁCTICOS -->
+        <section id="supuestos-practicos">
+            <h2>📝 Supuestos prácticos</h2>
+            <ol>
+                <li>
+                    A partir de la dirección de red 192.168.200.0/24, haz un reparto de direcciones entre los equipos de la clase. Configura cada equipo con los parámetros TCP/IP que corresponda y, mediante el empleo de los ficheros Hosts, configura un servicio de traducción de nombres de equipo a direcciones IP distribuido que permita acceder a cada equipo del laboratorio mediante el nombre del alumno que lo utiliza. Comprueba la conectividad de los equipos con la herramienta ping. (Actividad en grupo).
+                </li>
+                <li>
+                    Se desea mantener y gestionar un dominio para la empresa Kanado Corporation. Entre los requisitos que deben satisfacerse se encuentran:
+                    <ul class="lista-servicios">
+                        <li>El nombre del dominio será «kanado.local».</li>
+                        <li>Existirá un servidor DNS primario con dirección IP 192.168.1.100.</li>
+                        <li>Existirán tres equipos identificados como pc1, pc2 y pc3 dentro del dominio, cuyas direcciones IP serán, respectivamente, 192.168.1.12, 192.168.1.22 y 192.168.1.32.</li>
+                        <li>pc1 también podrá identificarse como «secretario».</li>
+                        <li>Existirán tres servidores de correo electrónico. Sus nombres serán mail1, mail2 y mail3, y sus direcciones serán, respectivamente, 192.168.1.5, 192.168.1.6 y 192.168.1.7. Todos ellos atenderán con nombre mailserver dentro del dominio. Los servidores mail1 y mail2 deben tener la misma prioridad, que deberá ser mayor que la del servidor mail3.</li>
+                        <li>Además, será necesario dar soporte para el servicio ftp. Existirán tres servidores ftp con nombres ftp1, ftp2 y ftp3, cuyas direcciones serán respectivamente 192.168.1.8, 192.168.1.9 y 192.168.1.10.</li>
+                        <li>Para dar solidez a la infraestructura será necesario gestionar un servidor DNS esclavo que mantenga una copia de la información del primario. Su dirección IP será la 192.168.1.11.</li>
+                        <li>Las transferencias de zona entre el servidor primario y el secundario deberán realizarse cada tres horas. Por razones de seguridad, únicamente deberán permitirse transferencias de zona entre ambos servidores.</li>
+                        <li>Los tiempos de vida de cada registro deberán de ser de tres horas.</li>
+                    </ul>
+                    Implementa el escenario descrito utilizando la tecnología servidor que ofrece el sistema operativo Microsoft Windows Server.
+                </li>
+                <li>Repite el escenario descrito en el supuesto práctico anterior utilizando ahora la tecnología servidor BIND sobre el sistema operativo Ubuntu Server.</li>
+                <li>
+                    Se desea mantener y gestionar un dominio formado por varios subdominios para una empresa con sedes en varios países de diferentes continentes. Las características del escenario que implementar son las siguientes:
+                    <ul class="lista-servicios">
+                        <li>El conjunto de dominios está formado por un dominio de alto nivel denominado «local», tres dominios para los continentes «América», «Asia» y «Europa», y dos dominios por cada continente correspondientes a los países «Canadá», «EE. UU.», «China», «Japón», «España» y «Portugal».</li>
+                        <li>Por cada dominio/subdominio:
+                            <ul>
+                                <li>Siempre existirá un servidor DNS maestro y uno esclavo con sendos nombres.</li>
+                                <li>Siempre existirá, al menos, un nombre que representará a un equipo con nombre «pc1».</li>
+                            </ul>
+                        </li>
+                        <li>El rango de direcciones IP para utilizar será un rango privado de clase B en la subred 172.16.10.0/24, en donde los servidores tomarán las primeras direcciones IP y los clientes las que queden libres a continuación. Es decir, los servidores de «local» tomarán la 172.16.10.1/24 y 172.16.10.2/24, los de «america.local» la 172.16.10.3/24 y 172.16.10.4/24… el cliente «pc1.local» la 172.16.10.21/24, el cliente «pc1.america.local» la 172.16.10.22/24… y así sucesivamente.</li>
+                        <li>Todos los servidores DNS, ya sean maestros o esclavos, podrán resolver de forma autoritativa las consultas que a ellos lleguen acerca de registros que pertenecen a las zonas que manejan de forma directa. Por ejemplo, el servidor maestro de Asia podrá contestar de forma autoritativa a la consulta «¿IP para maestro.asia.local?» o «¿IP para pc1.asia.local?», pero para el resto de consultas deberá delegar o reenviar, respectivamente, sobre el servidor de nivel inmediatamente inferior o superior.</li>
+                    </ul>
+                    Se pide:
+                    <ol>
+                        <li>Hacer el diseño que represente el dominio.</li>
+                        <li>Implementar el escenario entre todos los alumnos de la clase, de manera que se pueda conocer la dirección IP asignada a cada nombre y viceversa. Podrán combinarse todas las tecnologías descritas en el capítulo.</li>
+                        <li>Comprobar, desde un equipo cliente ajeno al entramado DNS implementado, pero con configuración de red compatible, que se puede interrogar a cualquier servidor del escenario acerca de cualquier nombre o IP y obtener el resultado correcto.</li>
+                    </ol>
+                    (Actividad en grupo).
+                </li>
+                <li>Simula el proceso de transferencia de zona sobre uno de los servidores que hayas configurado mediante el empleo de alguna de las herramientas cliente descritas.</li>
+                <li>La configuración DDNS de un router depende del modelo, por lo que no puede establecerse una guía genérica para su configuración. Accede a la página de configuración de tu router y busca la sección en la que puede configurarse para que haga uso de DDNS. A continuación, registra un FQDN en alguno de los portales soportados por tu router y asócialo a tu router para que actualice automáticamente tu IP pública con el FQDN elegido.</li>
+                <li>El protocolo NetBIOS es considerado por algunas aplicaciones de detección de vulnerabilidades como un protocolo inseguro y potencialmente peligroso, por lo que es recomendable deshabilitarlo. Descarga e instala en tu equipo la aplicación NetBIOS Enumerator y realiza un barrido con ella en tu red local para conocer los nombres NetBIOS de los equipos de la red que tengan activado dicho protocolo. A continuación, accede a las propiedades de tus equipos Windows y procede a deshabilitar el protocolo.</li>
+            </ol>
+        </section>
+
+        <!-- AUTOEVALUACIÓN -->
+        <section id="autoevaluacion">
+            <h2>Autoevaluación</h2>
+            <div class="quiz" id="quiz-tema03">
+                <div class="quiz-pregunta" data-correcta="d">
+                    <p><strong>1.</strong> ¿Qué puerto utiliza un servidor DNS para atender consultas?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">53 TCP.</li>
+                        <li data-op="b">53 UDP.</li>
+                        <li data-op="c">Todas las respuestas anteriores son incorrectas.</li>
+                        <li data-op="d">Las respuestas a) y b) son correctas.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>2.</strong> Los servidores DNS raíz:</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">Son tres identificados como a.root-servers.net., b.root-servers.net. y m.root-servers.net.</li>
+                        <li data-op="b">Son diez identificados como a.root-servers.net., b.root-servers.net.... y j.root-servers.net.</li>
+                        <li data-op="c">Son trece identificados como a.root-servers.net., b.root-servers.net.... y m.root-servers.net.</li>
+                        <li data-op="d">Todas las respuestas anteriores son incorrectas.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="a">
+                    <p><strong>3.</strong> ¿Cuál de las herramientas siguientes viene preinstalada en sistemas Microsoft Windows?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">nslookup.</li>
+                        <li data-op="b">dig.</li>
+                        <li data-op="c">host.</li>
+                        <li data-op="d">Todas las herramientas están disponibles de forma nativa en sistemas Microsoft Windows.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>4.</strong> Selecciona entre los siguientes aquel que no se trate de un campo válido para un registro:</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">TTL (Time To Live).</li>
+                        <li data-op="b">Clase.</li>
+                        <li data-op="c">SOA.</li>
+                        <li data-op="d">Datos.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>5.</strong> Identifica la afirmación falsa:</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">El servicio WINS es un servicio de resolución y registro de nombres de equipos NetBIOS a direcciones IP.</li>
+                        <li data-op="b">La dirección IP 19.8.133.55 se corresponderá con el registro puntero de la base de datos inversa con el nombre de dominio 19.8.133.55.in-addr.arpa.</li>
+                        <li data-op="c">Los sistemas de nombres planos no ofrecen información relativa a la estructura jerárquica de la red en la que se encuentran los dispositivos.</li>
+                        <li data-op="d">Una zona es como una base de datos completa para un subárbol podado del espacio de dominios.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>6.</strong> ¿Cuál de los siguientes dominios no sería adecuado para una entidad bancaria que pretende ganarse la confianza de sus clientes?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">.es.</li>
+                        <li data-op="b">.tk.</li>
+                        <li data-op="c">Las respuestas a) y b) son correctas.</li>
+                        <li data-op="d">Ninguna de las respuestas anteriores es correcta.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>7.</strong> ¿Cuál de los siguientes registros es obligatorio introducir en un fichero de zona de resolución directa del servidor secundario correspondiente?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">SOA.</li>
+                        <li data-op="b">NS.</li>
+                        <li data-op="c">Las respuestas a) y b) son verdaderas.</li>
+                        <li data-op="d">Todas las respuestas son incorrectas.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="a">
+                    <p><strong>8.</strong> ¿En qué ruta puede encontrarse el fichero hosts dentro de un sistema operativo Windows?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">C:\Windows\System32\drivers\etc\hosts.</li>
+                        <li data-op="b">C:\Windows\System\drivers\etc\hosts.</li>
+                        <li data-op="c">C:\Windows\System32\etc\drivers\hosts.</li>
+                        <li data-op="d">C:\Windows\System\etc\drivers\hosts.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="c">
+                    <p><strong>9.</strong> ¿Cuál de los siguientes comandos se emplea para consultar la caché DNS en un sistema Windows?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">ipconf -displaydns.</li>
+                        <li data-op="b">ifconfig -displaydns.</li>
+                        <li data-op="c">ipconfig -displaydns.</li>
+                        <li data-op="d">ifconfiguration -displaydns.</li>
+                    </ul>
+                </div>
+                <div class="quiz-pregunta" data-correcta="b">
+                    <p><strong>10.</strong> ¿A cuál de los siguientes tipos de dominio pertenece el dominio .edu?</p>
+                    <ul class="quiz-opciones">
+                        <li data-op="a">Se trata de un dominio de infraestructura.</li>
+                        <li data-op="b">Se trata de un dominio gTLD patrocinado.</li>
+                        <li data-op="c">Se trata de un dominio gTLD restringido.</li>
+                        <li data-op="d">Se trata de un dominio geográfico (ccTLD).</li>
+                    </ul>
+                </div>
+                <button id="quiz-corregir" type="button">Corregir</button>
+                <p id="quiz-resultado"></p>
+            </div>
+            <p class="quiz-fuente">
+                Fuente: Dorrego Martín, M. <em>Servicios en Red</em>. Editorial Síntesis.
+            </p>
+        </section>
+
+        <!-- BIBLIOGRAFÍA -->
+        <section id="bibliografia">
+            <h2>Bibliografía</h2>
+            <p>Dorrego Martín, M. <em>Servicios en Red</em>. Editorial Síntesis. Capítulo 3: Servicios de resolución de nombres (págs. 63-106).</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><a href="../">← Volver al módulo de Servicios en red (2SMR)</a></p>
+        <p><a href="../../">← Volver a la página principal</a></p>
+    </footer>
+
+    <script>
+    (function () {
+        var quiz = document.getElementById('quiz-tema03');
+        if (!quiz) return;
+
+        quiz.querySelectorAll('.quiz-opciones li').forEach(function (li) {
+            li.addEventListener('click', function () {
+                var opciones = li.parentElement.querySelectorAll('li');
+                opciones.forEach(function (o) { o.classList.remove('seleccionada'); });
+                li.classList.add('seleccionada');
+            });
+        });
+
+        document.getElementById('quiz-corregir').addEventListener('click', function () {
+            var preguntas = quiz.querySelectorAll('.quiz-pregunta');
+            var aciertos = 0;
+
+            preguntas.forEach(function (pregunta) {
+                var correcta = pregunta.dataset.correcta;
+                var opciones = pregunta.querySelectorAll('li');
+                var seleccionada = pregunta.querySelector('li.seleccionada');
+
+                opciones.forEach(function (o) {
+                    o.classList.remove('correcta', 'incorrecta');
+                    if (o.dataset.op === correcta) o.classList.add('correcta');
+                });
+
+                if (seleccionada && seleccionada.dataset.op === correcta) {
+                    aciertos++;
+                } else if (seleccionada) {
+                    seleccionada.classList.add('incorrecta');
+                }
+            });
+
+            document.getElementById('quiz-resultado').textContent =
+                'Resultado: ' + aciertos + ' / ' + preguntas.length + ' correctas.';
+        });
+    })();
+    </script>
+
+</body>
+</html>
