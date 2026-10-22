@@ -1060,11 +1060,6 @@ nombre_dirección TTL Clase PTR nombre</code></pre>
                 </li>
             </ul>
 
-            <div class="actividad">
-                <h3>💡 Recurso web</h3>
-                <p>En el servidor de ISC encontrarás una guía muy completa sobre la configuración de BIND9.</p>
-            </div>
-
             <h4>c) Configuración específica para servidor maestro</h4>
             <p>A continuación, se enumeran y describen los pasos necesarios para realizar una configuración equivalente a la realizada con Windows Server:</p>
             <ol>
@@ -1119,11 +1114,6 @@ recepción IN CNAME pc1.ejemplo.local.</code></pre>
 66.0 IN PTR pc1.ejemplo.local.</code></pre>
                 </li>
             </ol>
-
-            <div class="actividad">
-                <h3>💡 Recurso web</h3>
-                <p>En el caso de que estés empleando direcciones IPv6, en <a href="http://rdns6.com/hostRecord" target="_blank">http://rdns6.com/hostRecord</a> puedes encontrar un generador online de recursos PTR de direcciones IPv6 para BIND.</p>
-            </div>
 
             <h4>d) Configuración específica para servidor esclavo</h4>
             <p>Antes de proceder con las configuraciones sobre el servidor esclavo, se deben declarar en el maestro los dos registros A o AAAA correspondientes a los servidores maestro («ns1.ejemplo.local») y esclavo («ns2.ejemplo.local»), así como los registros NS asociados. Para ello, se editará el fichero de configuración <code>/etc/bind/db.ejemplo.local</code> en el servidor maestro:</p>
