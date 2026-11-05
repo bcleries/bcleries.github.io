@@ -1459,6 +1459,7 @@ _telnet_tcp SRV 20 0 23 equipo3.dominio.local.</code></pre>
                         <li>Para dar solidez a la infraestructura será necesario gestionar un servidor DNS esclavo que mantenga una copia de la información del primario. Su dirección IP será la 192.168.1.11.</li>
                         <li>Las transferencias de zona entre el servidor primario y el secundario deberán realizarse cada tres horas. Por razones de seguridad, únicamente deberán permitirse transferencias de zona entre ambos servidores.</li>
                         <li>Los tiempos de vida de cada registro deberán de ser de tres horas.</li>
+                        <li>NUEVO: Se requiere la creación de un servidor DNS delegado cuya dirección IP sea 192.168.1.80. Realiza las consultas cruzadas necesarias para que funcione correctamente.</li>
                     </ul>
                     Implementa el escenario descrito utilizando la tecnología servidor que ofrece el sistema operativo Microsoft Windows Server.
                 </li>
