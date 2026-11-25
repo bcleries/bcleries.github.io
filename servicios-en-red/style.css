@@ -1607,3 +1607,20 @@ main section {
         overflow-x: auto;
     }
 }
+
+/* TEMA 4 - FTP (estilos acotados) */
+.tema-04 main { line-height: 1.65; }
+.tema-04 table { width:100%; border-collapse:collapse; margin:25px 0; }
+.tema-04 th,.tema-04 td { border:1px solid #ddd; padding:12px; text-align:left; vertical-align:top; }
+.tema-04 th { background:#eee; }
+.tema-04 pre { background:#1e1e1e; color:#f5f5f5; padding:18px 20px; border-radius:8px; overflow-x:auto; }
+.tema-04 code { font-family:Consolas,monospace; }
+.tema-04 .ftp-diagrama { display:flex; align-items:center; justify-content:space-between; gap:15px; text-align:center; background:#e8f1f5; }
+.tema-04 .ftp-diagrama strong { padding:15px; border:2px solid #31586a; border-radius:10px; background:white; }
+.tema-04 .ftp-capas { display:grid; gap:5px; background:transparent; padding:0; }
+.tema-04 .ftp-capas span { background:#31586a; color:white; padding:12px; border-radius:8px; text-align:center; }
+.tema-04 .ftp-capas span:nth-child(2) { background:#4a7c9b; }
+.tema-04 .ftp-capas span:nth-child(3) { background:#6fa8bf; color:#173b4a; }
+.tema-04 .ftp-capas span:nth-child(4) { background:#b8d4dd; color:#173b4a; }
+.tema-04 a:focus-visible,.tema-04 li:focus-visible { outline:2px solid #31586a; }
+@media(max-width:700px){ .tema-04 table { display:block; overflow-x:auto; } .tema-04 .ftp-diagrama { flex-direction:column; } .tema-04 pre { font-size:13px; } }
