@@ -63,6 +63,11 @@
                     <span>Aplicación · FTP</span><span>Transporte · TCP</span><span>Internet · IP</span><span>Acceso a red</span></div>
                     <figcaption>FTP en el modelo TCP/IP (esquema propio).</figcaption>
                 </figure>
+                <figure class="figura" id="figura-4-1">
+                    <img src="Figura4.1.png" alt="FTP y su enclave en el modelo TCP/IP." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.1. FTP y su enclave en el modelo TCP/IP.</figcaption>
+                </figure>
+
                 <h3>2.1. Características y funcionamiento</h3>
                 <p>El cliente inicia una conexión de control al puerto TCP 21 del servidor. Las operaciones que transfieren datos, como LIST o RETR, requieren una conexión de datos independiente. El intérprete PI gestiona comandos y respuestas; el proceso DTP realiza las transferencias. La interfaz de usuario traduce las acciones del usuario en órdenes.</p>
                 <figure class="figura">
@@ -70,6 +75,11 @@
                     <strong>Cliente<br>PI / DTP</strong><span>→ Control TCP 21<br>↔ Datos</span><strong>Servidor<br>PI / DTP</strong></div>
                     <figcaption>Canales de control y datos.</figcaption>
                 </figure>
+                <figure class="figura" id="figura-4-2">
+                    <img src="Figura4.2.png" alt="Esquema de trabajo FTP." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.2. Esquema de trabajo FTP.</figcaption>
+                </figure>
+
                 <p>FTP transmite credenciales y contenido sin cifrar. Debe reservarse para laboratorios aislados o sustituirse por alternativas seguras.</p>
                 <div class="actividad">
                     <h3>Actividad propuesta</h3>
@@ -103,6 +113,11 @@
                     <strong>Cliente</strong><span>→ PASV (control)<br>→ Datos a puerto alto</span><strong>Servidor</strong></div>
                     <figcaption>Modo pasivo.</figcaption>
                 </figure>
+                <figure class="figura" id="figura-4-3">
+                    <img src="Figura4.3.png" alt="Transferencias en modo activo versus modo pasivo." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.3. Transferencias en modo activo versus modo pasivo.</figcaption>
+                </figure>
+
                 <table>
                     <thead>
                         <tr>
@@ -245,6 +260,11 @@ LIST
 226 Transfer complete
 QUIT
 221 Goodbye</code></pre>
+                <figure class="figura" id="figura-4-5">
+                    <img src="Figura4.5.png" alt="Conexión en modo consola desde un cliente Microsoft Windows." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.5. Conexión en modo consola desde un cliente Microsoft Windows.</figcaption>
+                </figure>
+
                 <p>En la respuesta PASV del ejemplo, el puerto es 195 × 256 + 80 = 50000.</p>
             </section>
 
@@ -293,6 +313,11 @@ QUIT
             <section id="tftp">
                 <h2>4. Protocolo TFTP</h2>
                 <p>TFTP (Trivial File Transfer Protocol, RFC 1350) utiliza UDP 69 para la petición inicial y puertos negociados para el resto de la transferencia. No proporciona autenticación ni listado de directorios. Se utiliza en arranque por red y distribución de firmware en entornos controlados.</p>
+                <figure class="figura" id="figura-4-4">
+                    <img src="Figura4.4.png" alt="TFTP y su enclave en el modelo TCP/IP." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.4. TFTP y su enclave en el modelo TCP/IP.</figcaption>
+                </figure>
+
                 <table>
                     <thead>
                         <tr>
@@ -373,10 +398,25 @@ bye</code></pre>
                 </table>
                 <h3>5.2. Navegador web</h3>
                 <p>El libro describe direcciones ftp://servidor; los navegadores modernos habituales han retirado el soporte FTP, por lo que se recomienda un cliente dedicado.</p>
+                <figure class="figura" id="figura-4-6">
+                    <img src="Figura4.6.png" alt="Conexión desde navegador Google Chrome." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.6. Conexión desde navegador Google Chrome.</figcaption>
+                </figure>
+
                 <h3>5.3. Explorador</h3>
                 <p>En sistemas compatibles puede introducirse ftp://172.16.0.9 en el explorador de archivos. Las capacidades dependen del sistema.</p>
+                <figure class="figura" id="figura-4-7">
+                    <img src="Figura4.7.png" alt="Conexión desde el explorador de archivos Explorer de Microsoft Windows." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.7. Conexión desde el explorador de archivos Explorer de Microsoft Windows.</figcaption>
+                </figure>
+
                 <h3>5.4. Cliente gráfico</h3>
                 <p>FileZilla permite configurar servidor, usuario, contraseña, puerto y protocolo. Su interfaz distingue archivos locales y remotos y muestra la cola y el registro de transferencias. Selecciona FTPS explícito cuando el servidor lo permita.</p>
+                <figure class="figura" id="figura-4-8">
+                    <img src="Figura4.8.png" alt="Conexión desde el cliente multiplataforma Filezilla Client." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.8. Conexión desde el cliente multiplataforma Filezilla Client.</figcaption>
+                </figure>
+
             </section>
 
             <section id="servidor-ftp">
@@ -423,13 +463,53 @@ bye</code></pre>
 Get-WindowsFeature *FTP*</code></pre>
                 <h3>B. Configuración</h3>
                 <ol>
-                    <li>Crea las cuentas AdminFTP, Informatico1, Informatico2, Contable1 y Contable2 y los grupos Informaticos y Contables. Asigna los miembros.</li>
+                    <li>Crea las cuentas AdminFTP, Informatico1, Informatico2, Contable1 y Contable2 y los grupos Informaticos y Contables. Asigna los miembros.
+                        <figure class="figura" id="figura-4-9">
+                            <img src="Figura4.9.png" alt="Usuarios y grupos del escenario ejemplo." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.9. Usuarios y grupos del escenario ejemplo.</figcaption>
+                        </figure>
+                    </li>
                     <li>Crea C:\EJEMPLO_LOCAL y configura permisos NTFS: modificación para AdminFTP e Informaticos; lectura y ejecución para Contables.</li>
-                    <li>En Administrador de IIS, Sitios → Agregar sitio FTP. Indica nombre, ruta, IP 172.16.0.9 y puerto 21. Para el laboratorio aislado selecciona Sin SSL; en producción exige TLS.</li>
-                    <li>En Autenticación FTP activa Básica y desactiva Anónima.</li>
-                    <li>En Reglas de autorización FTP agrega reglas de lectura/escritura para AdminFTP e Informaticos y lectura para Contables.</li>
-                    <li>En Configuración avanzada del sitio fija el límite de conexiones en 50.</li>
-                    <li>Para EJEMPLO_NET crea otro sitio (detén el anterior si comparten IP y puerto), habilita autenticación anónima y básica y autoriza lectura a anónimos y lectura/escritura a AdminFTP. Ajusta NTFS también para la identidad anónima.</li>
+                    <li>En Administrador de IIS, Sitios → Agregar sitio FTP. Indica nombre, ruta, IP 172.16.0.9 y puerto 21. Para el laboratorio aislado selecciona Sin SSL; en producción exige TLS.
+                        <figure class="figura" id="figura-4-10">
+                            <img src="Figura4.10.png" alt="Asistente de creación de sitio." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.10. Asistente de creación de sitio.</figcaption>
+                        </figure>
+
+                        <figure class="figura" id="figura-4-11">
+                            <img src="Figura4.11.png" alt="Sitios del servidor." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.11. Sitios del servidor.</figcaption>
+                        </figure>
+                    </li>
+                    <li>En Autenticación FTP activa Básica y desactiva Anónima.
+                        <figure class="figura" id="figura-4-12">
+                            <img src="Figura4.12.png" alt="Establecimiento de los tipos de autenticación del sitio." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.12. Establecimiento de los tipos de autenticación del sitio.</figcaption>
+                        </figure>
+                    </li>
+                    <li>En Reglas de autorización FTP agrega reglas de lectura/escritura para AdminFTP e Informaticos y lectura para Contables.
+                        <figure class="figura" id="figura-4-13">
+                            <img src="Figura4.13.png" alt="Establecimiento de reglas de autorización de permisos." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.13. Establecimiento de reglas de autorización de permisos.</figcaption>
+                        </figure>
+
+                        <figure class="figura" id="figura-4-14">
+                            <img src="Figura4.14.png" alt="Resumen de las reglas de autorización aplicadas al sitio." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.14. Resumen de las reglas de autorización aplicadas al sitio.</figcaption>
+                        </figure>
+                    </li>
+                    <li>En Configuración avanzada del sitio fija el límite de conexiones en 50.
+                        <figure class="figura" id="figura-4-15">
+                            <img src="Figura4.15.png" alt="Configuración del número de conexiones máximas." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.15. Configuración del número de conexiones máximas.</figcaption>
+                        </figure>
+                    </li>
+                    <li>Para EJEMPLO_NET crea otro sitio (detén el anterior si comparten IP y puerto), habilita autenticación anónima y básica y autoriza lectura a anónimos y lectura/escritura a AdminFTP. Ajusta NTFS también para la identidad anónima.
+                        <figure class="figura" id="figura-4-16">
+                            <img src="Figura4.16.png" alt="Establecimiento de reglas de autorización de permisos del sitio EJEMPLO NET." loading="lazy" style="max-width: 100%; height: auto;">
+                            <figcaption>Figura 4.16. Establecimiento de reglas de autorización de permisos del sitio EJEMPLO NET.</figcaption>
+                        </figure>
+                    </li>
                     <li>Configura el rango pasivo en Compatibilidad con firewall FTP y permite TCP 21 y el rango de datos en el firewall.</li>
                 </ol>
                 <h3>C. Administración y monitorización</h3>
@@ -438,6 +518,11 @@ Restart-Service ftpsvc
 Get-Website
 netstat -ano</code></pre>
                 <p>Consulta Sesiones actuales de FTP y Registro FTP en IIS. Los logs suelen estar en C:\inetpub\logs\LogFiles.</p>
+                <figure class="figura" id="figura-4-17">
+                    <img src="Figura4.17.png" alt="Consulta de las sesiones actuales de un sitio." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.17. Consulta de las sesiones actuales de un sitio.</figcaption>
+                </figure>
+
                 <div class="actividad">
                     <h3>Actividad propuesta</h3>
                     <p>Crea un sitio para tres departamentos: cada grupo modifica su carpeta y lee las demás; el gerente modifica todas.</p>
@@ -525,6 +610,11 @@ sudo ss -ltnp
 ftpwho
 ftptop
 sudo journalctl -u proftpd</code></pre>
+                <figure class="figura" id="figura-4-18">
+                    <img src="Figura4.18.png" alt="Salida de los comandos ftpwho y ftptop." loading="lazy" style="max-width: 100%; height: auto;">
+                    <figcaption>Figura 4.18. Salida de los comandos ftpwho y ftptop.</figcaption>
+                </figure>
+
                 <p>Si UFW está activo, permite TCP 21 y TCP 50000:50100 desde la red de laboratorio. Las directivas TransferLog, SystemLog y ExtendedLog permiten registrar transferencias y actividad.</p>
                 <pre><code>TransferLog /var/log/proftpd/xferlog
 SystemLog /var/log/proftpd/proftpd.log</code></pre>
