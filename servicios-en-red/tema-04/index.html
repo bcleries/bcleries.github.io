@@ -17,11 +17,223 @@
         <p>Servicios de transferencia de ficheros</p>
     </header>
 
-<main><section><h2>📚 Índice</h2><ul><li><a href="#introduccion">1. Introducción</a></li><li><a href="#protocolo-ftp">2. Protocolo FTP</a></li><li><a href="#tipos-conexion">2.2. Tipos de conexión</a></li><li><a href="#comandos-ftp">2.3. Peticiones, respuestas y códigos de estado</a></li><li><a href="#usuarios-ftp">2.4. Usuarios y grupos. Acceso anónimo</a></li><li><a href="#permisos-ftp">2.5. Permisos, cuotas y límite de ancho de banda</a></li><li><a href="#modos-transferencia">2.6. Modos de transferencia</a></li><li><a href="#ftps">3. Protocolo FTPS</a></li><li><a href="#tftp">4. Protocolo TFTP</a></li><li><a href="#cliente-ftp">5. Cliente FTP</a></li><li><a href="#servidor-ftp">6. Servidor FTP</a></li><li><a href="#implementacion-windows">6.1. Implementación con Microsoft Windows Server</a></li><li><a href="#implementacion-ubuntu">6.2. Implementación con Ubuntu Server (ProFTPD)</a></li><li><a href="#resumen">Resumen</a></li><li><a href="#ejercicios-propuestos">📝 Ejercicios propuestos</a></li><li><a href="#supuestos-practicos">📝 Supuestos prácticos</a></li><li><a href="#autoevaluacion">Autoevaluación</a></li><li><a href="#bibliografia">Bibliografía</a></li></ul></section>
-<section id="introduccion"><h2>1. Introducción</h2><p>Los servicios de transferencia de ficheros permiten intercambiar archivos entre equipos y administrar directorios remotos. En esta unidad estudiaremos FTP, FTPS y TFTP, sus clientes y la implantación de servidores en Windows Server y Ubuntu Server.</p><h3>Objetivos</h3><ul><li>Identificar protocolos, puertos y agentes.</li><li>Distinguir conexiones activas y pasivas y modos ASCII y binario.</li><li>Interpretar comandos y respuestas.</li><li>Instalar, configurar y monitorizar servidores con distintos permisos.</li></ul></section>
-<section id="protocolo-ftp"><h2>2. Protocolo FTP</h2><p>FTP (File Transfer Protocol), definido en RFC 959, pertenece a la capa de aplicación y utiliza TCP. Permite subir, descargar, listar, renombrar y eliminar archivos, además de crear directorios.</p><figure class="figura"><div class="ftp-capas"><span>Aplicación · FTP</span><span>Transporte · TCP</span><span>Internet · IP</span><span>Acceso a red</span></div><figcaption>FTP en el modelo TCP/IP (esquema propio).</figcaption></figure><h3>2.1. Características y funcionamiento</h3><p>El cliente inicia una conexión de control al puerto TCP 21 del servidor. Las operaciones que transfieren datos, como LIST o RETR, requieren una conexión de datos independiente. El intérprete PI gestiona comandos y respuestas; el proceso DTP realiza las transferencias. La interfaz de usuario traduce las acciones del usuario en órdenes.</p><figure class="figura"><div class="ftp-diagrama"><strong>Cliente<br>PI / DTP</strong><span>→ Control TCP 21<br>↔ Datos</span><strong>Servidor<br>PI / DTP</strong></div><figcaption>Canales de control y datos.</figcaption></figure><p>FTP transmite credenciales y contenido sin cifrar. Debe reservarse para laboratorios aislados o sustituirse por alternativas seguras.</p><div class="actividad"><h3>Actividad propuesta</h3><p>Investiga FXP y representa la transferencia entre dos servidores.</p></div></section>
-<section id="tipos-conexion"><h2>2.2. Tipos de conexión</h2><h3>Modo activo</h3><ol><li>El cliente comunica su puerto de escucha mediante PORT.</li><li>El servidor confirma y recibe una orden de transferencia.</li><li>El servidor inicia la conexión de datos, tradicionalmente desde TCP 20.</li><li>Al terminar, notifica el resultado por el canal de control.</li></ol><figure class="figura"><div class="ftp-diagrama"><strong>Cliente<br>Puerto alto</strong><span>→ PORT (control)<br>← Datos desde TCP 20</span><strong>Servidor<br>TCP 21 / 20</strong></div><figcaption>Modo activo.</figcaption></figure><h3>Modo pasivo</h3><ol><li>El cliente envía PASV.</li><li>El servidor anuncia un puerto de datos disponible.</li><li>El cliente inicia la conexión de datos hacia ese puerto.</li><li>Se realiza la transferencia y se comunica su finalización.</li></ol><figure class="figura"><div class="ftp-diagrama"><strong>Cliente</strong><span>→ PASV (control)<br>→ Datos a puerto alto</span><strong>Servidor</strong></div><figcaption>Modo pasivo.</figcaption></figure><table><thead><tr><th>Característica</th><th>Activo</th><th>Pasivo</th></tr></thead><tbody><tr><td>Inicia datos</td><td>Servidor</td><td>Cliente</td></tr><tr><td>Comando</td><td>PORT</td><td>PASV</td></tr><tr><td>Puerto de datos del servidor</td><td>20 habitualmente</td><td>Puerto negociado</td></tr><tr><td>Firewall</td><td>Entrada en cliente</td><td>Entrada en servidor</td></tr></tbody></table><div class="actividad"><h3>Actividad propuesta</h3><p>Explica por qué el modo pasivo facilita el uso de clientes detrás de NAT.</p></div></section>
-<section id="comandos-ftp"><h2>2.3. Peticiones, respuestas y códigos de estado</h2><p>Las órdenes se envían por el canal de control. El servidor responde con un código de tres cifras y un texto informativo.</p><table><thead><tr><th>Orden</th><th>Función</th></tr></thead><tbody><tr><td>USER / PASS</td><td>Identificación y contraseña</td></tr><tr><td>PWD / CWD / CDUP</td><td>Consultar o cambiar directorio</td></tr><tr><td>LIST / NLST</td><td>Listar contenido</td></tr><tr><td>RETR / STOR / APPE</td><td>Descargar, subir o añadir datos</td></tr><tr><td>DELE / MKD / RMD</td><td>Eliminar archivo, crear o eliminar directorio</td></tr><tr><td>RNFR / RNTO</td><td>Renombrar</td></tr><tr><td>PORT / PASV</td><td>Negociar conexión de datos</td></tr><tr><td>TYPE</td><td>Seleccionar representación</td></tr><tr><td>REST</td><td>Reanudar desde una posición</td></tr><tr><td>ABOR / QUIT</td><td>Abortar transferencia o cerrar sesión</td></tr><tr><td>SYST / STAT / NOOP</td><td>Información, estado o comprobación</td></tr></tbody></table><table><thead><tr><th>Familia</th><th>Significado</th><th>Ejemplo</th></tr></thead><tbody><tr><td>1xx</td><td>Respuesta preliminar</td><td>150 Abriendo conexión de datos</td></tr><tr><td>2xx</td><td>Éxito</td><td>226 Transferencia finalizada</td></tr><tr><td>3xx</td><td>Información adicional necesaria</td><td>331 Solicitud de contraseña</td></tr><tr><td>4xx</td><td>Fallo temporal</td><td>425 No se puede abrir conexión</td></tr><tr><td>5xx</td><td>Fallo permanente</td><td>530 No autenticado / 550 Acceso denegado</td></tr></tbody></table><pre><code>220 FTP ready
+        <main>
+
+            <section>
+                <h2>📚 Índice</h2>
+                <ul>
+                    <li><a href="#introduccion">1. Introducción</a></li>
+                    <li><a href="#protocolo-ftp">2. Protocolo FTP</a></li>
+                    <li><a href="#tipos-conexion">2.2. Tipos de conexión</a></li>
+                    <li><a href="#comandos-ftp">2.3. Peticiones, respuestas y códigos de estado</a></li>
+                    <li><a href="#usuarios-ftp">2.4. Usuarios y grupos. Acceso anónimo</a></li>
+                    <li><a href="#permisos-ftp">2.5. Permisos, cuotas y límite de ancho de banda</a></li>
+                    <li><a href="#modos-transferencia">2.6. Modos de transferencia</a></li>
+                    <li><a href="#ftps">3. Protocolo FTPS</a></li>
+                    <li><a href="#tftp">4. Protocolo TFTP</a></li>
+                    <li><a href="#cliente-ftp">5. Cliente FTP</a></li>
+                    <li><a href="#servidor-ftp">6. Servidor FTP</a></li>
+                    <li><a href="#implementacion-windows">6.1. Implementación con Microsoft Windows Server</a></li>
+                    <li><a href="#implementacion-ubuntu">6.2. Implementación con Ubuntu Server (ProFTPD)</a></li>
+                    <li><a href="#resumen">Resumen</a></li>
+                    <li><a href="#ejercicios-propuestos">📝 Ejercicios propuestos</a></li>
+                    <li><a href="#supuestos-practicos">📝 Supuestos prácticos</a></li>
+                    <li><a href="#autoevaluacion">Autoevaluación</a></li>
+                    <li><a href="#bibliografia">Bibliografía</a></li>
+                </ul>
+            </section>
+
+            <section id="introduccion">
+                <h2>1. Introducción</h2>
+                <p>Los servicios de transferencia de ficheros permiten intercambiar archivos entre equipos y administrar directorios remotos. En esta unidad estudiaremos FTP, FTPS y TFTP, sus clientes y la implantación de servidores en Windows Server y Ubuntu Server.</p>
+                <h3>Objetivos</h3>
+                <ul>
+                    <li>Identificar protocolos, puertos y agentes.</li>
+                    <li>Distinguir conexiones activas y pasivas y modos ASCII y binario.</li>
+                    <li>Interpretar comandos y respuestas.</li>
+                    <li>Instalar, configurar y monitorizar servidores con distintos permisos.</li>
+                </ul>
+            </section>
+
+            <section id="protocolo-ftp">
+                <h2>2. Protocolo FTP</h2>
+                <p>FTP (File Transfer Protocol), definido en RFC 959, pertenece a la capa de aplicación y utiliza TCP. Permite subir, descargar, listar, renombrar y eliminar archivos, además de crear directorios.</p>
+                <figure class="figura">
+                    <div class="ftp-capas">
+                    <span>Aplicación · FTP</span><span>Transporte · TCP</span><span>Internet · IP</span><span>Acceso a red</span></div>
+                    <figcaption>FTP en el modelo TCP/IP (esquema propio).</figcaption>
+                </figure>
+                <h3>2.1. Características y funcionamiento</h3>
+                <p>El cliente inicia una conexión de control al puerto TCP 21 del servidor. Las operaciones que transfieren datos, como LIST o RETR, requieren una conexión de datos independiente. El intérprete PI gestiona comandos y respuestas; el proceso DTP realiza las transferencias. La interfaz de usuario traduce las acciones del usuario en órdenes.</p>
+                <figure class="figura">
+                    <div class="ftp-diagrama">
+                    <strong>Cliente<br>PI / DTP</strong><span>→ Control TCP 21<br>↔ Datos</span><strong>Servidor<br>PI / DTP</strong></div>
+                    <figcaption>Canales de control y datos.</figcaption>
+                </figure>
+                <p>FTP transmite credenciales y contenido sin cifrar. Debe reservarse para laboratorios aislados o sustituirse por alternativas seguras.</p>
+                <div class="actividad">
+                    <h3>Actividad propuesta</h3>
+                    <p>Investiga FXP y representa la transferencia entre dos servidores.</p>
+                </div>
+            </section>
+
+            <section id="tipos-conexion">
+                <h2>2.2. Tipos de conexión</h2>
+                <h3>Modo activo</h3>
+                <ol>
+                    <li>El cliente comunica su puerto de escucha mediante PORT.</li>
+                    <li>El servidor confirma y recibe una orden de transferencia.</li>
+                    <li>El servidor inicia la conexión de datos, tradicionalmente desde TCP 20.</li>
+                    <li>Al terminar, notifica el resultado por el canal de control.</li>
+                </ol>
+                <figure class="figura">
+                    <div class="ftp-diagrama">
+                    <strong>Cliente<br>Puerto alto</strong><span>→ PORT (control)<br>← Datos desde TCP 20</span><strong>Servidor<br>TCP 21 / 20</strong></div>
+                    <figcaption>Modo activo.</figcaption>
+                </figure>
+                <h3>Modo pasivo</h3>
+                <ol>
+                    <li>El cliente envía PASV.</li>
+                    <li>El servidor anuncia un puerto de datos disponible.</li>
+                    <li>El cliente inicia la conexión de datos hacia ese puerto.</li>
+                    <li>Se realiza la transferencia y se comunica su finalización.</li>
+                </ol>
+                <figure class="figura">
+                    <div class="ftp-diagrama">
+                    <strong>Cliente</strong><span>→ PASV (control)<br>→ Datos a puerto alto</span><strong>Servidor</strong></div>
+                    <figcaption>Modo pasivo.</figcaption>
+                </figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Activo</th>
+                            <th>Pasivo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Inicia datos</td>
+                            <td>Servidor</td>
+                            <td>Cliente</td>
+                        </tr>
+                        <tr>
+                            <td>Comando</td>
+                            <td>PORT</td>
+                            <td>PASV</td>
+                        </tr>
+                        <tr>
+                            <td>Puerto de datos del servidor</td>
+                            <td>20 habitualmente</td>
+                            <td>Puerto negociado</td>
+                        </tr>
+                        <tr>
+                            <td>Firewall</td>
+                            <td>Entrada en cliente</td>
+                            <td>Entrada en servidor</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="actividad">
+                    <h3>Actividad propuesta</h3>
+                    <p>Explica por qué el modo pasivo facilita el uso de clientes detrás de NAT.</p>
+                </div>
+            </section>
+
+            <section id="comandos-ftp">
+                <h2>2.3. Peticiones, respuestas y códigos de estado</h2>
+                <p>Las órdenes se envían por el canal de control. El servidor responde con un código de tres cifras y un texto informativo.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Orden</th>
+                            <th>Función</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>USER / PASS</td>
+                            <td>Identificación y contraseña</td>
+                        </tr>
+                        <tr>
+                            <td>PWD / CWD / CDUP</td>
+                            <td>Consultar o cambiar directorio</td>
+                        </tr>
+                        <tr>
+                            <td>LIST / NLST</td>
+                            <td>Listar contenido</td>
+                        </tr>
+                        <tr>
+                            <td>RETR / STOR / APPE</td>
+                            <td>Descargar, subir o añadir datos</td>
+                        </tr>
+                        <tr>
+                            <td>DELE / MKD / RMD</td>
+                            <td>Eliminar archivo, crear o eliminar directorio</td>
+                        </tr>
+                        <tr>
+                            <td>RNFR / RNTO</td>
+                            <td>Renombrar</td>
+                        </tr>
+                        <tr>
+                            <td>PORT / PASV</td>
+                            <td>Negociar conexión de datos</td>
+                        </tr>
+                        <tr>
+                            <td>TYPE</td>
+                            <td>Seleccionar representación</td>
+                        </tr>
+                        <tr>
+                            <td>REST</td>
+                            <td>Reanudar desde una posición</td>
+                        </tr>
+                        <tr>
+                            <td>ABOR / QUIT</td>
+                            <td>Abortar transferencia o cerrar sesión</td>
+                        </tr>
+                        <tr>
+                            <td>SYST / STAT / NOOP</td>
+                            <td>Información, estado o comprobación</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Familia</th>
+                            <th>Significado</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1xx</td>
+                            <td>Respuesta preliminar</td>
+                            <td>150 Abriendo conexión de datos</td>
+                        </tr>
+                        <tr>
+                            <td>2xx</td>
+                            <td>Éxito</td>
+                            <td>226 Transferencia finalizada</td>
+                        </tr>
+                        <tr>
+                            <td>3xx</td>
+                            <td>Información adicional necesaria</td>
+                            <td>331 Solicitud de contraseña</td>
+                        </tr>
+                        <tr>
+                            <td>4xx</td>
+                            <td>Fallo temporal</td>
+                            <td>425 No se puede abrir conexión</td>
+                        </tr>
+                        <tr>
+                            <td>5xx</td>
+                            <td>Fallo permanente</td>
+                            <td>530 No autenticado / 550 Acceso denegado</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre><code>220 FTP ready
 USER alumno
 331 Password required
 PASS ********
@@ -32,13 +244,93 @@ LIST
 150 Opening data connection
 226 Transfer complete
 QUIT
-221 Goodbye</code></pre><p>En la respuesta PASV del ejemplo, el puerto es 195 × 256 + 80 = 50000.</p></section>
-<section id="usuarios-ftp"><h2>2.4. Usuarios y grupos. Acceso anónimo</h2><p>El servidor puede autenticar cuentas del sistema o cuentas específicas del servicio. Los grupos simplifican la asignación de permisos. El acceso anónimo utiliza normalmente el nombre anonymous y permite publicar recursos sin una cuenta personal. Conviene restringirlo a lectura y a un directorio concreto.</p></section>
-<section id="permisos-ftp"><h2>2.5. Permisos, cuotas y límite de ancho de banda</h2><p>Los permisos efectivos dependen tanto de las reglas del servidor FTP como de los permisos del sistema de archivos (NTFS o permisos UNIX y ACL). Una autorización FTP no sustituye los permisos del sistema. Las cuotas limitan el espacio o volumen permitido; los límites de velocidad y sesiones evitan que un cliente monopolice el servicio.</p><div class="actividad"><h3>Actividad propuesta</h3><p>Diseña una matriz de permisos para administradores, empleados y visitantes.</p></div></section>
-<section id="modos-transferencia"><h2>2.6. Modos de transferencia</h2><p>ASCII (TYPE A) adapta la representación de texto, incluidos los finales de línea. Binario (TYPE I) conserva los bytes y es apropiado para imágenes, ejecutables, ZIP y otros archivos. FTP también contempla representaciones EBCDIC y local, y modos de transmisión stream, block y compressed; no deben confundirse con activo y pasivo.</p><table><thead><tr><th>Archivo</th><th>Tipo recomendado</th></tr></thead><tbody><tr><td>TXT de texto plano</td><td>ASCII si se requiere conversión</td></tr><tr><td>PNG, ZIP, PDF, EXE</td><td>Binario</td></tr></tbody></table></section>
-<section id="ftps"><h2>3. Protocolo FTPS</h2><p>FTPS añade TLS a FTP. El modo implícito inicia el cifrado al conectar, normalmente en TCP 990. El explícito (FTPES) comienza en TCP 21 y negocia TLS mediante AUTH TLS antes de autenticar. Para proteger también los datos se utiliza PROT P. SFTP es un protocolo diferente, basado en SSH, habitualmente TCP 22.</p></section>
-<section id="tftp"><h2>4. Protocolo TFTP</h2><p>TFTP (Trivial File Transfer Protocol, RFC 1350) utiliza UDP 69 para la petición inicial y puertos negociados para el resto de la transferencia. No proporciona autenticación ni listado de directorios. Se utiliza en arranque por red y distribución de firmware en entornos controlados.</p><table><thead><tr><th>Mensaje</th><th>Función</th></tr></thead><tbody><tr><td>RRQ</td><td>Lectura</td></tr><tr><td>WRQ</td><td>Escritura</td></tr><tr><td>DATA</td><td>Bloque de datos</td></tr><tr><td>ACK</td><td>Confirmación</td></tr><tr><td>ERROR</td><td>Error</td></tr></tbody></table><p>Los bloques clásicos son de 512 bytes; un bloque menor señala el final. Si no llega confirmación se retransmite.</p></section>
-<section id="cliente-ftp"><h2>5. Cliente FTP</h2><h3>5.1. Consola</h3><p>Los comandos del cliente no siempre coinciden con los del protocolo. Ejemplo de sesión en una red de laboratorio:</p><pre><code>ftp 172.16.0.9
+221 Goodbye</code></pre>
+                <p>En la respuesta PASV del ejemplo, el puerto es 195 × 256 + 80 = 50000.</p>
+            </section>
+
+            <section id="usuarios-ftp">
+                <h2>2.4. Usuarios y grupos. Acceso anónimo</h2>
+                <p>El servidor puede autenticar cuentas del sistema o cuentas específicas del servicio. Los grupos simplifican la asignación de permisos. El acceso anónimo utiliza normalmente el nombre anonymous y permite publicar recursos sin una cuenta personal. Conviene restringirlo a lectura y a un directorio concreto.</p>
+            </section>
+
+            <section id="permisos-ftp">
+                <h2>2.5. Permisos, cuotas y límite de ancho de banda</h2>
+                <p>Los permisos efectivos dependen tanto de las reglas del servidor FTP como de los permisos del sistema de archivos (NTFS o permisos UNIX y ACL). Una autorización FTP no sustituye los permisos del sistema. Las cuotas limitan el espacio o volumen permitido; los límites de velocidad y sesiones evitan que un cliente monopolice el servicio.</p>
+                <div class="actividad">
+                    <h3>Actividad propuesta</h3>
+                    <p>Diseña una matriz de permisos para administradores, empleados y visitantes.</p>
+                </div>
+            </section>
+
+            <section id="modos-transferencia">
+                <h2>2.6. Modos de transferencia</h2>
+                <p>ASCII (TYPE A) adapta la representación de texto, incluidos los finales de línea. Binario (TYPE I) conserva los bytes y es apropiado para imágenes, ejecutables, ZIP y otros archivos. FTP también contempla representaciones EBCDIC y local, y modos de transmisión stream, block y compressed; no deben confundirse con activo y pasivo.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Archivo</th>
+                            <th>Tipo recomendado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TXT de texto plano</td>
+                            <td>ASCII si se requiere conversión</td>
+                        </tr>
+                        <tr>
+                            <td>PNG, ZIP, PDF, EXE</td>
+                            <td>Binario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="ftps">
+                <h2>3. Protocolo FTPS</h2>
+                <p>FTPS añade TLS a FTP. El modo implícito inicia el cifrado al conectar, normalmente en TCP 990. El explícito (FTPES) comienza en TCP 21 y negocia TLS mediante AUTH TLS antes de autenticar. Para proteger también los datos se utiliza PROT P. SFTP es un protocolo diferente, basado en SSH, habitualmente TCP 22.</p>
+            </section>
+
+            <section id="tftp">
+                <h2>4. Protocolo TFTP</h2>
+                <p>TFTP (Trivial File Transfer Protocol, RFC 1350) utiliza UDP 69 para la petición inicial y puertos negociados para el resto de la transferencia. No proporciona autenticación ni listado de directorios. Se utiliza en arranque por red y distribución de firmware en entornos controlados.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mensaje</th>
+                            <th>Función</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RRQ</td>
+                            <td>Lectura</td>
+                        </tr>
+                        <tr>
+                            <td>WRQ</td>
+                            <td>Escritura</td>
+                        </tr>
+                        <tr>
+                            <td>DATA</td>
+                            <td>Bloque de datos</td>
+                        </tr>
+                        <tr>
+                            <td>ACK</td>
+                            <td>Confirmación</td>
+                        </tr>
+                        <tr>
+                            <td>ERROR</td>
+                            <td>Error</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Los bloques clásicos son de 512 bytes; un bloque menor señala el final. Si no llega confirmación se retransmite.</p>
+            </section>
+
+            <section id="cliente-ftp">
+                <h2>5. Cliente FTP</h2>
+                <h3>5.1. Consola</h3>
+                <p>Los comandos del cliente no siempre coinciden con los del protocolo. Ejemplo de sesión en una red de laboratorio:</p>
+                <pre><code>ftp 172.16.0.9
 # Introducir usuario y contraseña cuando se soliciten
 ls
 pwd
@@ -48,16 +340,119 @@ binary
 put imagen.png
 get imagen.png copia.png
 cd ..
-bye</code></pre><table><thead><tr><th>Cliente</th><th>Protocolo</th></tr></thead><tbody><tr><td>get</td><td>RETR</td></tr><tr><td>put</td><td>STOR</td></tr><tr><td>ls</td><td>LIST</td></tr><tr><td>cd</td><td>CWD</td></tr><tr><td>delete</td><td>DELE</td></tr></tbody></table><h3>5.2. Navegador web</h3><p>El libro describe direcciones ftp://servidor; los navegadores modernos habituales han retirado el soporte FTP, por lo que se recomienda un cliente dedicado.</p><h3>5.3. Explorador</h3><p>En sistemas compatibles puede introducirse ftp://172.16.0.9 en el explorador de archivos. Las capacidades dependen del sistema.</p><h3>5.4. Cliente gráfico</h3><p>FileZilla permite configurar servidor, usuario, contraseña, puerto y protocolo. Su interfaz distingue archivos locales y remotos y muestra la cola y el registro de transferencias. Selecciona FTPS explícito cuando el servidor lo permita.</p></section>
-<section id="servidor-ftp"><h2>6. Servidor FTP</h2><p>Escenarios del capítulo: servidor 172.16.0.9/24, máximo 50 conexiones simultáneas.</p><table><thead><tr><th>Escenario</th><th>Usuario o grupo</th><th>Permisos</th></tr></thead><tbody><tr><td>EJEMPLO_LOCAL</td><td>AdminFTP e Informaticos</td><td>Lectura y escritura</td></tr><tr><td>EJEMPLO_LOCAL</td><td>Contables</td><td>Lectura</td></tr><tr><td>EJEMPLO_NET</td><td>AdminFTP</td><td>Lectura y escritura</td></tr><tr><td>EJEMPLO_NET</td><td>anonymous</td><td>Lectura</td></tr></tbody></table><p>Los dos escenarios se pueden practicar por separado sobre el mismo puerto 21.</p></section>
-<section id="implementacion-windows"><h2>6.1. Implementación con Microsoft Windows Server</h2><h3>A. Instalación de IIS</h3><pre><code>Install-WindowsFeature Web-FTP-Server -IncludeAllSubFeature -IncludeManagementTools
-Get-WindowsFeature *FTP*</code></pre><h3>B. Configuración</h3><ol><li>Crea las cuentas AdminFTP, Informatico1, Informatico2, Contable1 y Contable2 y los grupos Informaticos y Contables. Asigna los miembros.</li><li>Crea C:\EJEMPLO_LOCAL y configura permisos NTFS: modificación para AdminFTP e Informaticos; lectura y ejecución para Contables.</li><li>En Administrador de IIS, Sitios → Agregar sitio FTP. Indica nombre, ruta, IP 172.16.0.9 y puerto 21. Para el laboratorio aislado selecciona Sin SSL; en producción exige TLS.</li><li>En Autenticación FTP activa Básica y desactiva Anónima.</li><li>En Reglas de autorización FTP agrega reglas de lectura/escritura para AdminFTP e Informaticos y lectura para Contables.</li><li>En Configuración avanzada del sitio fija el límite de conexiones en 50.</li><li>Para EJEMPLO_NET crea otro sitio (detén el anterior si comparten IP y puerto), habilita autenticación anónima y básica y autoriza lectura a anónimos y lectura/escritura a AdminFTP. Ajusta NTFS también para la identidad anónima.</li><li>Configura el rango pasivo en Compatibilidad con firewall FTP y permite TCP 21 y el rango de datos en el firewall.</li></ol><h3>C. Administración y monitorización</h3><pre><code>Get-Service ftpsvc
+bye</code></pre>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Protocolo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>get</td>
+                            <td>RETR</td>
+                        </tr>
+                        <tr>
+                            <td>put</td>
+                            <td>STOR</td>
+                        </tr>
+                        <tr>
+                            <td>ls</td>
+                            <td>LIST</td>
+                        </tr>
+                        <tr>
+                            <td>cd</td>
+                            <td>CWD</td>
+                        </tr>
+                        <tr>
+                            <td>delete</td>
+                            <td>DELE</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>5.2. Navegador web</h3>
+                <p>El libro describe direcciones ftp://servidor; los navegadores modernos habituales han retirado el soporte FTP, por lo que se recomienda un cliente dedicado.</p>
+                <h3>5.3. Explorador</h3>
+                <p>En sistemas compatibles puede introducirse ftp://172.16.0.9 en el explorador de archivos. Las capacidades dependen del sistema.</p>
+                <h3>5.4. Cliente gráfico</h3>
+                <p>FileZilla permite configurar servidor, usuario, contraseña, puerto y protocolo. Su interfaz distingue archivos locales y remotos y muestra la cola y el registro de transferencias. Selecciona FTPS explícito cuando el servidor lo permita.</p>
+            </section>
+
+            <section id="servidor-ftp">
+                <h2>6. Servidor FTP</h2>
+                <p>Escenarios del capítulo: servidor 172.16.0.9/24, máximo 50 conexiones simultáneas.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Escenario</th>
+                            <th>Usuario o grupo</th>
+                            <th>Permisos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EJEMPLO_LOCAL</td>
+                            <td>AdminFTP e Informaticos</td>
+                            <td>Lectura y escritura</td>
+                        </tr>
+                        <tr>
+                            <td>EJEMPLO_LOCAL</td>
+                            <td>Contables</td>
+                            <td>Lectura</td>
+                        </tr>
+                        <tr>
+                            <td>EJEMPLO_NET</td>
+                            <td>AdminFTP</td>
+                            <td>Lectura y escritura</td>
+                        </tr>
+                        <tr>
+                            <td>EJEMPLO_NET</td>
+                            <td>anonymous</td>
+                            <td>Lectura</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Los dos escenarios se pueden practicar por separado sobre el mismo puerto 21.</p>
+            </section>
+
+            <section id="implementacion-windows">
+                <h2>6.1. Implementación con Microsoft Windows Server</h2>
+                <h3>A. Instalación de IIS</h3>
+                <pre><code>Install-WindowsFeature Web-FTP-Server -IncludeAllSubFeature -IncludeManagementTools
+Get-WindowsFeature *FTP*</code></pre>
+                <h3>B. Configuración</h3>
+                <ol>
+                    <li>Crea las cuentas AdminFTP, Informatico1, Informatico2, Contable1 y Contable2 y los grupos Informaticos y Contables. Asigna los miembros.</li>
+                    <li>Crea C:\EJEMPLO_LOCAL y configura permisos NTFS: modificación para AdminFTP e Informaticos; lectura y ejecución para Contables.</li>
+                    <li>En Administrador de IIS, Sitios → Agregar sitio FTP. Indica nombre, ruta, IP 172.16.0.9 y puerto 21. Para el laboratorio aislado selecciona Sin SSL; en producción exige TLS.</li>
+                    <li>En Autenticación FTP activa Básica y desactiva Anónima.</li>
+                    <li>En Reglas de autorización FTP agrega reglas de lectura/escritura para AdminFTP e Informaticos y lectura para Contables.</li>
+                    <li>En Configuración avanzada del sitio fija el límite de conexiones en 50.</li>
+                    <li>Para EJEMPLO_NET crea otro sitio (detén el anterior si comparten IP y puerto), habilita autenticación anónima y básica y autoriza lectura a anónimos y lectura/escritura a AdminFTP. Ajusta NTFS también para la identidad anónima.</li>
+                    <li>Configura el rango pasivo en Compatibilidad con firewall FTP y permite TCP 21 y el rango de datos en el firewall.</li>
+                </ol>
+                <h3>C. Administración y monitorización</h3>
+                <pre><code>Get-Service ftpsvc
 Restart-Service ftpsvc
 Get-Website
-netstat -ano</code></pre><p>Consulta Sesiones actuales de FTP y Registro FTP en IIS. Los logs suelen estar en C:\inetpub\logs\LogFiles.</p><div class="actividad"><h3>Actividad propuesta</h3><p>Crea un sitio para tres departamentos: cada grupo modifica su carpeta y lee las demás; el gerente modifica todas.</p></div></section>
-<section id="implementacion-ubuntu"><h2>6.2. Implementación con Ubuntu Server (ProFTPD)</h2><h3>A. Instalación</h3><pre><code>sudo apt update
+netstat -ano</code></pre>
+                <p>Consulta Sesiones actuales de FTP y Registro FTP en IIS. Los logs suelen estar en C:\inetpub\logs\LogFiles.</p>
+                <div class="actividad">
+                    <h3>Actividad propuesta</h3>
+                    <p>Crea un sitio para tres departamentos: cada grupo modifica su carpeta y lee las demás; el gerente modifica todas.</p>
+                </div>
+            </section>
+
+            <section id="implementacion-ubuntu">
+                <h2>6.2. Implementación con Ubuntu Server (ProFTPD)</h2>
+                <h3>A. Instalación</h3>
+                <pre><code>sudo apt update
 sudo apt install proftpd-basic -y
-sudo cp /etc/proftpd/proftpd.conf /etc/proftpd/proftpd.conf.bak</code></pre><p>En versiones donde el paquete anterior no esté disponible, comprueba el paquete proftpd-core. Edita /etc/proftpd/proftpd.conf. Conserva las directivas de distribución necesarias y evita duplicar configuraciones.</p><h3>B. Escenario EJEMPLO_LOCAL</h3><pre><code>sudo groupadd informaticos
+sudo cp /etc/proftpd/proftpd.conf /etc/proftpd/proftpd.conf.bak</code></pre>
+                <p>En versiones donde el paquete anterior no esté disponible, comprueba el paquete proftpd-core. Edita /etc/proftpd/proftpd.conf. Conserva las directivas de distribución necesarias y evita duplicar configuraciones.</p>
+                <h3>B. Escenario EJEMPLO_LOCAL</h3>
+                <pre><code>sudo groupadd informaticos
 sudo groupadd contables
 sudo useradd -M -s /bin/false -g informaticos informatico1
 sudo useradd -M -s /bin/false -g informaticos informatico2
@@ -68,7 +463,9 @@ sudo passwd adminftp
 # Repetir passwd para las demás cuentas
 sudo mkdir -p /EJEMPLO_LOCAL
 sudo chown adminftp:informaticos /EJEMPLO_LOCAL
-sudo chmod 2775 /EJEMPLO_LOCAL</code></pre><p>Adaptación del ejemplo del libro: nombres en minúscula y permisos más restrictivos que 777. El grupo contables puede leer mediante los permisos de otros; la regla FTP restringe el acceso a las cuentas autorizadas.</p><pre><code>ServerName &quot;EJEMPLO LOCAL&quot;
+sudo chmod 2775 /EJEMPLO_LOCAL</code></pre>
+                <p>Adaptación del ejemplo del libro: nombres en minúscula y permisos más restrictivos que 777. El grupo contables puede leer mediante los permisos de otros; la regla FTP restringe el acceso a las cuentas autorizadas.</p>
+                <pre><code>ServerName &quot;EJEMPLO LOCAL&quot;
 ServerType standalone
 DefaultServer on
 Port 21
@@ -89,9 +486,13 @@ PassivePorts 50000 50100
     DenyAll
   &lt;/Limit&gt;
   AllowOverwrite on
-&lt;/Directory&gt;</code></pre><h3>C. Escenario EJEMPLO_NET</h3><pre><code>sudo mkdir -p /EJEMPLO_NET
+&lt;/Directory&gt;</code></pre>
+                <h3>C. Escenario EJEMPLO_NET</h3>
+                <pre><code>sudo mkdir -p /EJEMPLO_NET
 sudo chown adminftp:root /EJEMPLO_NET
-sudo chmod 755 /EJEMPLO_NET</code></pre><p>Como configuración alternativa al escenario local, sustituye sus bloques de acceso por los siguientes. Comprueba que existe la cuenta ftp y que no hay otro bloque Anonymous activo.</p><pre><code>ServerName &quot;EJEMPLO NET&quot;
+sudo chmod 755 /EJEMPLO_NET</code></pre>
+                <p>Como configuración alternativa al escenario local, sustituye sus bloques de acceso por los siguientes. Comprueba que existe la cuenta ftp y que no hay otro bloque Anonymous activo.</p>
+                <pre><code>ServerName &quot;EJEMPLO NET&quot;
 ServerType standalone
 DefaultServer on
 Port 21
@@ -115,19 +516,199 @@ PassivePorts 50000 50100
   &lt;Limit WRITE&gt;
     DenyAll
   &lt;/Limit&gt;
-&lt;/Anonymous&gt;</code></pre><h3>D. Validación y monitorización</h3><pre><code>sudo proftpd -t
+&lt;/Anonymous&gt;</code></pre>
+                <h3>D. Validación y monitorización</h3>
+                <pre><code>sudo proftpd -t
 sudo systemctl restart proftpd
 sudo systemctl status proftpd
 sudo ss -ltnp
 ftpwho
 ftptop
-sudo journalctl -u proftpd</code></pre><p>Si UFW está activo, permite TCP 21 y TCP 50000:50100 desde la red de laboratorio. Las directivas TransferLog, SystemLog y ExtendedLog permiten registrar transferencias y actividad.</p><pre><code>TransferLog /var/log/proftpd/xferlog
-SystemLog /var/log/proftpd/proftpd.log</code></pre><p>Comprueba con cada cuenta que las operaciones permitidas funcionan y las prohibidas fallan. Si se utiliza PAM, revisa sus restricciones de shell y autenticación.</p></section>
-<section id="resumen"><h2>Resumen</h2><table><thead><tr><th>Protocolo</th><th>Transporte / puerto inicial</th><th>Seguridad</th></tr></thead><tbody><tr><td>FTP</td><td>TCP 21</td><td>Sin cifrado</td></tr><tr><td>FTPS explícito</td><td>TCP 21</td><td>TLS negociado</td></tr><tr><td>FTPS implícito</td><td>TCP 990</td><td>TLS desde inicio</td></tr><tr><td>TFTP</td><td>UDP 69</td><td>Sin autenticación ni cifrado</td></tr><tr><td>SFTP</td><td>TCP 22</td><td>SSH</td></tr></tbody></table><p>FTP separa control y datos; activo y pasivo determinan quién inicia los datos. La autorización efectiva combina reglas FTP y permisos de archivos.</p></section>
-<section id="ejercicios-propuestos"><h2>📝 Ejercicios propuestos</h2><ol><li>Dibuja la arquitectura PI/DTP y explica ambos canales.</li><li>Compara PORT y PASV y calcula el puerto de una respuesta 227 con valores 192,168,1,10,195,81.</li><li>Relaciona USER, PASS, RETR, STOR, LIST y QUIT con su función.</li><li>Clasifica los códigos 150, 226, 331, 425 y 550.</li><li>Explica cuándo elegir ASCII o binario.</li><li>Compara FTP, FTPS, SFTP y TFTP.</li><li>Diseña permisos para tres grupos y un administrador.</li><li>Investiga cómo limitar conexiones y consultar sesiones en IIS y ProFTPD.</li></ol></section>
-<section id="supuestos-practicos"><h2>📝 Supuestos prácticos</h2><div class="actividad"><h3>Práctica 1. Ubuntu Server</h3><p>Implanta EJEMPLO_LOCAL y EJEMPLO_NET según la matriz anterior. Verifica autenticación, lectura, escritura y denegaciones mediante capturas. Configura después un máximo de cuatro clientes e intenta conectar cinco.</p></div><div class="actividad"><h3>Práctica 2. Windows Server</h3><p>Reproduce ambos escenarios con IIS y comprueba permisos NTFS, reglas FTP, sesiones y logs.</p></div><div class="actividad"><h3>Práctica 3. Clientes y análisis de tráfico</h3><p>Con FileZilla y consola, crea fotos, sube vacio.txt, descárgalo y elimina el archivo y el directorio. En una red aislada captura tráfico propio con Wireshark, filtro ftp o ftp-data, y relaciona órdenes y respuestas. Compara con una conexión FTPS.</p></div></section>
-<section id="autoevaluacion"><h2>Autoevaluación</h2><div class="quiz" id="quiz-tema04"><div class="quiz-pregunta" data-correcta="b"><p><strong>1.</strong> ¿Puerto de control FTP?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">20</li><li data-op="b" tabindex="0" role="button">21</li><li data-op="c" tabindex="0" role="button">22</li><li data-op="d" tabindex="0" role="button">69</li></ul></div><div class="quiz-pregunta" data-correcta="c"><p><strong>2.</strong> ¿Quién inicia los datos en modo activo?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">Cliente</li><li data-op="b" tabindex="0" role="button">DNS</li><li data-op="c" tabindex="0" role="button">Servidor</li><li data-op="d" tabindex="0" role="button">Router</li></ul></div><div class="quiz-pregunta" data-correcta="b"><p><strong>3.</strong> ¿Orden de modo pasivo?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">PORT</li><li data-op="b" tabindex="0" role="button">PASV</li><li data-op="c" tabindex="0" role="button">RETR</li><li data-op="d" tabindex="0" role="button">TYPE</li></ul></div><div class="quiz-pregunta" data-correcta="c"><p><strong>4.</strong> ¿Qué código indica transferencia completada?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">331</li><li data-op="b" tabindex="0" role="button">530</li><li data-op="c" tabindex="0" role="button">226</li><li data-op="d" tabindex="0" role="button">425</li></ul></div><div class="quiz-pregunta" data-correcta="b"><p><strong>5.</strong> ¿Qué orden descarga un archivo?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">STOR</li><li data-op="b" tabindex="0" role="button">RETR</li><li data-op="c" tabindex="0" role="button">MKD</li><li data-op="d" tabindex="0" role="button">DELE</li></ul></div><div class="quiz-pregunta" data-correcta="c"><p><strong>6.</strong> ¿Qué tipo se usa para ZIP?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">ASCII</li><li data-op="b" tabindex="0" role="button">EBCDIC</li><li data-op="c" tabindex="0" role="button">Binario</li><li data-op="d" tabindex="0" role="button">Texto</li></ul></div><div class="quiz-pregunta" data-correcta="b"><p><strong>7.</strong> ¿Qué transporte utiliza TFTP?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">TCP</li><li data-op="b" tabindex="0" role="button">UDP</li><li data-op="c" tabindex="0" role="button">ICMP</li><li data-op="d" tabindex="0" role="button">ARP</li></ul></div><div class="quiz-pregunta" data-correcta="a"><p><strong>8.</strong> ¿Qué añade FTPS?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">TLS</li><li data-op="b" tabindex="0" role="button">DHCP</li><li data-op="c" tabindex="0" role="button">DNS</li><li data-op="d" tabindex="0" role="button">NAT</li></ul></div><div class="quiz-pregunta" data-correcta="b"><p><strong>9.</strong> ¿Qué herramienta muestra sesiones ProFTPD?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">dig</li><li data-op="b" tabindex="0" role="button">ftpwho</li><li data-op="c" tabindex="0" role="button">nslookup</li><li data-op="d" tabindex="0" role="button">ping</li></ul></div><div class="quiz-pregunta" data-correcta="c"><p><strong>10.</strong> ¿Qué permisos determinan el acceso efectivo?</p><ul class="quiz-opciones"><li data-op="a" tabindex="0" role="button">Solo FTP</li><li data-op="b" tabindex="0" role="button">Solo NTFS</li><li data-op="c" tabindex="0" role="button">FTP y sistema de archivos</li><li data-op="d" tabindex="0" role="button">Solo DNS</li></ul></div><button id="quiz-corregir" type="button">Corregir</button><p id="quiz-resultado" aria-live="polite"></p></div><p class="quiz-fuente">Preguntas de elaboración propia basadas en el capítulo 4.</p></section>
-<section id="bibliografia"><h2>Bibliografía</h2><p>Dorrego Martín, M. (2020). <em>Servicios en red</em>. Editorial Síntesis. Capítulo 4, pp. 107–140. Material adaptado y resumido; diagramas y ejercicios de elaboración propia.</p><p><a href="https://www.rfc-editor.org/rfc/rfc959">RFC 959</a> · <a href="https://www.rfc-editor.org/rfc/rfc1350">RFC 1350</a> · <a href="https://www.rfc-editor.org/rfc/rfc4217">RFC 4217</a></p></section></main>    <footer>
+sudo journalctl -u proftpd</code></pre>
+                <p>Si UFW está activo, permite TCP 21 y TCP 50000:50100 desde la red de laboratorio. Las directivas TransferLog, SystemLog y ExtendedLog permiten registrar transferencias y actividad.</p>
+                <pre><code>TransferLog /var/log/proftpd/xferlog
+SystemLog /var/log/proftpd/proftpd.log</code></pre>
+                <p>Comprueba con cada cuenta que las operaciones permitidas funcionan y las prohibidas fallan. Si se utiliza PAM, revisa sus restricciones de shell y autenticación.</p>
+            </section>
+
+            <section id="resumen">
+                <h2>Resumen</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Protocolo</th>
+                            <th>Transporte / puerto inicial</th>
+                            <th>Seguridad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FTP</td>
+                            <td>TCP 21</td>
+                            <td>Sin cifrado</td>
+                        </tr>
+                        <tr>
+                            <td>FTPS explícito</td>
+                            <td>TCP 21</td>
+                            <td>TLS negociado</td>
+                        </tr>
+                        <tr>
+                            <td>FTPS implícito</td>
+                            <td>TCP 990</td>
+                            <td>TLS desde inicio</td>
+                        </tr>
+                        <tr>
+                            <td>TFTP</td>
+                            <td>UDP 69</td>
+                            <td>Sin autenticación ni cifrado</td>
+                        </tr>
+                        <tr>
+                            <td>SFTP</td>
+                            <td>TCP 22</td>
+                            <td>SSH</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>FTP separa control y datos; activo y pasivo determinan quién inicia los datos. La autorización efectiva combina reglas FTP y permisos de archivos.</p>
+            </section>
+
+            <section id="ejercicios-propuestos">
+                <h2>📝 Ejercicios propuestos</h2>
+                <ol>
+                    <li>Dibuja la arquitectura PI/DTP y explica ambos canales.</li>
+                    <li>Compara PORT y PASV y calcula el puerto de una respuesta 227 con valores 192,168,1,10,195,81.</li>
+                    <li>Relaciona USER, PASS, RETR, STOR, LIST y QUIT con su función.</li>
+                    <li>Clasifica los códigos 150, 226, 331, 425 y 550.</li>
+                    <li>Explica cuándo elegir ASCII o binario.</li>
+                    <li>Compara FTP, FTPS, SFTP y TFTP.</li>
+                    <li>Diseña permisos para tres grupos y un administrador.</li>
+                    <li>Investiga cómo limitar conexiones y consultar sesiones en IIS y ProFTPD.</li>
+                </ol>
+            </section>
+
+            <section id="supuestos-practicos">
+                <h2>📝 Supuestos prácticos</h2>
+                <div class="actividad">
+                    <h3>Práctica 1. Ubuntu Server</h3>
+                    <p>Implanta EJEMPLO_LOCAL y EJEMPLO_NET según la matriz anterior. Verifica autenticación, lectura, escritura y denegaciones mediante capturas. Configura después un máximo de cuatro clientes e intenta conectar cinco.</p>
+                </div>
+                <div class="actividad">
+                    <h3>Práctica 2. Windows Server</h3>
+                    <p>Reproduce ambos escenarios con IIS y comprueba permisos NTFS, reglas FTP, sesiones y logs.</p>
+                </div>
+                <div class="actividad">
+                    <h3>Práctica 3. Clientes y análisis de tráfico</h3>
+                    <p>Con FileZilla y consola, crea fotos, sube vacio.txt, descárgalo y elimina el archivo y el directorio. En una red aislada captura tráfico propio con Wireshark, filtro ftp o ftp-data, y relaciona órdenes y respuestas. Compara con una conexión FTPS.</p>
+                </div>
+            </section>
+
+            <section id="autoevaluacion">
+                <h2>Autoevaluación</h2>
+                <div class="quiz" id="quiz-tema04">
+                    <div class="quiz-pregunta" data-correcta="b">
+                        <p><strong>1.</strong> ¿Puerto de control FTP?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">20</li>
+                            <li data-op="b" tabindex="0" role="button">21</li>
+                            <li data-op="c" tabindex="0" role="button">22</li>
+                            <li data-op="d" tabindex="0" role="button">69</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="c">
+                        <p><strong>2.</strong> ¿Quién inicia los datos en modo activo?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">Cliente</li>
+                            <li data-op="b" tabindex="0" role="button">DNS</li>
+                            <li data-op="c" tabindex="0" role="button">Servidor</li>
+                            <li data-op="d" tabindex="0" role="button">Router</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="b">
+                        <p><strong>3.</strong> ¿Orden de modo pasivo?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">PORT</li>
+                            <li data-op="b" tabindex="0" role="button">PASV</li>
+                            <li data-op="c" tabindex="0" role="button">RETR</li>
+                            <li data-op="d" tabindex="0" role="button">TYPE</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="c">
+                        <p><strong>4.</strong> ¿Qué código indica transferencia completada?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">331</li>
+                            <li data-op="b" tabindex="0" role="button">530</li>
+                            <li data-op="c" tabindex="0" role="button">226</li>
+                            <li data-op="d" tabindex="0" role="button">425</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="b">
+                        <p><strong>5.</strong> ¿Qué orden descarga un archivo?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">STOR</li>
+                            <li data-op="b" tabindex="0" role="button">RETR</li>
+                            <li data-op="c" tabindex="0" role="button">MKD</li>
+                            <li data-op="d" tabindex="0" role="button">DELE</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="c">
+                        <p><strong>6.</strong> ¿Qué tipo se usa para ZIP?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">ASCII</li>
+                            <li data-op="b" tabindex="0" role="button">EBCDIC</li>
+                            <li data-op="c" tabindex="0" role="button">Binario</li>
+                            <li data-op="d" tabindex="0" role="button">Texto</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="b">
+                        <p><strong>7.</strong> ¿Qué transporte utiliza TFTP?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">TCP</li>
+                            <li data-op="b" tabindex="0" role="button">UDP</li>
+                            <li data-op="c" tabindex="0" role="button">ICMP</li>
+                            <li data-op="d" tabindex="0" role="button">ARP</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="a">
+                        <p><strong>8.</strong> ¿Qué añade FTPS?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">TLS</li>
+                            <li data-op="b" tabindex="0" role="button">DHCP</li>
+                            <li data-op="c" tabindex="0" role="button">DNS</li>
+                            <li data-op="d" tabindex="0" role="button">NAT</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="b">
+                        <p><strong>9.</strong> ¿Qué herramienta muestra sesiones ProFTPD?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">dig</li>
+                            <li data-op="b" tabindex="0" role="button">ftpwho</li>
+                            <li data-op="c" tabindex="0" role="button">nslookup</li>
+                            <li data-op="d" tabindex="0" role="button">ping</li>
+                        </ul>
+                    </div>
+                    <div class="quiz-pregunta" data-correcta="c">
+                        <p><strong>10.</strong> ¿Qué permisos determinan el acceso efectivo?</p>
+                        <ul class="quiz-opciones">
+                            <li data-op="a" tabindex="0" role="button">Solo FTP</li>
+                            <li data-op="b" tabindex="0" role="button">Solo NTFS</li>
+                            <li data-op="c" tabindex="0" role="button">FTP y sistema de archivos</li>
+                            <li data-op="d" tabindex="0" role="button">Solo DNS</li>
+                        </ul>
+                    </div>
+                    <button id="quiz-corregir" type="button">Corregir</button>
+                    <p id="quiz-resultado" aria-live="polite"></p>
+                </div>
+                <p class="quiz-fuente">Preguntas de elaboración propia basadas en el capítulo 4.</p>
+            </section>
+
+            <section id="bibliografia">
+                <h2>Bibliografía</h2>
+                <p>Dorrego Martín, M. (2020). <em>Servicios en red</em>. Editorial Síntesis. Capítulo 4, pp. 107–140. Material adaptado y resumido; diagramas y ejercicios de elaboración propia.</p>
+                <p><a href="https://www.rfc-editor.org/rfc/rfc959">RFC 959</a> · <a href="https://www.rfc-editor.org/rfc/rfc1350">RFC 1350</a> · <a href="https://www.rfc-editor.org/rfc/rfc4217">RFC 4217</a></p>
+            </section>
+        </main>
+
+    <footer>
         <p><a href="../">← Volver al módulo de Servicios en red (2SMR)</a></p>
         <p><a href="../../">← Volver a la página principal</a></p>
     </footer>
